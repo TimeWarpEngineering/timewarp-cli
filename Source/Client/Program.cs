@@ -4,7 +4,6 @@ namespace TimeWarpCli.Client
   using Grpc.Net.Client;
   using Grpc.Net.Client.Web;
   using MediatR;
-  using Microsoft.AspNetCore.Components;
   using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
   using Microsoft.Extensions.Configuration;
   using Microsoft.Extensions.DependencyInjection;
@@ -12,15 +11,14 @@ namespace TimeWarpCli.Client
   using ProtoBuf.Grpc.Client;
   using System;
   using System.CommandLine;
+  using System.CommandLine.Parsing;
   using System.Net.Http;
   using System.Reflection;
   using System.Threading.Tasks;
-  using TimeWarpCli.Analyzer;
   using TimeWarpCli.Client.CommandLine;
   using TimeWarpCli.Components;
   using TimeWarpCli.Features.ClientLoaders;
   using TimeWarpCli.Features.EventStreams;
-  using TimeWarpCli.Features.Hellos;
   using TimeWarpCli.Features.Superheros;
 
   public class Program

@@ -8,7 +8,6 @@
   using System.Collections.Generic;
   using System.CommandLine;
   using System.CommandLine.Builder;
-  using System.CommandLine.Invocation;
   using System.Linq;
   using System.Reflection;
 
@@ -69,16 +68,16 @@
       foreach (PropertyInfo propertyInfo in aType.GetProperties())
       {
         var option = new Option(
-          alias: $"--{propertyInfo.Name}",
+          aliases: new string[] { $"--{propertyInfo.Name}" },
           description: XmlDocReader.GetDescriptionForPropertyInfo(propertyInfo))
         {
-          Argument = CreateGenericArgument(propertyInfo.PropertyType),
+          ArgumentHelpName = CreateGenericArgument(propertyInfo.PropertyType),
           IsHidden = false
         };
         command.AddOption(option);
       }
 
-      this.AddCommand(command);
+      this.Command.AddCommand(command);
     }
 
     private void Configure()
@@ -94,11 +93,11 @@
       .UseExceptionHandler();
     }
 
-    private Argument CreateGenericArgument(Type aPropertyType)
+    private string CreateGenericArgument(Type aPropertyType)
     {
       Type argumentType = typeof(Argument<>);
       Type genericArgumentType = argumentType.MakeGenericType(aPropertyType);
-      return Activator.CreateInstance(genericArgumentType) as Argument;
+      return Activator.CreateInstance(genericArgumentType) as string;
     }
 
     private ParserBuilder UseMediatorCommands()

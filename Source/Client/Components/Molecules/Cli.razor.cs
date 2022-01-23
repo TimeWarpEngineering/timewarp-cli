@@ -6,6 +6,7 @@
   using System.Collections.Generic;
   using System.CommandLine;
   using System.CommandLine.Invocation;
+  using System.CommandLine.Parsing;
   using System.Linq;
   using System.Threading.Tasks;
   using TimeWarpCli.Features.Bases;
@@ -99,7 +100,7 @@
       {
         Console.WriteLine($"HandleTabKeyPress Parsing Input:{Input}");
         ParseResult = Parser.Parse(Input);
-        Suggestions = ParseResult.Suggestions().ToList();
+        Suggestions = ParseResult.GetCompletions().Select(x => x.Label).ToList();
         SuggestedIndex = 0;
       }
       WriteLine(Suggestion);

@@ -32,7 +32,7 @@
     <PackageReference Include="Blazor-State" Version="$(BlazorStateVersion)" />
     <PackageReference Include="Dawn.Guard" Version="$(DawnGuardVersion)" />
     <PackageReference Include="PeterLeslieMorris.Blazor.FluentValidation" Version="$(PeterLeslieMorrisBlazorFluentValidationVersion)" />
-    <PackageReference Include="System.CommandLine.Experimental" Version="0.3.0-alpha.19317.1" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta2.21617.1" />
   </ItemGroup>
 
   <ItemGroup>

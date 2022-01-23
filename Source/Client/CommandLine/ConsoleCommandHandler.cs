@@ -4,6 +4,7 @@
   using System;
   using System.CommandLine;
   using System.CommandLine.Invocation;
+  using System.CommandLine.Parsing;
   using System.Threading.Tasks;
 
   internal class ConsoleCommandHandler : ICommandHandler
@@ -26,7 +27,7 @@
         {
           var optionResult = symbolResult as OptionResult;
           object value = optionResult.GetValueOrDefault();
-          Type.GetProperty(symbolResult.Name).SetValue(request, value);
+          Type.GetProperty(symbolResult.Symbol.Name).SetValue(request, value);
         }
 
         Type requestType = Type.GetInterface(typeof(IRequest).Name);
