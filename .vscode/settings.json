@@ -3,8 +3,10 @@
         "accessibilities",
         "Allman",
         "Cramer",
+        "fooding",
         "globalusingsanalyzer",
         "LINQ",
+        "nonexistentcommand",
         "resharper",
         "timewarp"
     ]

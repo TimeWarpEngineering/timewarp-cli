@@ -74,18 +74,9 @@ return result.StandardOutput.Split
 
 ### ⚠️ Areas for Improvement
 
-**Missing Interface Abstraction**: The library lacks interfaces, making it difficult to mock or substitute implementations for testing:
+~~**Missing Interface Abstraction**: The library lacks interfaces, making it difficult to mock or substitute implementations for testing~~ ✅ **INTENTIONALLY OMITTED**
 
-```csharp
-// Missing - would improve testability
-public interface ICommandResult
-{
-    Task<string> GetStringAsync();
-    Task<string[]> GetLinesAsync();
-    Task ExecuteAsync();
-    CommandResult Pipe(string executable, params string[] arguments);
-}
-```
+*Analysis: After thorough evaluation, interfaces were intentionally omitted to maintain library simplicity and align with scripting use cases. The integration testing approach with real commands is superior to unit testing with mocks for this type of tool. The static API design (`Run()` method) makes dependency injection less relevant, and the single implementation model doesn't warrant interface abstraction. Consumers needing testability can create their own wrapper interfaces if required.*
 
 **Singleton Anti-pattern**: The `NullCommandResult` is a singleton, which can cause issues in concurrent scenarios and testing:
 
@@ -241,7 +232,7 @@ catch (Exception ex) when (ex is not OutOfMemoryException)
 ### 📈 Medium Priority Improvements
 
 1. **Add XML Documentation** for all public APIs
-2. **Implement Interfaces** for better testability
+2. ~~**Implement Interfaces** for better testability~~ ✅ **INTENTIONALLY OMITTED**
 3. **Add Timeout Support** for long-running commands
 4. **Optimize String Operations** with static readonly arrays
 5. **Add Logging Support** for debugging
@@ -261,8 +252,8 @@ The main areas for improvement focus on:
 - Adding cancellation and timeout support
 - Improving error handling granularity
 - Adding caching to prevent multiple executions
-- Enhancing testability through interfaces
 - Adding comprehensive XML documentation
+- Optimizing string operations and resource management
 
 The library demonstrates good architecture principles and would benefit from the suggested improvements to make it more robust and enterprise-ready while maintaining its simplicity and ease of use.
 
