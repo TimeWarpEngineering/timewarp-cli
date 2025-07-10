@@ -68,4 +68,28 @@ public class CommandResult
       // This matches shell behavior where failed commands don't crash the shell
     }
   }
+  
+  public CommandResult Pipe(string executable, params string[] arguments)
+  {
+    if (Command == null)
+    {
+      return new CommandResult(null);
+    }
+    
+    try
+    {
+      Command nextCommand = CliWrap.Cli.Wrap(executable)
+        .WithArguments(arguments)
+        .WithValidation(CommandResultValidation.None);
+        
+      // Chain commands using CliWrap's pipe operator
+      Command pipedCommand = Command | nextCommand;
+      return new CommandResult(pipedCommand);
+    }
+    catch
+    {
+      // Command creation failures return null command (graceful degradation)
+      return new CommandResult(null);
+    }
+  }
 }

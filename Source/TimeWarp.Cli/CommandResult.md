@@ -48,8 +48,48 @@ Executes the command and returns the standard output split into individual lines
 - Returns empty array on command failure or null command
 - Ideal for processing output line-by-line
 
+### `Pipe(string executable, params string[] arguments)`
+
+Chains the current command with another command, creating a pipeline where the output of the first command becomes the input of the second command.
+
+**Parameters:**
+- `executable`: The command to pipe to
+- `arguments`: Command line arguments for the piped command
+
+**Returns:**
+- `CommandResult`: A new CommandResult representing the entire pipeline
+
+**Behavior:**
+- Uses CliWrap's pipe operator (`|`) internally
+- Maintains graceful error handling - if any command in the pipeline fails, returns empty results
+- Supports chaining multiple pipes together
+- Memory efficient - streams data directly between processes without buffering
+
 **Example Usage:**
 ```csharp
+// Basic pipeline - find and filter
+var filteredFiles = await Run("find", ".", "-name", "*.cs")
+    .Pipe("grep", "async")
+    .GetLinesAsync();
+
+// Multi-stage pipeline - find, filter, and count
+var count = await Run("echo", "line1\nline2\nline3\nline4")
+    .Pipe("grep", "line")
+    .Pipe("wc", "-l")
+    .GetStringAsync();
+
+// Real-world example - git log with formatting
+var recentCommits = await Run("git", "log", "--oneline", "-n", "10")
+    .Pipe("head", "-5")
+    .GetLinesAsync();
+
+// Text processing pipeline
+var words = await Run("echo", "The quick brown fox jumps over the lazy dog")
+    .Pipe("tr", " ", "\n")
+    .Pipe("grep", "o")
+    .GetLinesAsync();
+```
+
 // Process each file from ls command
 var files = await Run("ls", "-la").GetLinesAsync();
 foreach (var file in files)

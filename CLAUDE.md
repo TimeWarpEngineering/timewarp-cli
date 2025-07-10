@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 TimeWarp.Cli is a fluent API wrapper around CliWrap for elegant C# scripting. The library makes shell command execution feel natural and concise in C#, providing a simple static `Run()` method with async operations and graceful error handling.
 
 **Target Framework:** .NET 10.0  
-**Current Version:** 0.1.1  
+**Current Version:** 0.2.0  
 **Package ID:** TimeWarp.Cli
 
 ## Project Structure
@@ -63,6 +63,7 @@ public static CommandResult Run(string executable, params string[] arguments)
 public async Task<string> GetStringAsync()      // Get full output as string
 public async Task<string[]> GetLinesAsync()     // Get output as line array
 public async Task ExecuteAsync()                // Execute without capturing output
+public CommandResult Pipe(string executable, params string[] arguments)  // Chain commands
 ```
 
 ### Usage Examples
@@ -79,12 +80,24 @@ foreach (var file in files) Console.WriteLine(file);
 
 // Execute without output
 await Run("echo", "Hello World").ExecuteAsync();
+
+// Pipeline commands (NEW in v0.2.0)
+var filteredFiles = await Run("find", ".", "-name", "*.cs")
+    .Pipe("grep", "async")
+    .GetLinesAsync();
+
+// Multi-stage pipelines
+var count = await Run("git", "log", "--oneline", "-n", "10")
+    .Pipe("head", "-5")
+    .Pipe("wc", "-l")
+    .GetStringAsync();
 ```
 
 ### Error Handling
 - Commands that fail return empty results (no exceptions thrown)
 - `GetStringAsync()` returns empty string on failure
 - `GetLinesAsync()` returns empty array on failure
+- Pipeline commands maintain graceful degradation - if any command fails, entire pipeline returns empty results
 - Designed for scripting scenarios where graceful degradation is preferred
 
 ## Key Architecture Decisions
@@ -93,7 +106,19 @@ await Run("echo", "Hello World").ExecuteAsync();
 2. **Static Entry Point**: Global `Run()` method for simplicity in scripts
 3. **Async-First**: All operations are async for non-blocking execution
 4. **No Exceptions**: Failed commands return empty results
-5. **Dogfooding**: Build scripts and test runner use TimeWarp.Cli itself
+5. **Pipeline Support**: Commands can be chained with `.Pipe()` for shell-like operations
+6. **Dogfooding**: Test runner uses TimeWarp.Cli itself for execution
+
+## Build System Architecture
+
+**CRITICAL**: The build scripts (`Scripts/Build.cs`, `Scripts/Pack.cs`, `Scripts/Clean.cs`) deliberately use raw `System.Diagnostics.Process` instead of TimeWarp.Cli to avoid circular dependencies. This ensures:
+
+- Build scripts remain self-contained and stable
+- No chicken-and-egg problems when the library has issues
+- Build can always succeed even if TimeWarp.Cli is broken
+- Once the library is stable, other scripts can dogfood it safely
+
+**Rule**: Never make build scripts depend on the library they're building.
 
 ## Dependencies
 

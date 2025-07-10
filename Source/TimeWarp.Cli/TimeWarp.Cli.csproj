@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>TimeWarp.Cli</PackageId>
-    <Version>0.1.1</Version>
+    <Version>0.2.0</Version>
     <Authors>TimeWarp Engineering</Authors>
     <Description>Fluent API wrapper around CliWrap for elegant C# scripting</Description>
     <PackageTags>cli;scripting;cliwrap;fluent;shell</PackageTags>
