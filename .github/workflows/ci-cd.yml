@@ -48,6 +48,8 @@ jobs:
         run: |
           echo "Building TimeWarp.Cli..."
           dotnet run Scripts/Build.cs
+          echo "Packing to local feed for tests..."
+          dotnet run Scripts/Pack.cs
           echo "Running tests..."
           dotnet run Tests/RunTests.cs
 
