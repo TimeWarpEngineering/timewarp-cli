@@ -78,6 +78,18 @@ try
     var packagePath = newNupkgFiles[0];
     Console.WriteLine($"📦 Package created: {packagePath}");
 
+    // Clean LocalNuGetFeed directory to ensure only one version at a time
+    var localFeedPath = "../LocalNuGetFeed";
+    if (Directory.Exists(localFeedPath))
+    {
+        var existingPackages = Directory.GetFiles(localFeedPath, "*.nupkg");
+        foreach (var existingPackage in existingPackages)
+        {
+            File.Delete(existingPackage);
+            Console.WriteLine($"🗑️  Deleted existing package from local feed: {Path.GetFileName(existingPackage)}");
+        }
+    }
+
     // Push to local feed
     var pushProcess = new Process
     {
