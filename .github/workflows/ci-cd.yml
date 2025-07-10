@@ -1,0 +1,88 @@
+name: NuGet Publish
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'Source/**'
+      - 'Tests/**'
+      - 'Scripts/**'
+      - '.github/workflows/**'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'Source/**'
+      - 'Tests/**'
+      - 'Scripts/**'
+      - '.github/workflows/**'
+  release:
+    types: [published] # Triggered when a release is published via GitHub Releases UI or gh CLI
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for MinVer to read all tags
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Make scripts executable
+        run: |
+          chmod +x Scripts/Build.cs
+          chmod +x Scripts/Pack.cs
+          chmod +x Scripts/Clean.cs
+          chmod +x Tests/RunTests.cs
+
+      - name: Build and Test
+        run: |
+          echo "Building TimeWarp.Cli..."
+          ./Scripts/Build.cs
+          echo "Running tests..."
+          ./Tests/RunTests.cs
+
+      - name: Pack for Release
+        if: github.event_name == 'release'
+        run: |
+          echo "Packing TimeWarp.Cli for release..."
+          ./Scripts/Pack.cs
+
+      - name: Check if version already published (Releases only)
+        if: github.event_name == 'release'
+        run: |
+          VERSION=$(grep '<Version>' Source/TimeWarp.Cli/TimeWarp.Cli.csproj | sed 's/.*<Version>\(.*\)<\/Version>.*/\1/')
+          echo "Checking if TimeWarp.Cli $VERSION is already published..."
+          
+          # Check TimeWarp.Cli using package search
+          if dotnet package search TimeWarp.Cli --exact-match --prerelease | grep -q "$VERSION"; then
+            echo "⚠️ WARNING: TimeWarp.Cli $VERSION is already published to NuGet.org"
+            echo "❌ This version cannot be republished. Please increment the version in TimeWarp.Cli.csproj"
+            exit 1
+          else
+            echo "✅ TimeWarp.Cli $VERSION is not yet published"
+          fi
+
+      - name: Publish to NuGet.org (Releases only)
+        if: github.event_name == 'release'
+        run: |
+          dotnet nuget push Source/TimeWarp.Cli/bin/Release/*.nupkg \
+            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
+        env:
+          DOTNET_NUGET_SIGNATURE_VERIFICATION: false
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Packages-${{ github.run_number }}
+          path: |
+            Source/TimeWarp.Cli/bin/Release/*.nupkg
+            LocalNuGetFeed/*.nupkg
