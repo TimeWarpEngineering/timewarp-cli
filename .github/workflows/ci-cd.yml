@@ -47,9 +47,9 @@ jobs:
       - name: Build and Test
         run: |
           echo "Building TimeWarp.Cli..."
-          cd Scripts && dotnet run Build.cs
+          dotnet run Scripts/Build.cs
           echo "Running tests..."
-          cd Tests && dotnet run RunTests.cs
+          dotnet run Tests/RunTests.cs
 
       - name: Pack for Release
         if: github.event_name == 'release'
