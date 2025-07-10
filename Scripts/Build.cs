@@ -2,49 +2,71 @@
 // Build.cs - Build the TimeWarp.Cli library
 #pragma warning disable IDE0005 // Using directive is unnecessary
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 #pragma warning restore IDE0005
 
+// Get script directory using CallerFilePath (C# equivalent of PowerShell's $PSScriptRoot)
+static string GetScriptDirectory([CallerFilePath] string scriptPath = "")
+{
+  return Path.GetDirectoryName(scriptPath) ?? "";
+}
+
+// Push current directory, change to script directory for relative paths
+string originalDirectory = Directory.GetCurrentDirectory();
+string scriptDir = GetScriptDirectory();
+Directory.SetCurrentDirectory(scriptDir);
+
 Console.WriteLine("Building TimeWarp.Cli library...");
+Console.WriteLine($"Script directory: {scriptDir}");
+Console.WriteLine($"Working from: {Directory.GetCurrentDirectory()}");
 
 try
 {
-    // Build the project
-    var buildProcess = new Process
+    try
     {
-        StartInfo = new ProcessStartInfo
+        // Build the project using simple relative path
+        var buildProcess = new Process
         {
-            FileName = "dotnet",
-            Arguments = "build Source/TimeWarp.Cli/TimeWarp.Cli.csproj --configuration Release",
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            CreateNoWindow = true
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                Arguments = "build ../Source/TimeWarp.Cli/TimeWarp.Cli.csproj --configuration Release",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            }
+        };
+
+        buildProcess.Start();
+        string output = await buildProcess.StandardOutput.ReadToEndAsync();
+        string error = await buildProcess.StandardError.ReadToEndAsync();
+        await buildProcess.WaitForExitAsync();
+
+        Console.WriteLine(output);
+        if (!string.IsNullOrEmpty(error))
+        {
+            Console.WriteLine($"Errors: {error}");
         }
-    };
 
-    buildProcess.Start();
-    string output = await buildProcess.StandardOutput.ReadToEndAsync();
-    string error = await buildProcess.StandardError.ReadToEndAsync();
-    await buildProcess.WaitForExitAsync();
-
-    Console.WriteLine(output);
-    if (!string.IsNullOrEmpty(error))
-    {
-        Console.WriteLine($"Errors: {error}");
+        if (buildProcess.ExitCode == 0)
+        {
+            Console.WriteLine("✅ Build completed successfully!");
+        }
+        else
+        {
+            Console.WriteLine($"❌ Build failed with exit code {buildProcess.ExitCode}");
+            Environment.Exit(buildProcess.ExitCode);
+        }
     }
-
-    if (buildProcess.ExitCode == 0)
+    catch (Exception ex)
     {
-        Console.WriteLine("✅ Build completed successfully!");
-    }
-    else
-    {
-        Console.WriteLine($"❌ Build failed with exit code {buildProcess.ExitCode}");
-        Environment.Exit(buildProcess.ExitCode);
+        Console.WriteLine($"❌ An error occurred: {ex.Message}");
+        Environment.Exit(1);
     }
 }
-catch (Exception ex)
+finally
 {
-    Console.WriteLine($"❌ An error occurred: {ex.Message}");
-    Environment.Exit(1);
+    // Pop - restore original working directory
+    Directory.SetCurrentDirectory(originalDirectory);
 }

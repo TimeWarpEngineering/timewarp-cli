@@ -4,20 +4,36 @@
 
 #pragma warning disable IDE0005 // Using directive is unnecessary
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using TimeWarp.Cli;
 using static TimeWarp.Cli.CommandExtensions;
 #pragma warning restore IDE0005
 
-Console.WriteLine("🧪 Running TimeWarp.Cli Test Suite...\n");
+// Get script directory using CallerFilePath (C# equivalent of PowerShell's $PSScriptRoot)
+static string GetScriptDirectory([CallerFilePath] string scriptPath = "")
+{
+  return Path.GetDirectoryName(scriptPath) ?? "";
+}
 
-var testResults = new List<(string TestName, bool Passed, string Output)>();
+// Push current directory, change to script directory for relative paths
+string originalDirectory = Directory.GetCurrentDirectory();
+string scriptDir = GetScriptDirectory();
+Directory.SetCurrentDirectory(scriptDir);
 
-// Discover all test files
-var testFiles = await Run("find", "Tests/Integration", "-name", "*.cs", "-type", "f").GetLinesAsync();
+Console.WriteLine("🧪 Running TimeWarp.Cli Test Suite...");
+Console.WriteLine($"Script directory: {scriptDir}");
+Console.WriteLine($"Working from: {Directory.GetCurrentDirectory()}\n");
+
+try
+{
+    var testResults = new List<(string TestName, bool Passed, string Output)>();
+
+    // Discover all test files
+var testFiles = await Run("find", "Integration", "-name", "*.cs", "-type", "f").GetLinesAsync();
 
 if (testFiles.Length == 0)
 {
-    Console.WriteLine("❌ No test files found in Tests/Integration/");
+    Console.WriteLine("❌ No test files found in Integration/");
     Environment.Exit(1);
 }
 
@@ -111,5 +127,11 @@ if (failedTests > 0)
 
 Console.WriteLine(new string('=', 60));
 
-// Exit with appropriate code
-Environment.Exit(failedTests == 0 ? 0 : 1);
+    // Exit with appropriate code
+    Environment.Exit(failedTests == 0 ? 0 : 1);
+}
+finally
+{
+    // Pop - restore original working directory
+    Directory.SetCurrentDirectory(originalDirectory);
+}

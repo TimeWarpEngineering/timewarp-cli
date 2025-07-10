@@ -2,14 +2,30 @@
 // Pack.cs - Pack and publish TimeWarp.Cli to local NuGet feed
 #pragma warning disable IDE0005 // Using directive is unnecessary
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 #pragma warning restore IDE0005
 
+// Get script directory using CallerFilePath (C# equivalent of PowerShell's $PSScriptRoot)
+static string GetScriptDirectory([CallerFilePath] string scriptPath = "")
+{
+  return Path.GetDirectoryName(scriptPath) ?? "";
+}
+
+// Push current directory, change to script directory for relative paths
+string originalDirectory = Directory.GetCurrentDirectory();
+string scriptDir = GetScriptDirectory();
+Directory.SetCurrentDirectory(scriptDir);
+
 Console.WriteLine("Packing and publishing TimeWarp.Cli to local NuGet feed...");
+Console.WriteLine($"Script directory: {scriptDir}");
+Console.WriteLine($"Working from: {Directory.GetCurrentDirectory()}");
 
 try
 {
-    // First, clean any existing packages
-    var packagesPath = Path.Combine("Source", "TimeWarp.Cli", "bin", "Release");
+    try
+    {
+        // First, clean any existing packages
+    var packagesPath = "../Source/TimeWarp.Cli/bin/Release";
     if (Directory.Exists(packagesPath))
     {
         var nupkgFiles = Directory.GetFiles(packagesPath, "*.nupkg", SearchOption.AllDirectories);
@@ -26,7 +42,7 @@ try
         StartInfo = new ProcessStartInfo
         {
             FileName = "dotnet",
-            Arguments = "pack Source/TimeWarp.Cli/TimeWarp.Cli.csproj --configuration Release --no-build",
+            Arguments = "pack ../Source/TimeWarp.Cli/TimeWarp.Cli.csproj --configuration Release --no-build",
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -96,9 +112,15 @@ try
         Console.WriteLine($"❌ Push failed with exit code {pushProcess.ExitCode}");
         Environment.Exit(pushProcess.ExitCode);
     }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ An error occurred: {ex.Message}");
+        Environment.Exit(1);
+    }
 }
-catch (Exception ex)
+finally
 {
-    Console.WriteLine($"❌ An error occurred: {ex.Message}");
-    Environment.Exit(1);
+    // Pop - restore original working directory
+    Directory.SetCurrentDirectory(originalDirectory);
 }
