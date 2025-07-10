@@ -13,10 +13,15 @@
     <PackageTags>cli;scripting;fluent;shell;pipeline</PackageTags>
     <RepositoryUrl>https://github.com/TimeWarpEngineering/timewarp-cli</RepositoryUrl>
     <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
+    <PackageIcon>logo.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CliWrap" Version="3.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Assets\logo.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>
