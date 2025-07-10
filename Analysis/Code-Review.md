@@ -124,7 +124,9 @@ string[] lines = await cmd.GetLinesAsync();  // Executes command again
 new char[] { '\n', '\r' }
 ```
 
-**No Cancellation Support**: The API doesn't support cancellation tokens, which limits its usefulness in long-running or interactive scenarios.
+~~**No Cancellation Support**: The API doesn't support cancellation tokens, which limits its usefulness in long-running or interactive scenarios.~~ ✅ **FIXED**
+
+*All async methods now support optional `CancellationToken` parameters, enabling timeout functionality and manual cancellation of long-running commands.*
 
 ## 4. Security & Robustness
 
@@ -193,11 +195,11 @@ catch
 
 ### 🔧 High Priority Improvements
 
-1. **Add Cancellation Support**:
+~~1. **Add Cancellation Support**:~~ ✅ **IMPLEMENTED**
 ```csharp
 public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
 {
-    // Implementation with cancellation support
+    // All async methods now support cancellation tokens
 }
 ```
 

@@ -18,7 +18,7 @@ public class CommandResult
     Command = command;
   }
   
-  public async Task<string> GetStringAsync()
+  public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
   {
     if (Command == null)
     {
@@ -27,7 +27,7 @@ public class CommandResult
     
     try
     {
-      BufferedCommandResult result = await Command.ExecuteBufferedAsync();
+      BufferedCommandResult result = await Command.ExecuteBufferedAsync(cancellationToken);
       return result.StandardOutput;
     }
     catch
@@ -37,7 +37,7 @@ public class CommandResult
     }
   }
   
-  public async Task<string[]> GetLinesAsync()
+  public async Task<string[]> GetLinesAsync(CancellationToken cancellationToken = default)
   {
     if (Command == null)
     {
@@ -46,7 +46,7 @@ public class CommandResult
     
     try
     {
-      BufferedCommandResult result = await Command.ExecuteBufferedAsync();
+      BufferedCommandResult result = await Command.ExecuteBufferedAsync(cancellationToken);
       return result.StandardOutput.Split
       (
         NewlineCharacters, 
@@ -60,7 +60,7 @@ public class CommandResult
     }
   }
   
-  public async Task ExecuteAsync()
+  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
   {
     if (Command == null)
     {
@@ -69,7 +69,7 @@ public class CommandResult
     
     try
     {
-      await Command.ExecuteAsync();
+      await Command.ExecuteAsync(cancellationToken);
     }
     catch
     {

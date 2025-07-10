@@ -12,9 +12,12 @@ This class serves as the execution wrapper returned by `CommandExtensions.Run()`
 
 ## Public API
 
-### `GetStringAsync()`
+### `GetStringAsync(CancellationToken cancellationToken = default)`
 
 Executes the command and returns the complete standard output as a single string.
+
+**Parameters:**
+- `cancellationToken` (optional): Token to cancel the command execution
 
 **Returns:**
 - `Task<string>`: The full standard output of the command, including newlines
@@ -22,7 +25,7 @@ Executes the command and returns the complete standard output as a single string
 **Behavior:**
 - Preserves original formatting and whitespace
 - Includes all newlines and carriage returns
-- Returns empty string on command failure or null command
+- Returns empty string on command failure, null command, or cancellation
 
 **Example Usage:**
 ```csharp
@@ -33,11 +36,19 @@ Console.WriteLine($"Current date: {dateOutput}");
 // Get git status with full formatting
 var gitStatus = await Run("git", "status").GetStringAsync();
 Console.WriteLine(gitStatus);
+
+// With cancellation token and timeout
+using var cts = new CancellationTokenSource();
+cts.CancelAfter(TimeSpan.FromSeconds(30)); // 30 second timeout
+var output = await Run("long-running-command").GetStringAsync(cts.Token);
 ```
 
-### `GetLinesAsync()`
+### `GetLinesAsync(CancellationToken cancellationToken = default)`
 
 Executes the command and returns the standard output split into individual lines.
+
+**Parameters:**
+- `cancellationToken` (optional): Token to cancel the command execution
 
 **Returns:**
 - `Task<string[]>`: Array of strings, each representing a line of output
@@ -45,7 +56,7 @@ Executes the command and returns the standard output split into individual lines
 **Behavior:**
 - Splits on both `\n` and `\r` characters
 - Removes empty lines automatically (`StringSplitOptions.RemoveEmptyEntries`)
-- Returns empty array on command failure or null command
+- Returns empty array on command failure, null command, or cancellation
 - Ideal for processing output line-by-line
 
 ### `Pipe(string executable, params string[] arguments)`
@@ -145,9 +156,12 @@ var fileCount = csharpFiles.Length;
 Console.WriteLine($"Found {fileCount} C# files");
 ```
 
-### `ExecuteAsync()`
+### `ExecuteAsync(CancellationToken cancellationToken = default)`
 
 Executes the command without capturing any output, useful for commands that perform actions rather than produce output.
+
+**Parameters:**
+- `cancellationToken` (optional): Token to cancel the command execution
 
 **Returns:**
 - `Task`: Completes when command execution finishes
@@ -156,6 +170,7 @@ Executes the command without capturing any output, useful for commands that perf
 - Does not capture or return any output
 - Allows output to flow to console/terminal normally
 - Silently handles command failures without throwing exceptions
+- Supports cancellation for long-running commands
 - Optimal for commands like `git add`, `mkdir`, `rm`, etc.
 
 **Implementation:**
@@ -185,7 +200,72 @@ await Run("git", "commit", "-m", "Update files").ExecuteAsync();
 // Create directories or copy files
 await Run("mkdir", "-p", "build/output").ExecuteAsync();
 await Run("cp", "file1.txt", "backup/").ExecuteAsync();
+
+// With cancellation for long operations
+using var cts = new CancellationTokenSource();
+cts.CancelAfter(TimeSpan.FromMinutes(5)); // 5 minute timeout
+await Run("large-file-copy", "source", "destination").ExecuteAsync(cts.Token);
 ```
+
+## Cancellation Support
+
+All async methods in `CommandResult` support cancellation through optional `CancellationToken` parameters. This enables timeout functionality and manual cancellation of long-running commands.
+
+### Cancellation Behavior
+
+**Graceful Handling**: When a command is cancelled, the library follows its graceful failure philosophy:
+- `GetStringAsync()`: Returns empty string
+- `GetLinesAsync()`: Returns empty array  
+- `ExecuteAsync()`: Completes without throwing
+
+**Exception Handling**: While CliWrap may throw `OperationCanceledException`, TimeWarp.Cli catches these and returns safe defaults consistent with other failure scenarios.
+
+### Cancellation Examples
+
+```csharp
+// Timeout scenario
+using var cts = new CancellationTokenSource();
+cts.CancelAfter(TimeSpan.FromSeconds(30));
+
+try 
+{
+    var result = await Run("long-running-process").GetStringAsync(cts.Token);
+    Console.WriteLine($"Command completed: {result}");
+}
+catch (OperationCanceledException)
+{
+    Console.WriteLine("Command was cancelled due to timeout");
+}
+
+// Manual cancellation
+var manualCts = new CancellationTokenSource();
+
+// Cancel after user input
+Task.Run(async () => 
+{
+    Console.ReadKey(); // Wait for user input
+    manualCts.Cancel();
+});
+
+var output = await Run("interactive-command").GetStringAsync(manualCts.Token);
+
+// Pipeline with cancellation
+using var pipelineCts = new CancellationTokenSource();
+pipelineCts.CancelAfter(TimeSpan.FromMinutes(1));
+
+var result = await Run("find", ".", "-name", "*.log")
+    .Pipe("grep", "ERROR")
+    .Pipe("head", "-100")
+    .GetLinesAsync(pipelineCts.Token);
+```
+
+### Cancellation Best Practices
+
+1. **Always use timeouts** for potentially long-running commands
+2. **Dispose CancellationTokenSource** with `using` statements
+3. **Handle both completion and cancellation** scenarios gracefully
+4. **Consider shorter timeouts** for user-facing operations
+5. **Use manual cancellation** for interactive scenarios
 
 ## Error Handling Philosophy
 
