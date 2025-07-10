@@ -219,14 +219,14 @@ public async Task<string> GetStringAsync()
 }
 ```
 
-3. **Add Configuration Options**:
+~~3. **Add Configuration Options**:~~ ✅ **IMPLEMENTED**
 ```csharp
 public static CommandResult Run(string executable, params string[] arguments)
     => Run(executable, arguments, new CommandOptions());
 
 public static CommandResult Run(string executable, string[] arguments, CommandOptions options)
 {
-    // Implementation with configurable options
+    // CommandOptions supports working directory, environment variables, and fluent configuration
 }
 ```
 

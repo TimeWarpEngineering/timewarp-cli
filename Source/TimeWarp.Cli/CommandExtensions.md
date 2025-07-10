@@ -19,6 +19,18 @@ Creates a new command execution context that can be used to run shell commands a
 **Returns:**
 - `CommandResult`: A fluent wrapper that provides async methods for executing and capturing output
 
+### `Run(string executable, string[] arguments, CommandOptions options)`
+
+Creates a new command execution context with advanced configuration options.
+
+**Parameters:**
+- `executable` (string): The executable command to run (e.g., "echo", "ls", "git")
+- `arguments` (string[]): Array of arguments to pass to the command
+- `options` (CommandOptions): Configuration options for working directory, environment variables, etc.
+
+**Returns:**
+- `CommandResult`: A fluent wrapper that provides async methods for executing and capturing output
+
 **Example Usage:**
 ```csharp
 // Simple command execution
@@ -29,7 +41,70 @@ var files = await Run("find", ".", "-name", "*.cs").GetLinesAsync();
 
 // Execute without capturing output
 await Run("git", "add", ".").ExecuteAsync();
+
+// Advanced configuration with working directory
+var options = new CommandOptions()
+    .WithWorkingDirectory("/path/to/project");
+var result = await Run("git", new[] { "status" }, options).GetStringAsync();
+
+// Configuration with environment variables
+var envOptions = new CommandOptions()
+    .WithEnvironmentVariable("NODE_ENV", "production")
+    .WithEnvironmentVariable("API_KEY", "secret123");
+var output = await Run("node", new[] { "build.js" }, envOptions).GetStringAsync();
+
+// Combined configuration
+var combinedOptions = new CommandOptions()
+    .WithWorkingDirectory("/app")
+    .WithEnvironmentVariable("PATH", "/custom/bin:/usr/bin")
+    .WithEnvironmentVariable("DEBUG", "true");
+await Run("make", new[] { "install" }, combinedOptions).ExecuteAsync();
 ```
+
+## CommandOptions Configuration
+
+The `CommandOptions` class provides advanced configuration capabilities through a fluent interface:
+
+### Working Directory Configuration
+```csharp
+var options = new CommandOptions()
+    .WithWorkingDirectory("/path/to/project");
+
+// Command will execute in the specified directory
+var result = await Run("ls", new string[0], options).GetLinesAsync();
+```
+
+### Environment Variables
+```csharp
+// Single environment variable
+var options = new CommandOptions()
+    .WithEnvironmentVariable("NODE_ENV", "production");
+
+// Multiple environment variables via fluent chaining
+var options = new CommandOptions()
+    .WithEnvironmentVariable("API_KEY", "key123")
+    .WithEnvironmentVariable("DEBUG", "true")
+    .WithEnvironmentVariable("TIMEOUT", "30");
+
+// Multiple environment variables via dictionary
+var envVars = new Dictionary<string, string?>
+{
+    { "NODE_ENV", "production" },
+    { "API_KEY", "secret" },
+    { "DEBUG", "false" }
+};
+var options = new CommandOptions()
+    .WithEnvironmentVariables(envVars);
+```
+
+### Configuration Features
+- **Immutable Design**: Each `With*` method returns a new `CommandOptions` instance
+- **Fluent Interface**: Chain multiple configuration methods together
+- **Graceful Fallbacks**: Invalid configuration gracefully returns `NullCommandResult`
+- **CliWrap Integration**: Seamlessly applies configuration to underlying CliWrap commands
+
+### Backward Compatibility
+The original `Run(executable, params arguments)` method continues to work unchanged. The new overload is purely additive and maintains full backward compatibility.
 
 ## Error Handling Philosophy
 

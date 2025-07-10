@@ -8,8 +8,23 @@ public static class CommandExtensions
     params string[] arguments
   )
   {
+    return Run(executable, arguments, new CommandOptions());
+  }
+  
+  public static CommandResult Run
+  (
+    string executable,
+    string[] arguments,
+    CommandOptions options
+  )
+  {
     // Input validation
     if (string.IsNullOrWhiteSpace(executable))
+    {
+      return CommandResult.NullCommandResult;
+    }
+    
+    if (options == null)
     {
       return CommandResult.NullCommandResult;
     }
@@ -19,6 +34,9 @@ public static class CommandExtensions
       Command cliCommand = CliWrap.Cli.Wrap(executable)
         .WithArguments(arguments)
         .WithValidation(CommandResultValidation.None);
+      
+      // Apply configuration options
+      cliCommand = options.ApplyTo(cliCommand);
         
       return new CommandResult(cliCommand);
     }
