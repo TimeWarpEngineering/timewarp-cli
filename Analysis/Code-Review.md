@@ -209,14 +209,12 @@ public async Task<string> GetStringAsync(CancellationToken cancellationToken = d
 }
 ```
 
-2. **Implement Caching/Memoization**:
+~~2. **Implement Caching/Memoization**:~~ ✅ **IMPLEMENTED**
 ```csharp
-private BufferedCommandResult? _cachedResult;
-public async Task<string> GetStringAsync()
-{
-    _cachedResult ??= await Command.ExecuteBufferedAsync();
-    return _cachedResult.StandardOutput;
-}
+// Opt-in caching via .Cached() method
+var cachedCmd = Run("expensive-command").Cached();
+var result1 = await cachedCmd.GetStringAsync(); // Executes
+var result2 = await cachedCmd.GetStringAsync(); // Returns cached result
 ```
 
 ~~3. **Add Configuration Options**:~~ ✅ **IMPLEMENTED**

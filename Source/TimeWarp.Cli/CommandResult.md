@@ -207,6 +207,125 @@ cts.CancelAfter(TimeSpan.FromMinutes(5)); // 5 minute timeout
 await Run("large-file-copy", "source", "destination").ExecuteAsync(cts.Token);
 ```
 
+## Caching Support
+
+The `CommandResult` class supports opt-in caching through the `.Cached()` method. This enables efficient reuse of command results when appropriate.
+
+### Cached() Method
+
+Creates a new `CommandResult` instance with caching enabled. Subsequent calls to `GetStringAsync()`, `GetLinesAsync()`, or `ExecuteAsync()` will return cached results instead of re-executing the command.
+
+**Returns:**
+- `CommandResult`: A new CommandResult instance with caching enabled
+
+**Behavior:**
+- **Opt-in design**: Caching must be explicitly enabled via `.Cached()`
+- **Instance-scoped**: Each CommandResult instance has its own cache
+- **All methods cached**: GetStringAsync, GetLinesAsync, and ExecuteAsync all use caching when enabled
+- **Pipeline preservation**: Caching state is preserved through `.Pipe()` operations
+- **Thread-safe**: Cache access is safe for concurrent use
+
+### Basic Caching Examples
+
+```csharp
+// Without caching - executes fresh each time
+var dateCmd = Run("date");
+var time1 = await dateCmd.GetStringAsync(); // 14:30:15
+var time2 = await dateCmd.GetStringAsync(); // 14:30:16 (different)
+
+// With caching - executes once, returns cached result
+var cachedCmd = Run("echo", "hello world").Cached();
+var result1 = await cachedCmd.GetStringAsync(); // Executes command
+var result2 = await cachedCmd.GetStringAsync(); // Returns cached result
+var lines = await cachedCmd.GetLinesAsync();    // Also uses cache
+
+// Mixed usage on same base command
+var gitLog = Run("git", "log", "--oneline", "-n", "10");
+var cached = await gitLog.Cached().GetLinesAsync(); // Cached result
+var fresh = await gitLog.GetStringAsync();          // Fresh execution
+```
+
+### Pipeline Caching Scenarios
+
+#### Cache Final Pipeline Result
+```csharp
+// Cache the entire pipeline result
+var pipeline = Run("find", ".", "-name", "*.cs")
+    .Pipe("grep", "async")
+    .Pipe("head", "-10")
+    .Cached();
+
+var files1 = await pipeline.GetLinesAsync(); // Executes full pipeline
+var files2 = await pipeline.GetLinesAsync(); // Returns cached result
+```
+
+#### Cache Intermediate Steps
+```csharp
+// Cache expensive first operation
+var findResult = Run("find", "/large/codebase", "-name", "*.cs").Cached();
+
+// Multiple filters on same cached base
+var asyncFiles = await findResult.Pipe("grep", "async").GetLinesAsync();
+var testFiles = await findResult.Pipe("grep", "Test").GetLinesAsync();
+var allFiles = await findResult.GetLinesAsync();
+
+// Only one expensive find operation executed!
+```
+
+#### Complex Pipeline Analysis
+```csharp
+// Cache git log data for multiple analyses
+var logData = Run("git", "log", "--since=1.week.ago", "--oneline").Cached();
+
+// Different analyses of the same cached data
+var bugFixes = await logData.Pipe("grep", "fix").GetLinesAsync();
+var features = await logData.Pipe("grep", "feat").GetLinesAsync();
+var authors = await logData
+    .Pipe("cut", "-d", " ", "-f", "2-")
+    .Pipe("sort")
+    .Pipe("uniq")
+    .GetLinesAsync();
+```
+
+### Caching Best Practices
+
+#### When to Use Caching
+- **Deterministic commands**: Commands that always return the same output
+- **Expensive operations**: Large directory scans, complex git operations
+- **Multiple consumers**: When the same result is needed multiple times
+- **Pipeline branching**: When multiple analyses run on the same base data
+
+#### When NOT to Use Caching
+- **Time-sensitive commands**: `date`, `uptime`, system monitoring
+- **Stateful commands**: Commands that depend on changing system state
+- **Side-effect commands**: Commands that modify the system
+- **Interactive commands**: Commands expecting user input
+
+#### Performance Considerations
+```csharp
+// Efficient: Cache expensive operation, vary cheap filters
+var files = Run("find", "/", "-name", "*.log").Cached();
+var errorLogs = await files.Pipe("grep", "ERROR").GetLinesAsync();
+var warningLogs = await files.Pipe("grep", "WARN").GetLinesAsync();
+
+// Inefficient: Caching cheap operations
+var echo = Run("echo", "test").Cached(); // Unnecessary for simple commands
+```
+
+### Cache Scope and Lifetime
+
+```csharp
+// Each instance has independent cache
+var cmd1 = Run("date").Cached();
+var cmd2 = Run("date").Cached();
+
+var time1 = await cmd1.GetStringAsync(); // 14:30:15
+var time2 = await cmd2.GetStringAsync(); // 14:30:16 (different cache)
+
+// Cache lifetime = CommandResult instance lifetime
+// Cache is garbage collected with the CommandResult
+```
+
 ## Cancellation Support
 
 All async methods in `CommandResult` support cancellation through optional `CancellationToken` parameters. This enables timeout functionality and manual cancellation of long-running commands.
