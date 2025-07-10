@@ -4,65 +4,172 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a collection of C# scripts designed for file searching and command-line utility tasks. The scripts are written as standalone .NET top-level programs that can be executed directly using `dotnet run`.
+TimeWarp.Cli is a fluent API wrapper around CliWrap for elegant C# scripting. The library makes shell command execution feel natural and concise in C#, providing a simple static `Run()` method with async operations and graceful error handling.
+
+**Target Framework:** .NET 10.0  
+**Current Version:** 0.1.1  
+**Package ID:** TimeWarp.Cli
+
+## Project Structure
+
+- `Source/TimeWarp.Cli/` - Main library (published as NuGet package)
+  - `CommandExtensions.cs` - Static `Run()` method entry point
+  - `CommandResult.cs` - Fluent result wrapper with async operations
+- `Scripts/` - Build automation scripts (all use TimeWarp.Cli itself)
+- `Tests/` - Integration tests with custom test runner
+- `Spikes/CsScripts/` - Example scripts demonstrating API usage
+- `LocalNuGetFeed/` - Local NuGet packages for development
 
 ## Development Commands
 
-### Running Scripts
+### Build and Package Management
 ```bash
-# Run scripts directly using shebang lines (scripts have execute permissions)
-./<script-name>.cs
+# Build the library (Release mode)
+./Scripts/Build.cs
 
-# Examples:
-./app.cs
-./FindPs1Files.cs
-./FindLunaSyncPs1Files.cs
-./FindLunaPs1FilesWithFzfAsync.cs
+# Pack and publish to local feed
+./Scripts/Pack.cs
+
+# Clean all artifacts and packages
+./Scripts/Clean.cs
 ```
 
-### Building and Testing
-Since these are standalone scripts without project files, they don't require traditional build commands. Each script can be compiled and run independently.
+### Testing
+```bash
+# Run all integration tests
+./Tests/RunTests.cs
+```
 
-## Code Architecture
+Tests are executable C# scripts that return exit codes. The test runner uses TimeWarp.Cli itself to execute tests and report results.
 
-### Script Categories
+**Important**: All test files include `#:property RestoreNoCache true` to ensure fresh package downloads and avoid caching issues during development.
 
-1. **Simple Console Applications**
-   - `app.cs` - Basic "Hello World" style application demonstrating .NET 10 features
+### Local Development Workflow
 
-2. **File Search Utilities**
-   - `FindPs1Files.cs` - Searches for PowerShell (.ps1) files in the home directory
-   - `FindLunaSyncPs1Files.cs` - Searches for .ps1 files containing "LunaSync" using command pipelines
-   - `FindLunaPs1FilesWithFzfAsync.cs` - Interactive file finder with fzf integration for user selection
-   - `FindLunaPs1FilesWithFzfAsync_Optimized.cs` - Optimized version using direct command pipelines
+1. Make changes to `Source/TimeWarp.Cli/`
+2. Run `./Scripts/Build.cs` to build
+3. Run `./Scripts/Pack.cs` to publish to local feed
+4. Test in scripts using `#:package TimeWarp.Cli`
+5. Run `./Tests/RunTests.cs` to verify functionality
 
-3. **Command Wrapper Applications**
-   - `CliWrapApp.cs` - Demonstrates the use of CliWrap library for executing external commands
-   - `TestRun.cs` - Tests the CommandExtensions utility class
+## API Design
 
-4. **Utility Libraries**
-   - `CommandExtensions.cs` - Provides fluent API wrapper around CliWrap for simplified command execution
+### Core API
+```csharp
+// Entry point - static Run method
+public static CommandResult Run(string executable, params string[] arguments)
 
-### Key Patterns
+// CommandResult methods (all async)
+public async Task<string> GetStringAsync()      // Get full output as string
+public async Task<string[]> GetLinesAsync()     // Get output as line array
+public async Task ExecuteAsync()                // Execute without capturing output
+```
 
-- **Top-level programs**: All scripts use C# top-level program syntax with `await` calls at the root level
-- **CliWrap integration**: File search utilities use the CliWrap library (v3.9.0) for executing system commands like `find` and `grep`
-- **Command pipelines**: Advanced scripts demonstrate piping commands together using CliWrap's pipeline operator (`|`)
-- **Async/await patterns**: All file operations and command executions use async patterns
-- **Error handling**: Scripts include try-catch blocks for robust error handling
+### Usage Examples
+```csharp
+#!/usr/bin/dotnet run
+#:package TimeWarp.Cli
 
-### Dependencies
+// Get command output
+var date = await Run("date").GetStringAsync();
 
-- **CliWrap**: Used for executing external commands and building command pipelines
-- **System.Diagnostics.Process**: Used for more complex process management (e.g., fzf integration)
+// Process lines
+var files = await Run("find", ".", "-name", "*.cs").GetLinesAsync();
+foreach (var file in files) Console.WriteLine(file);
 
-### Script Execution Model
+// Execute without output
+await Run("echo", "Hello World").ExecuteAsync();
+```
 
-Scripts use shebang lines for direct execution:
-- `#!/usr/bin/dotnet run` - Basic execution
-- `#!/usr/bin/dotnet run --package CliWrap` - With package dependency
-- `#:package CliWrap@3.9.0` - Package reference notation
+### Error Handling
+- Commands that fail return empty results (no exceptions thrown)
+- `GetStringAsync()` returns empty string on failure
+- `GetLinesAsync()` returns empty array on failure
+- Designed for scripting scenarios where graceful degradation is preferred
 
-## Working with Interactive Tools
+## Key Architecture Decisions
 
-The `FindLunaPs1FilesWithFzfAsync.cs` script demonstrates integration with external interactive tools like fzf. It uses temporary files and process management to provide user-friendly file selection capabilities.
+1. **Minimal API Surface**: Only two classes exposed (CommandExtensions, CommandResult)
+2. **Static Entry Point**: Global `Run()` method for simplicity in scripts
+3. **Async-First**: All operations are async for non-blocking execution
+4. **No Exceptions**: Failed commands return empty results
+5. **Dogfooding**: Build scripts and test runner use TimeWarp.Cli itself
+
+## Dependencies
+
+- **CliWrap 3.9.0**: Core command execution and piping functionality
+- No other external dependencies
+
+## Script Execution Model
+
+All scripts use shebang lines for direct execution:
+```csharp
+#!/usr/bin/dotnet run                          // Basic script
+#!/usr/bin/dotnet run --package CliWrap        // With external package
+#:package TimeWarp.Cli                         // Reference local library
+```
+
+Scripts must have execute permissions (`chmod +x script.cs`).
+
+## NuGet Configuration
+
+The repository includes `nuget.config` with two sources:
+1. Official NuGet.org feed
+2. Local feed at `./LocalNuGetFeed/`
+
+This enables rapid development iteration with local packages.
+
+## C# Coding Standards
+
+This project follows specific C# coding standards defined in `.ai/04-csharp-coding-standards.md`:
+
+### Formatting
+- **Indentation**: 2 spaces (no tabs)
+- **Line endings**: LF
+- **Bracket style**: Allman style - all brackets on their own line
+  ```csharp
+  public void Method
+  (
+    string param1,
+    string param2
+  )
+  {
+    // implementation
+  }
+  ```
+
+### Naming Conventions
+- **Private fields**: No underscore prefix (`private readonly HttpClient httpClient;`)
+- **Class scope**: PascalCase for all members (fields, properties, methods, events)
+- **Method scope**: camelCase for parameters and local variables
+
+### Language Features
+- **Type declarations**: Use `var` only when type is apparent from right side
+- **New operator**: Use targeted type new (`HttpClient client = new();`)
+- **Namespaces**: Use file-scoped namespaces (`namespace TimeWarp.Cli;`)
+- **Using statements**: Prefer global usings in GlobalUsings.cs
+
+### Example Following Standards
+```csharp
+namespace TimeWarp.Cli;
+
+public class CommandResult
+{
+  private readonly Command Command;
+  
+  public CommandResult(Command command)
+  {
+    Command = command;
+  }
+  
+  public async Task<string> GetStringAsync()
+  {
+    StringBuilder output = new();
+    await foreach (string line in Command.ListenAsync())
+    {
+      output.AppendLine(line);
+    }
+    return output.ToString();
+  }
+}
+```
