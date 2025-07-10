@@ -44,15 +44,15 @@ jobs:
       - name: Build and Test
         run: |
           echo "Building TimeWarp.Cli..."
-          ./Scripts/Build.cs
+          cd Scripts && dotnet run Build.cs
           echo "Running tests..."
-          ./Tests/RunTests.cs
+          cd Tests && dotnet run RunTests.cs
 
       - name: Pack for Release
         if: github.event_name == 'release'
         run: |
           echo "Packing TimeWarp.Cli for release..."
-          ./Scripts/Pack.cs
+          dotnet pack Source/TimeWarp.Cli/TimeWarp.Cli.csproj --configuration Release
 
       - name: Check if version already published (Releases only)
         if: github.event_name == 'release'
@@ -83,6 +83,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Packages-${{ github.run_number }}
-          path: |
-            Source/TimeWarp.Cli/bin/Release/*.nupkg
-            LocalNuGetFeed/*.nupkg
+          path: Source/TimeWarp.Cli/bin/Release/*.nupkg
