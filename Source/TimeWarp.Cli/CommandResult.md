@@ -60,10 +60,50 @@ Chains the current command with another command, creating a pipeline where the o
 - `CommandResult`: A new CommandResult representing the entire pipeline
 
 **Behavior:**
-- Uses CliWrap's pipe operator (`|`) internally
-- Maintains graceful error handling - if any command in the pipeline fails, returns empty results
-- Supports chaining multiple pipes together
-- Memory efficient - streams data directly between processes without buffering
+- **Input validation**: Validates that both current command and target executable are valid
+- **Uses CommandExtensions.Run()**: Internally calls `CommandExtensions.Run()` to create the next command
+- **CliWrap integration**: Uses CliWrap's pipe operator (`|`) to chain commands
+- **Graceful error handling**: If any command in the pipeline fails, returns `NullCommandResult`
+- **Chaining support**: Supports chaining multiple pipes together
+- **Memory efficient**: Streams data directly between processes without buffering
+
+**Implementation Details:**
+```csharp
+public CommandResult Pipe(string executable, params string[] arguments)
+{
+  // Input validation
+  if (Command == null)
+  {
+    return NullCommandResult;
+  }
+  
+  if (string.IsNullOrWhiteSpace(executable))
+  {
+    return NullCommandResult;
+  }
+  
+  try
+  {
+    // Use Run() to create the next command instead of duplicating logic
+    CommandResult nextCommandResult = CommandExtensions.Run(executable, arguments);
+    
+    // If Run() failed, it returned a CommandResult with null Command
+    if (nextCommandResult.InternalCommand == null)
+    {
+      return NullCommandResult;
+    }
+    
+    // Chain commands using CliWrap's pipe operator
+    Command pipedCommand = Command | nextCommandResult.InternalCommand;
+    return new CommandResult(pipedCommand);
+  }
+  catch
+  {
+    // Command creation failures return null command (graceful degradation)
+    return NullCommandResult;
+  }
+}
+```
 
 **Example Usage:**
 ```csharp
@@ -90,6 +130,8 @@ var words = await Run("echo", "The quick brown fox jumps over the lazy dog")
     .GetLinesAsync();
 ```
 
+**Additional Examples:**
+```csharp
 // Process each file from ls command
 var files = await Run("ls", "-la").GetLinesAsync();
 foreach (var file in files)
@@ -115,6 +157,24 @@ Executes the command without capturing any output, useful for commands that perf
 - Allows output to flow to console/terminal normally
 - Silently handles command failures without throwing exceptions
 - Optimal for commands like `git add`, `mkdir`, `rm`, etc.
+
+**Implementation:**
+```csharp
+if (Command == null)
+{
+  return;
+}
+
+try
+{
+  await Command.ExecuteAsync();
+}
+catch
+{
+  // Process start failures (non-existent commands, etc.) are silently ignored
+  // This matches shell behavior where failed commands don't crash the shell
+}
+```
 
 **Example Usage:**
 ```csharp
@@ -144,14 +204,14 @@ The `CommandResult` class implements a **graceful failure** approach across all 
 ### Command Failure Scenarios
 ```csharp
 // Non-existent command - returns empty string/array
-var result = await Run("nonexistentcommand").GetStringAsync(); // Returns ""
-var lines = await Run("nonexistentcommand").GetLinesAsync();   // Returns []
+var result = await Run("nonexistentcommand").GetStringAsync(); // Returns string.Empty
+var lines = await Run("nonexistentcommand").GetLinesAsync();   // Returns Array.Empty<string>()
 
 // Command with non-zero exit code - returns captured output
 var output = await Run("ls", "/nonexistent/path").GetStringAsync(); // Returns error message
 
 // Permission denied - returns empty results
-var restricted = await Run("cat", "/etc/shadow").GetStringAsync(); // Returns ""
+var restricted = await Run("cat", "/etc/shadow").GetStringAsync(); // Returns string.Empty
 ```
 
 ## Implementation Details
@@ -165,21 +225,42 @@ Each public method follows the same defensive pattern:
 3. **Safe Return**: Return appropriate empty value on any failure
 
 ```csharp
-// Pattern used in all methods
+// GetStringAsync pattern
 if (Command == null)
 {
-  return /* appropriate empty value */;
+  return string.Empty;
 }
 
 try
 {
-  // Execute CliWrap command
-  // Process and return result
+  BufferedCommandResult result = await Command.ExecuteBufferedAsync();
+  return result.StandardOutput;
 }
 catch
 {
-  // Return safe empty value
-  return /* appropriate empty value */;
+  // Process start failures (non-existent commands, etc.) return empty string
+  return string.Empty;
+}
+
+// GetLinesAsync pattern
+if (Command == null)
+{
+  return Array.Empty<string>();
+}
+
+try
+{
+  BufferedCommandResult result = await Command.ExecuteBufferedAsync();
+  return result.StandardOutput.Split
+  (
+    new char[] { '\n', '\r' }, 
+    StringSplitOptions.RemoveEmptyEntries
+  );
+}
+catch
+{
+  // Process start failures (non-existent commands, etc.) return empty array
+  return Array.Empty<string>();
 }
 ```
 
@@ -207,12 +288,38 @@ The class leverages CliWrap's robust command execution:
 - **Streaming Execution**: Uses `ExecuteAsync()` for fire-and-forget scenarios
 - **Validation Disabled**: Commands are created with `CommandResultValidation.None`
 
+## Internal API
+
+### NullCommandResult Singleton
+- **Static readonly field**: `internal static readonly CommandResult NullCommandResult = new(null)`
+- **Shared instance**: All failure scenarios return the same singleton instance
+- **Memory efficiency**: Avoids creating multiple identical null command instances
+- **Thread safety**: Static readonly initialization is inherently thread-safe
+- **Performance**: No allocation overhead for common failure scenarios
+
+### InternalCommand Property
+- **Private access**: `private Command? InternalCommand => Command`
+- **Purpose**: Allows `Pipe()` method to access the `Command` field from other `CommandResult` instances
+- **Same-class access**: C# allows private member access between instances of the same class
+- **Type safety**: Returns nullable `Command` to handle null cases safely
+
+```csharp
+// Usage in Pipe() method
+if (nextCommandResult.InternalCommand == null)
+{
+  return NullCommandResult;
+}
+
+Command pipedCommand = Command | nextCommandResult.InternalCommand;
+```
+
 ## Design Decisions
 
 ### Internal Constructor
 - **Controlled Creation**: Only `CommandExtensions.Run()` can create instances
 - **Encapsulation**: Prevents direct instantiation by external code
 - **Null Safety**: Accepts nullable `Command` for graceful failure handling
+- **Singleton Integration**: Works with `NullCommandResult` pattern
 
 ### Async-First Design
 - **Non-blocking**: All operations are asynchronous by default

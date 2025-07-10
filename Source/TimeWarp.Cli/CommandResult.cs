@@ -4,6 +4,9 @@ public class CommandResult
 {
   private readonly Command? Command;
   
+  // Constants for line splitting - handle both Unix (\n) and Windows (\r\n) line endings
+  private static readonly char[] NewlineCharacters = { '\n', '\r' };
+  
   // Singleton for failed commands to avoid creating multiple identical null instances
   internal static readonly CommandResult NullCommandResult = new(null);
   
@@ -46,7 +49,7 @@ public class CommandResult
       BufferedCommandResult result = await Command.ExecuteBufferedAsync();
       return result.StandardOutput.Split
       (
-        new char[] { '\n', '\r' }, 
+        NewlineCharacters, 
         StringSplitOptions.RemoveEmptyEntries
       );
     }
@@ -75,7 +78,11 @@ public class CommandResult
     }
   }
   
-  public CommandResult Pipe(string executable, params string[] arguments)
+  public CommandResult Pipe
+  (
+    string executable,
+    params string[] arguments
+  )
   {
     // Input validation
     if (Command == null)
