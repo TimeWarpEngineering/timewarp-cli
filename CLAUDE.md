@@ -136,6 +136,38 @@ All scripts use shebang lines for direct execution:
 
 Scripts must have execute permissions (`chmod +x script.cs`).
 
+### Script Directory Management Pattern
+
+All scripts use a consistent push/pop directory pattern using `[CallerFilePath]`:
+
+```csharp
+public static async Task<int> Main(string[] args, [CallerFilePath] string scriptPath = "")
+{
+  string originalDirectory = Environment.CurrentDirectory;
+  string scriptDirectory = Path.GetDirectoryName(scriptPath)!;
+  
+  try
+  {
+    Environment.CurrentDirectory = scriptDirectory;
+    
+    // Use relative paths from script location
+    // e.g., "../Source/TimeWarp.Cli/TimeWarp.Cli.csproj"
+    
+    return 0;
+  }
+  finally
+  {
+    Environment.CurrentDirectory = originalDirectory;
+  }
+}
+```
+
+This pattern ensures:
+- Scripts work when executed from any directory location
+- Relative paths are always resolved from the script's location (not current directory)
+- Original working directory is restored for the caller
+- Equivalent to PowerShell's `$PSScriptRoot` pattern but for C#
+
 **Important Note on ImplicitUsings**: C# script files automatically include most common namespaces via ImplicitUsings, but `System.Diagnostics` is NOT included. Scripts that use `Process` or `ProcessStartInfo` must explicitly include:
 ```csharp
 #pragma warning disable IDE0005 // Using directive is unnecessary
