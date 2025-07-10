@@ -41,6 +41,9 @@ jobs:
           chmod +x Scripts/Clean.cs
           chmod +x Tests/RunTests.cs
 
+      - name: Create LocalNuGetFeed directory
+        run: mkdir -p LocalNuGetFeed
+
       - name: Build and Test
         run: |
           echo "Building TimeWarp.Cli..."
