@@ -11,7 +11,7 @@ public static class CommandExtensions
     // Input validation
     if (string.IsNullOrWhiteSpace(executable))
     {
-      return new CommandResult(null);
+      return CommandResult.NullCommandResult;
     }
     
     try
@@ -25,7 +25,7 @@ public static class CommandExtensions
     catch
     {
       // If command creation fails, return a result that will return empty values
-      return new CommandResult(null);
+      return CommandResult.NullCommandResult;
     }
   }
 }

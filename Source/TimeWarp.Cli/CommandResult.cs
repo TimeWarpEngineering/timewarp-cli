@@ -4,8 +4,11 @@ public class CommandResult
 {
   private readonly Command? Command;
   
-  // Internal access for Pipe() method to avoid duplicating command creation logic
-  internal Command? InternalCommand => Command;
+  // Singleton for failed commands to avoid creating multiple identical null instances
+  internal static readonly CommandResult NullCommandResult = new(null);
+  
+  // Property to access Command from other CommandResult instances in Pipe() method
+  private Command? InternalCommand => Command;
   
   internal CommandResult(Command? command)
   {
@@ -77,12 +80,12 @@ public class CommandResult
     // Input validation
     if (Command == null)
     {
-      return new CommandResult(null);
+      return NullCommandResult;
     }
     
     if (string.IsNullOrWhiteSpace(executable))
     {
-      return new CommandResult(null);
+      return NullCommandResult;
     }
     
     try
@@ -93,7 +96,7 @@ public class CommandResult
       // If Run() failed, it returned a CommandResult with null Command
       if (nextCommandResult.InternalCommand == null)
       {
-        return new CommandResult(null);
+        return NullCommandResult;
       }
       
       // Chain commands using CliWrap's pipe operator
@@ -103,7 +106,7 @@ public class CommandResult
     catch
     {
       // Command creation failures return null command (graceful degradation)
-      return new CommandResult(null);
+      return NullCommandResult;
     }
   }
 }
