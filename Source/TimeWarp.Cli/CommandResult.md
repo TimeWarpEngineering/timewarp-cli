@@ -413,11 +413,50 @@ Command pipedCommand = Command | nextCommandResult.InternalCommand;
 
 ## Thread Safety
 
-The `CommandResult` class is thread-safe:
-- **Immutable State**: The internal `Command` field is readonly
-- **Stateless Operations**: Methods don't modify instance state
-- **CliWrap Safety**: Underlying CliWrap commands are thread-safe
-- **Concurrent Execution**: Multiple methods can be called concurrently
+The `CommandResult` class is fully thread-safe and designed for concurrent use:
+
+### Immutable Design
+- **Readonly Fields**: All instance fields are `readonly`, preventing modification after construction
+- **No Mutable State**: No instance variables are modified after object creation
+- **Immutable Operations**: All methods return new values without modifying the instance
+- **CliWrap Foundation**: Built on CliWrap's thread-safe, immutable Command objects
+
+### Singleton Thread Safety
+- **CLR Guaranteed**: The `NullCommandResult` singleton uses static readonly initialization
+- **Memory Barriers**: CLR handles proper memory barriers during static initialization
+- **Shared Instance**: Multiple threads can safely share the same `NullCommandResult` instance
+- **No Race Conditions**: Static readonly prevents multiple initialization scenarios
+
+### Concurrent Usage Patterns
+```csharp
+// Safe: Multiple threads can use the same CommandResult instance
+CommandResult cmd = Run("echo", "test");
+
+// Thread 1
+Task<string> stringTask = cmd.GetStringAsync();
+
+// Thread 2  
+Task<string[]> linesTask = cmd.GetLinesAsync();
+
+// Thread 3
+Task executeTask = cmd.ExecuteAsync();
+
+// All execute safely in parallel
+await Task.WhenAll(stringTask, linesTask, executeTask);
+
+// Safe: Multiple threads creating CommandResults
+Parallel.For(0, 100, i => 
+{
+    var result = Run("echo", $"Thread {i}");
+    // Each thread gets its own CommandResult instance
+});
+```
+
+### Thread Safety Guarantees
+1. **Instance Safety**: CommandResult instances can be shared across threads
+2. **Static Safety**: Static members (NullCommandResult, NewlineCharacters) are thread-safe
+3. **Method Safety**: All public methods are safe for concurrent execution
+4. **Pipeline Safety**: Pipe operations create new instances without modifying originals
 
 ## Performance Considerations
 
