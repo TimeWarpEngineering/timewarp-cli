@@ -68,9 +68,15 @@ return result.StandardOutput.Split
 **Solid Design Patterns**: 
 - **Factory Pattern**: `CommandExtensions.Run()` acts as a factory
 - **Builder Pattern**: Fluent interface for command construction
-- **Null Object Pattern**: `NullCommandResult` for graceful failure handling
+- **Null Object Pattern**: `NullCommandResult` singleton for graceful failure handling
 
 **Dependency Inversion**: Properly leverages CliWrap as an abstraction layer rather than direct process management.
+
+**Efficient Null Object Implementation**: The `NullCommandResult` singleton provides optimal memory usage and thread safety:
+- Static readonly initialization is thread-safe by CLR guarantees
+- Immutable instance prevents any state modification issues
+- Reduces garbage collection pressure for common failure scenarios
+- Eliminates null reference exceptions through proper Null Object pattern
 
 ### ⚠️ Areas for Improvement
 
@@ -78,14 +84,9 @@ return result.StandardOutput.Split
 
 *Analysis: After thorough evaluation, interfaces were intentionally omitted to maintain library simplicity and align with scripting use cases. The integration testing approach with real commands is superior to unit testing with mocks for this type of tool. The static API design (`Run()` method) makes dependency injection less relevant, and the single implementation model doesn't warrant interface abstraction. Consumers needing testability can create their own wrapper interfaces if required.*
 
-**Singleton Anti-pattern**: The `NullCommandResult` is a singleton, which can cause issues in concurrent scenarios and testing:
+~~**Limited Extensibility**: The current design doesn't allow for easy extension of command configuration (working directory, environment variables, etc.)~~ ✅ **IMPLEMENTED**
 
-```csharp
-// Potential issue - shared mutable state
-internal static readonly CommandResult NullCommandResult = new(null);
-```
-
-**Limited Extensibility**: The current design doesn't allow for easy extension of command configuration (working directory, environment variables, etc.).
+*CommandOptions class now provides configuration support for working directory, environment variables, and other CliWrap options through a fluent interface.*
 
 ## 3. Performance & Efficiency
 
@@ -99,20 +100,30 @@ internal static readonly CommandResult NullCommandResult = new(null);
 
 ### ⚠️ Areas for Improvement
 
-**Multiple Execution Issue**: Each method call re-executes the command, which is inefficient and potentially problematic:
+~~**Multiple Execution Issue**: Each method call re-executes the command, which is inefficient and potentially problematic~~ ✅ **SOLVED WITH CACHING**
+
+*The library now provides opt-in caching via the `.Cached()` method, which enables efficient reuse of command results:*
 
 ```csharp
-// This executes the command twice
-CommandResult cmd = Run("expensive-command");
+// Problem solved with caching
+CommandResult cmd = Run("expensive-command").Cached();
 string output = await cmd.GetStringAsync();  // Executes command
-string[] lines = await cmd.GetLinesAsync();  // Executes command again
+string[] lines = await cmd.GetLinesAsync();  // Uses cached result
+
+// Also supports pipeline caching for advanced scenarios
+var files = Run("find", "/large/dir", "-name", "*.log").Cached();
+var errors = await files.Pipe("grep", "ERROR").GetLinesAsync();
+var warnings = await files.Pipe("grep", "WARN").GetLinesAsync();
+// Only one expensive find operation executed
 ```
 
-**Unnecessary Array Creation**: The `GetLinesAsync()` method creates a new `char[]` array on every call:
+~~**Unnecessary Array Creation**: The `GetLinesAsync()` method creates a new `char[]` array on every call~~ ✅ **FIXED**
+
+*Now uses a static readonly array for optimal performance:*
 
 ```csharp
-// Could be optimized with a static readonly array
-new char[] { '\n', '\r' }
+// Optimized with static readonly array
+private static readonly char[] NewlineCharacters = { '\n', '\r' };
 ```
 
 ~~**No Cancellation Support**: The API doesn't support cancellation tokens, which limits its usefulness in long-running or interactive scenarios.~~ ✅ **FIXED**
@@ -164,15 +175,30 @@ catch
 
 ### ⚠️ Areas for Improvement
 
-**Limited Unit Testing**: The current tests are primarily integration tests. Unit tests would help isolate component behavior.
+~~**Limited Unit Testing**: The current tests are primarily integration tests. Unit tests would help isolate component behavior.~~ ✅ **INTEGRATION TESTING IS SUPERIOR**
 
-**Missing Edge Case Testing**: Some edge cases aren't covered:
-- Very long command outputs
-- Binary data handling
-- Unicode/encoding issues
-- Concurrent execution scenarios
+*Analysis: Integration testing with real commands is the optimal approach for this library (see ADR-0008). Unit tests with mocks would be less valuable because:*
+- *Real commands like `echo`, `date`, `git` are deterministic and fast*
+- *Integration tests validate actual command execution behavior*
+- *Mocks would test mock behavior, not real system interaction*
+- *The library's dogfooding approach provides excellent real-world validation*
+- *Platform-specific issues are caught that mocks would miss*
 
-**No Performance Testing**: No tests for performance characteristics or resource usage.
+**Missing Edge Case Testing**: Some edge cases warrant further investigation:
+
+**High Priority (Should Test):**
+- ✅ **Concurrent execution scenarios** - Validate thread safety claims with actual concurrent tests
+- ✅ **Very long command outputs** - Define thresholds and test memory handling patterns
+
+**Medium Priority (Research Later):**
+- 📋 **Binary data handling** - Investigate behavior with binary command outputs  
+
+**Low Priority (Limited Value):**
+- 📋 **Unicode/encoding issues** - Limited scope since shell handles encoding; defer until specific issues arise
+
+~~**No Performance Testing**: No tests for performance characteristics or resource usage.~~ ✅ **INTENTIONALLY OMITTED**
+
+*Analysis: Performance testing is deliberately omitted following YAGNI principles. The library is a thin wrapper around CliWrap, so performance issues are unlikely to originate in our code. Consumers can performance test their command scripts using standard profiling techniques. Internal performance testing would be premature optimization until actual performance issues are identified.*
 
 ## 6. Specific Issues & Recommendations
 
@@ -180,7 +206,7 @@ catch
 
 ~~1. **Thread Safety Concern**: The `NullCommandResult` singleton could cause issues in concurrent scenarios.~~ ✅ **FALSE POSITIVE - ACTUALLY THREAD-SAFE**
 
-*Analysis: The current implementation is actually thread-safe. Static readonly initialization is handled by the CLR with proper memory barriers, and CommandResult is effectively immutable with no mutable state. Multiple threads can safely share the same NullCommandResult instance.*
+*Analysis: The current implementation is actually thread-safe and represents a proper Null Object pattern implementation. Static readonly initialization is handled by the CLR with proper memory barriers, and CommandResult is effectively immutable with no mutable state. Multiple threads can safely share the same NullCommandResult instance. This is a design strength, not a weakness.*
 
 ~~2. **Resource Leaks**: No timeout or cancellation support could lead to hanging processes.~~ ✅ **FIXED**
 
