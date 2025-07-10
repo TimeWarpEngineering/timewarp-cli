@@ -7,7 +7,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>TimeWarp.Cli</PackageId>
-    <Version>0.5.0</Version>
+    <Version>0.6.0-beta1</Version>
     <Authors>Steven T. Cramer</Authors>
     <Description>Fluent API for elegant C# scripting with pipeline support</Description>
     <PackageTags>cli;scripting;fluent;shell;pipeline</PackageTags>
