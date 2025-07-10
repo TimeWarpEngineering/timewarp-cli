@@ -40,6 +40,7 @@ jobs:
           chmod +x Scripts/Pack.cs
           chmod +x Scripts/Clean.cs
           chmod +x Tests/RunTests.cs
+          chmod +x Tests/Integration/*.cs
 
       - name: Create LocalNuGetFeed directory
         run: mkdir -p LocalNuGetFeed
