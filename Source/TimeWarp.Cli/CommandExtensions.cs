@@ -4,14 +4,20 @@ public static class CommandExtensions
 {
   public static CommandResult Run
   (
-    string command,
-    params string[] args
+    string executable,
+    params string[] arguments
   )
   {
+    // Input validation
+    if (string.IsNullOrWhiteSpace(executable))
+    {
+      return new CommandResult(null);
+    }
+    
     try
     {
-      Command cliCommand = CliWrap.Cli.Wrap(command)
-        .WithArguments(args)
+      Command cliCommand = CliWrap.Cli.Wrap(executable)
+        .WithArguments(arguments)
         .WithValidation(CommandResultValidation.None);
         
       return new CommandResult(cliCommand);

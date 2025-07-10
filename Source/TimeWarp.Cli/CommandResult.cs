@@ -4,6 +4,9 @@ public class CommandResult
 {
   private readonly Command? Command;
   
+  // Internal access for Pipe() method to avoid duplicating command creation logic
+  internal Command? InternalCommand => Command;
+  
   internal CommandResult(Command? command)
   {
     Command = command;
@@ -71,19 +74,30 @@ public class CommandResult
   
   public CommandResult Pipe(string executable, params string[] arguments)
   {
+    // Input validation
     if (Command == null)
+    {
+      return new CommandResult(null);
+    }
+    
+    if (string.IsNullOrWhiteSpace(executable))
     {
       return new CommandResult(null);
     }
     
     try
     {
-      Command nextCommand = CliWrap.Cli.Wrap(executable)
-        .WithArguments(arguments)
-        .WithValidation(CommandResultValidation.None);
-        
+      // Use Run() to create the next command instead of duplicating logic
+      CommandResult nextCommandResult = CommandExtensions.Run(executable, arguments);
+      
+      // If Run() failed, it returned a CommandResult with null Command
+      if (nextCommandResult.InternalCommand == null)
+      {
+        return new CommandResult(null);
+      }
+      
       // Chain commands using CliWrap's pipe operator
-      Command pipedCommand = Command | nextCommand;
+      Command pipedCommand = Command | nextCommandResult.InternalCommand;
       return new CommandResult(pipedCommand);
     }
     catch
