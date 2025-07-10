@@ -2,7 +2,10 @@
 #:package TimeWarp.Cli
 #:property RestoreNoCache true
 
+#pragma warning disable IDE0005 // Using directive is unnecessary
 using TimeWarp.Cli;
+using static TimeWarp.Cli.CommandExtensions;
+#pragma warning restore IDE0005
 
 Console.WriteLine("🧪 Testing ErrorHandling...");
 
@@ -13,7 +16,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-    var result = await CommandExtensions.Run("nonexistentcommand12345").GetStringAsync();
+    var result = await Run("nonexistentcommand12345").GetStringAsync();
     if (result == string.Empty)
     {
         Console.WriteLine("✅ Test 1 PASSED: Non-existent command returned empty string");
@@ -33,7 +36,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await CommandExtensions.Run("ls", "/nonexistent/path/12345").GetStringAsync();
+    var result = await Run("ls", "/nonexistent/path/12345").GetStringAsync();
     Console.WriteLine("✅ Test 2 PASSED: Command with non-zero exit code didn't throw");
     passCount++;
 }
@@ -46,7 +49,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    await CommandExtensions.Run("ls", "/nonexistent/path/12345").ExecuteAsync();
+    await Run("ls", "/nonexistent/path/12345").ExecuteAsync();
     Console.WriteLine("✅ Test 3 PASSED: ExecuteAsync with non-zero exit code didn't throw");
     passCount++;
 }
@@ -59,7 +62,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var lines = await CommandExtensions.Run("ls", "/nonexistent/path/12345").GetLinesAsync();
+    var lines = await Run("ls", "/nonexistent/path/12345").GetLinesAsync();
     Console.WriteLine("✅ Test 4 PASSED: GetLinesAsync with non-zero exit code didn't throw");
     passCount++;
 }
@@ -72,7 +75,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await CommandExtensions.Run("echo", "Hello & World | Test").GetStringAsync();
+    var result = await Run("echo", "Hello & World | Test").GetStringAsync();
     if (result.Contains("Hello") && result.Contains("World") && result.Contains("Test"))
     {
         Console.WriteLine("✅ Test 5 PASSED: Special characters in arguments handled correctly");
@@ -92,7 +95,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await CommandExtensions.Run("").GetStringAsync();
+    var result = await Run("").GetStringAsync();
     if (result == string.Empty)
     {
         Console.WriteLine("✅ Test 6 PASSED: Empty command returned empty string gracefully");
@@ -112,7 +115,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await CommandExtensions.Run("   ").GetStringAsync();
+    var result = await Run("   ").GetStringAsync();
     if (result == string.Empty)
     {
         Console.WriteLine("✅ Test 7 PASSED: Whitespace-only command returned empty string gracefully");

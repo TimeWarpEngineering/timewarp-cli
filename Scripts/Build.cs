@@ -1,8 +1,8 @@
 #!/usr/bin/dotnet run
 // Build.cs - Build the TimeWarp.Cli library
-using System;
-using System.Threading.Tasks;
+#pragma warning disable IDE0005 // Using directive is unnecessary
 using System.Diagnostics;
+#pragma warning restore IDE0005
 
 Console.WriteLine("Building TimeWarp.Cli library...");
 

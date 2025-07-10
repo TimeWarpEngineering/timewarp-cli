@@ -2,7 +2,10 @@
 #:package TimeWarp.Cli
 #:property RestoreNoCache true
 
+#pragma warning disable IDE0005 // Using directive is unnecessary
 using TimeWarp.Cli;
+using static TimeWarp.Cli.CommandExtensions;
+#pragma warning restore IDE0005
 
 Console.WriteLine("🧪 Testing OutputFormats...");
 
@@ -13,7 +16,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-    var result = await CommandExtensions.Run("echo", "line1\nline2\nline3").GetStringAsync();
+    var result = await Run("echo", "line1\nline2\nline3").GetStringAsync();
     if (result.Contains("line1") && result.Contains("line2") && result.Contains("line3"))
     {
         Console.WriteLine("✅ Test 1 PASSED: GetStringAsync returns raw output with newlines");
@@ -34,7 +37,7 @@ totalTests++;
 try
 {
     // Use printf to ensure consistent cross-platform newlines
-    var lines = await CommandExtensions.Run("printf", "line1\nline2\nline3").GetLinesAsync();
+    var lines = await Run("printf", "line1\nline2\nline3").GetLinesAsync();
     if (lines.Length == 3 && lines[0] == "line1" && lines[1] == "line2" && lines[2] == "line3")
     {
         Console.WriteLine("✅ Test 2 PASSED: GetLinesAsync splits lines correctly");
@@ -54,7 +57,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var lines = await CommandExtensions.Run("printf", "line1\n\nline2\n\n").GetLinesAsync();
+    var lines = await Run("printf", "line1\n\nline2\n\n").GetLinesAsync();
     if (lines.Length == 2 && lines[0] == "line1" && lines[1] == "line2")
     {
         Console.WriteLine("✅ Test 3 PASSED: GetLinesAsync removes empty lines");
@@ -74,8 +77,8 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await CommandExtensions.Run("echo", "").GetStringAsync();
-    var lines = await CommandExtensions.Run("echo", "").GetLinesAsync();
+    var result = await Run("echo", "").GetStringAsync();
+    var lines = await Run("echo", "").GetLinesAsync();
     
     if (result.Length <= 2 && lines.Length == 0) // Allow for just newline character
     {
@@ -96,7 +99,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var files = await CommandExtensions.Run("ls", "-1").GetLinesAsync();
+    var files = await Run("ls", "-1").GetLinesAsync();
     if (files.Length > 0)
     {
         Console.WriteLine($"✅ Test 5 PASSED: ls command returns {files.Length} files/directories");

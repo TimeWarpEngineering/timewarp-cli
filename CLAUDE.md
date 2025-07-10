@@ -111,6 +111,14 @@ All scripts use shebang lines for direct execution:
 
 Scripts must have execute permissions (`chmod +x script.cs`).
 
+**Important Note on ImplicitUsings**: C# script files automatically include most common namespaces via ImplicitUsings, but `System.Diagnostics` is NOT included. Scripts that use `Process` or `ProcessStartInfo` must explicitly include:
+```csharp
+#pragma warning disable IDE0005 // Using directive is unnecessary
+using System.Diagnostics;
+#pragma warning restore IDE0005
+```
+The pragma warnings suppress false IDE warnings about the using directive being unnecessary.
+
 ## NuGet Configuration
 
 The repository includes `nuget.config` with two sources:

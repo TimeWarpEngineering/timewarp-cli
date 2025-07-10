@@ -4,45 +4,6 @@
 
 A fluent API wrapper around CliWrap to make shell command execution in C# scripts feel natural and concise, similar to PowerShell pipelines but with C# syntax and type safety.
 
-## Today's Reality: Claude CLI
-
-While we're building toward this vision, we already have a powerful semantic tool available today - Claude CLI (the very tool creating this document!). Claude Code can be used as a command-line tool for AI-powered operations:
-
-```bash
-# Use Claude directly in your shell
-claude "analyze these log files and find patterns"
-
-# Pipe command output to Claude
-find . -name "*.cs" | claude "which of these files need refactoring?"
-
-# Use Claude in scripts
-result=$(git diff | claude "summarize these changes")
-```
-
-Learn more: [Claude CLI Reference](https://docs.anthropic.com/en/docs/claude-code/cli-reference)
-
-This means you can start experimenting with semantic/syntactic hybrid approaches today, using Claude as your semantic execution engine while building syntactic C# implementations.
-
-### Using Claude in C# Scripts Today
-```csharp
-// Semantic analysis with Claude CLI
-var analysis = await Run("git", "diff")
-    .Pipe("claude", "summarize the changes and suggest a commit message")
-    .GetStringAsync();
-
-// Hybrid approach - syntactic search, semantic analysis
-var testFiles = await Run("find", ".", "-name", "*Test.cs", "-type", "f")
-    .GetLinesAsync();
-    
-var coverage = await Run("echo", string.Join('\n', testFiles))
-    .Pipe("claude", "which test files seem to be missing coverage for their corresponding source files?")
-    .GetStringAsync();
-
-// Let Claude help generate syntactic code
-var code = await Run("claude", "generate a C# method that finds and deletes temporary files older than 7 days")
-    .SaveAs("CleanupTempFiles.cs");
-```
-
 ## The Problem
 
 Traditional C# command execution is verbose and cumbersome:
@@ -435,3 +396,42 @@ This creates a self-improving system where:
 4. You get the best of both worlds: flexibility when exploring, performance when repeating
 
 We're essentially building a shell that gets smarter and faster the more you use it - just like what we're doing right now in this conversation!
+
+## Today's Reality: Claude CLI
+
+While we're building toward this vision, we already have a powerful semantic tool available today - Claude CLI (the very tool creating this document!). Claude Code can be used as a command-line tool for AI-powered operations:
+
+```bash
+# Use Claude directly in your shell
+claude "analyze these log files and find patterns"
+
+# Pipe command output to Claude
+find . -name "*.cs" | claude "which of these files need refactoring?"
+
+# Use Claude in scripts
+result=$(git diff | claude "summarize these changes")
+```
+
+Learn more: [Claude CLI Reference](https://docs.anthropic.com/en/docs/claude-code/cli-reference)
+
+This means you can start experimenting with semantic/syntactic hybrid approaches today, using Claude as your semantic execution engine while building syntactic C# implementations.
+
+### Using Claude in C# Scripts Today
+```csharp
+// Semantic analysis with Claude CLI
+var analysis = await Run("git", "diff")
+    .Pipe("claude", "summarize the changes and suggest a commit message")
+    .GetStringAsync();
+
+// Hybrid approach - syntactic search, semantic analysis
+var testFiles = await Run("find", ".", "-name", "*Test.cs", "-type", "f")
+    .GetLinesAsync();
+    
+var coverage = await Run("echo", string.Join('\n', testFiles))
+    .Pipe("claude", "which test files seem to be missing coverage for their corresponding source files?")
+    .GetStringAsync();
+
+// Let Claude help generate syntactic code
+var code = await Run("claude", "generate a C# method that finds and deletes temporary files older than 7 days")
+    .SaveAs("CleanupTempFiles.cs");
+```

@@ -1,9 +1,8 @@
 #!/usr/bin/dotnet run
 // Pack.cs - Pack and publish TimeWarp.Cli to local NuGet feed
-using System;
-using System.Threading.Tasks;
+#pragma warning disable IDE0005 // Using directive is unnecessary
 using System.Diagnostics;
-using System.IO;
+#pragma warning restore IDE0005
 
 Console.WriteLine("Packing and publishing TimeWarp.Cli to local NuGet feed...");
 

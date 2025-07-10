@@ -2,15 +2,18 @@
 #:package TimeWarp.Cli
 #:property RestoreNoCache true
 
+#pragma warning disable IDE0005 // Using directive is unnecessary
 using System.Diagnostics;
 using TimeWarp.Cli;
+using static TimeWarp.Cli.CommandExtensions;
+#pragma warning restore IDE0005
 
 Console.WriteLine("🧪 Running TimeWarp.Cli Test Suite...\n");
 
 var testResults = new List<(string TestName, bool Passed, string Output)>();
 
 // Discover all test files
-var testFiles = await CommandExtensions.Run("find", "Tests/Integration", "-name", "*.cs", "-type", "f").GetLinesAsync();
+var testFiles = await Run("find", "Tests/Integration", "-name", "*.cs", "-type", "f").GetLinesAsync();
 
 if (testFiles.Length == 0)
 {

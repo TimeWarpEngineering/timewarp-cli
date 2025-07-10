@@ -285,7 +285,7 @@ dotnet_naming_symbols.local_functions.applicable_kinds = local_function
 dotnet_naming_style.local_function_style.capitalization = pascal_case
 
 
-#### Analyizer settings ####
+#### Analyzer settings ####
 dotnet_code_quality.null_check_validation_methods = NotNull
 
 # CA1308: Normalize strings to uppercase
