@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>TimeWarp.Cli</id>
-    <version>0.6.0-beta4</version>
+    <version>0.6.0-beta5</version>
     <authors>Steven T. Cramer</authors>
     <license type="expression">Unlicense</license>
     <licenseUrl>https://licenses.nuget.org/Unlicense</licenseUrl>
@@ -10,7 +10,7 @@
     <readme>README.md</readme>
     <description>Fluent API for elegant C# scripting with pipeline support</description>
     <tags>cli scripting fluent shell pipeline</tags>
-    <repository type="git" url="https://github.com/TimeWarpEngineering/timewarp-cli" commit="ce9f43e385d6fd7ddc54018c74cea16a6efed8ec" />
+    <repository type="git" url="https://github.com/TimeWarpEngineering/timewarp-cli" commit="7ffed9e727b276c17400edbd79b0aac9601662e4" />
     <dependencies>
       <group targetFramework="net10.0">
         <dependency id="CliWrap" version="3.9.0" exclude="Build,Analyzers" />
