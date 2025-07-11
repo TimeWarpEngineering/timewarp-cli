@@ -10,7 +10,7 @@
     <readme>README.md</readme>
     <description>Fluent API for elegant C# scripting with pipeline support</description>
     <tags>cli scripting fluent shell pipeline</tags>
-    <repository type="git" url="https://github.com/TimeWarpEngineering/timewarp-cli" commit="3557bf4930ce5f79cb19854820ae5a58a56ca5f1" />
+    <repository type="git" url="https://github.com/TimeWarpEngineering/timewarp-cli" commit="a31bbd659953da07d923c87c284231512c61667f" />
     <dependencies>
       <group targetFramework="net10.0">
         <dependency id="CliWrap" version="3.9.0" exclude="Build,Analyzers" />
