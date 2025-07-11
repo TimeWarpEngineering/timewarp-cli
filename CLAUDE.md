@@ -201,6 +201,35 @@ using System.Diagnostics;
 ```
 The pragma warnings suppress false IDE warnings about the using directive being unnecessary.
 
+### Local Package Cache Management for Development
+
+**Problem**: During development, C# scripts cache NuGet packages globally, making it difficult to test changes without constantly bumping version numbers.
+
+**Solution**: Use `RestorePackagesPath` property to create local package caches per script/test directory.
+
+**Integration Test Script Headers Should Include**:
+```csharp
+#!/usr/bin/dotnet run
+#:package TimeWarp.Cli@*-*
+#:property RestoreNoCache true
+#:property DisableImplicitNuGetFallbackFolder true
+#:property RestorePackagesPath ./local-packages
+```
+
+**Development Workflow**:
+1. Make code changes to library
+2. Run `./Scripts/Build.cs` and `./Scripts/Pack.cs`
+3. Clear only our package cache: `rm -rf Tests/Integration/local-packages/timewarp.cli`
+4. Run tests: `./Tests/RunTests.cs`
+
+**Benefits**:
+- ✅ Keeps other packages (CliWrap, etc.) cached for faster restores
+- ✅ Only clears our specific package when needed
+- ✅ Avoids version number pollution
+- ✅ Gives precise control over package caching per script
+
+**Note**: RunTests.cs itself cannot clear the cache because it depends on TimeWarp.Cli package (chicken-and-egg problem). Cache clearing must be done manually or via separate shell script.
+
 ## NuGet Configuration
 
 The repository includes `nuget.config` with two sources:
