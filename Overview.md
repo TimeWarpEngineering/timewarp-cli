@@ -81,6 +81,13 @@ var files = await Run("ls", "-la").GetLinesAsync();
 
 // Just execute (fire and forget)
 await Run("mkdir", "temp").ExecuteAsync();
+
+// Strongly-typed dotnet command examples
+var buildResult = await Run("dotnet", "build", "--configuration", "Release").GetStringAsync();
+var testOutput = await Run("dotnet", "test", "--logger", "console").GetLinesAsync();
+var packages = await Run("dotnet", "list", "package").GetLinesAsync();
+await Run("dotnet", "restore").ExecuteAsync();
+var runOutput = await Run("dotnet", "run", "--project", "MyApp.csproj", "--", "arg1", "arg2").GetStringAsync();
 ```
 
 ## Why This Matters for C# Scripts
@@ -133,6 +140,25 @@ var files = await FileSystem.Find("*.cs")
 var branches = await Git.Branches()
     .Remote()
     .ContainingCommit("abc123")
+    .ToListAsync();
+
+// Dotnet CLI with fluent interface
+var testResults = await DotNet.Test()
+    .WithProject("MyApp.Tests.csproj")
+    .WithConfiguration("Release")
+    .WithFilter("Category=Unit")
+    .WithLogger("trx")
+    .RunAsync();
+
+var buildOutput = await DotNet.Build()
+    .WithConfiguration("Debug")
+    .WithNoRestore()
+    .WithWarningsAsErrors()
+    .ExecuteAsync();
+
+var packages = await DotNet.ListPackages()
+    .IncludeTransitive()
+    .Outdated()
     .ToListAsync();
 ```
 

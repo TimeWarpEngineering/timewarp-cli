@@ -19,6 +19,12 @@ TimeWarp.Cli is a fluent API wrapper around CliWrap for elegant C# scripting. Th
 - `Tests/` - Integration tests with custom test runner
 - `Spikes/CsScripts/` - Example scripts demonstrating API usage
 - `LocalNuGetFeed/` - Local NuGet packages for development
+- `Kanban/` - Task management system with the following structure:
+  - `Backlog/` - Future features and ideas
+  - `ToDo/` - Ready to implement tasks
+  - `InProgress/` - Currently being worked on
+  - `Done/` - Completed tasks
+  - `Task-Template.md` - Template for creating new tasks
 
 ## Development Commands
 
@@ -51,6 +57,25 @@ Tests are executable C# scripts that return exit codes. The test runner uses Tim
 3. Run `./Scripts/Pack.cs` to publish to local feed
 4. Test in scripts using `#:package TimeWarp.Cli`
 5. Run `./Tests/RunTests.cs` to verify functionality
+
+### Task Management Workflow
+
+The project uses a Kanban board system located in the `Kanban/` directory:
+
+1. **Creating Tasks**: Use `Task-Template.md` as a starting point
+   - Tasks are numbered (e.g., `003_Implement-DotNet-Fluent-API.md`)
+   - Place new tasks in appropriate folder (usually `ToDo/`)
+   - Include description, requirements, and relevant checklist items
+
+2. **Task Progression**:
+   - `Backlog/` → `ToDo/` → `InProgress/` → `Done/`
+   - Move task files between folders as work progresses
+   - Update task content with implementation notes as needed
+
+3. **Task Naming Convention**:
+   - Format: `NNN_Brief-Description.md` (e.g., `003_Implement-DotNet-Fluent-API.md`)
+   - Use sequential numbering for ordering
+   - Use kebab-case for descriptions
 
 ## API Design
 
