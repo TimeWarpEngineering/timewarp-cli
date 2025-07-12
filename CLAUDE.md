@@ -213,13 +213,12 @@ The pragma warnings suppress false IDE warnings about the using directive being 
 #:package TimeWarp.Cli@*-*
 #:property RestoreNoCache true
 #:property DisableImplicitNuGetFallbackFolder true
-#:property RestorePackagesPath ./local-packages
 ```
 
 **Development Workflow**:
 1. Make code changes to library
 2. Run `./Scripts/Build.cs` and `./Scripts/Pack.cs`
-3. Clear only our package cache: `rm -rf Tests/Integration/local-packages/timewarp.cli`
+3. Clear only our package cache: `rm -rf LocalNuGetCache/timewarp.cli`
 4. Run tests: `./Tests/RunTests.cs`
 
 **Benefits**:

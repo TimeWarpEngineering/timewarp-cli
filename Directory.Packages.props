@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <!-- External packages -->
+    <PackageVersion Include="CliWrap" Version="3.9.0" />
+    
+    <!-- Our packages -->
+    <PackageVersion Include="TimeWarp.Cli" Version="0.6.0-beta10" />
+  </ItemGroup>
+</Project>

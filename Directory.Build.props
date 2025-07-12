@@ -1,5 +1,8 @@
 <Project>
   <PropertyGroup>
+    <!-- Enable Central Package Management -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    
     <!-- Analyzer Settings -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningLevel>5</WarningLevel>
@@ -15,5 +18,8 @@
     
     <!-- Fail build on analyzer warnings since TreatWarningsAsErrors is true -->
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    
+    <!-- Use local packages directory instead of global cache -->
+    <RestorePackagesPath>./LocalNuGetCache</RestorePackagesPath>
   </PropertyGroup>
 </Project>
