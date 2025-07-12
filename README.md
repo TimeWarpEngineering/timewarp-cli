@@ -59,6 +59,21 @@ var files = Run("find", "/large/dir", "-name", "*.log").Cached();
 var errors = await files.Pipe("grep", "ERROR").GetLinesAsync();
 var warnings = await files.Pipe("grep", "WARN").GetLinesAsync();
 // Only one expensive find operation executed!
+
+// C# scripts with arguments work seamlessly
+await Run("./myscript.cs", "--verbose", "-o", "output.txt").ExecuteAsync();
+
+// Use fluent command builders for complex commands
+var packages = await DotNet.ListPackages()
+    .WithOutdated()
+    .AsJson()
+    .ToListAsync();
+
+// Interactive file selection with FZF
+var selectedFile = await FZF.Run()
+    .WithItems("file1.txt", "file2.txt", "file3.txt")
+    .WithPreview("cat {}")
+    .GetStringAsync();
 ```
 
 ## Installation
@@ -85,6 +100,8 @@ Check out the latest NuGet package: [TimeWarp.Cli](https://www.nuget.org/package
 - **Configuration Options**: Working directory, environment variables, and more
 - **Cancellation Support**: Full CancellationToken support for timeouts and manual cancellation
 - **Cross-Platform**: Works on Windows, Linux, and macOS
+- **C# Script Support**: Seamless execution of C# scripts with proper argument handling
+- **Command Builders**: Fluent builders for complex commands (DotNet, FZF, Ghq, Gwq)
 
 ## Architecture
 
@@ -103,7 +120,7 @@ See our [Architectural Decision Records](Documentation/Conceptual/ArchitecturalD
 - **[CLAUDE.md](CLAUDE.md)** - Complete API reference and usage guide
 - **[CommandExtensions.md](Source/TimeWarp.Cli/CommandExtensions.md)** - Static API documentation
 - **[CommandResult.md](Source/TimeWarp.Cli/CommandResult.md)** - Fluent interface documentation
-- **[Architectural Decisions](Documentation/Conceptual/ArchitecturalDecisionRecisions/Overview.md)** - Design rationale and decisions
+- **[Architectural Decisions](Documentation/Conceptual/ArchitecturalDecisionRecords/Overview.md)** - Design rationale and decisions
 
 ## Example Scripts
 
