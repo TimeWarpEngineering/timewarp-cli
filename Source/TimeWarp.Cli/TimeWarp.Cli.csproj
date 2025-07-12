@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>TimeWarp.Cli</PackageId>
-    <Version>0.6.0-beta11</Version>
+    <Version>0.6.0-beta12</Version>
     <Authors>Steven T. Cramer</Authors>
     <Description>Fluent API for elegant C# scripting with pipeline support</Description>
     <PackageTags>cli;scripting;fluent;shell;pipeline</PackageTags>
