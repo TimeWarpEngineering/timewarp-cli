@@ -2,6 +2,7 @@ namespace TimeWarp.Cli;
 
 public static class CommandExtensions
 {
+  private const string CSharpScriptExtension = ".cs";
   public static CommandResult Run
   (
     string executable,
@@ -31,6 +32,14 @@ public static class CommandExtensions
     
     try
     {
+      // Handle .cs script files specially
+      if (executable.EndsWith(CSharpScriptExtension, StringComparison.OrdinalIgnoreCase))
+      {
+        // Insert -- at the beginning of arguments to prevent dotnet from intercepting them
+        List<string> newArgs = ["--", .. arguments];
+        arguments = [.. newArgs];
+      }
+      
       Command cliCommand = CliWrap.Cli.Wrap(executable)
         .WithArguments(arguments)
         .WithValidation(CommandResultValidation.None);
