@@ -78,9 +78,9 @@ var packages = await DotNet.ListPackages()
     .AsJson()
     .ToListAsync();
 
-// Interactive file selection with FZF
-var selectedFile = await FZF.Run()
-    .WithItems("file1.txt", "file2.txt", "file3.txt")
+// Interactive file selection with Fzf
+var selectedFile = await Fzf.Run()
+    .FromInput("file1.txt", "file2.txt", "file3.txt")
     .WithPreview("cat {}")
     .GetStringAsync();
 ```
@@ -110,7 +110,7 @@ Check out the latest NuGet package: [TimeWarp.Cli](https://www.nuget.org/package
 - **Cancellation Support**: Full CancellationToken support for timeouts and manual cancellation
 - **Cross-Platform**: Works on Windows, Linux, and macOS
 - **C# Script Support**: Seamless execution of C# scripts with proper argument handling
-- **Command Builders**: Fluent builders for complex commands (DotNet, FZF, Ghq, Gwq)
+- **Command Builders**: Fluent builders for complex commands (DotNet, Fzf, Ghq, Gwq)
 
 ## Architecture
 
