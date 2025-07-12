@@ -1,13 +1,13 @@
 namespace TimeWarp.Cli;
 
-public partial class FZFBuilder
+public partial class FzfBuilder
 {
   // Interface Options
   /// <summary>
   /// Enables multi-select mode.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithMulti()
+  public FzfBuilder WithMulti()
   {
     _arguments.Add("--multi");
     return this;
@@ -18,7 +18,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="max">Maximum number of selections</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithMulti(int max)
+  public FzfBuilder WithMulti(int max)
   {
     _arguments.Add($"--multi={max}");
     return this;
@@ -28,7 +28,7 @@ public partial class FZFBuilder
   /// Disables mouse support.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithNoMouse()
+  public FzfBuilder WithNoMouse()
   {
     _arguments.Add("--no-mouse");
     return this;
@@ -39,7 +39,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="bindings">Key binding specifications</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithBind(string bindings)
+  public FzfBuilder WithBind(string bindings)
   {
     _arguments.Add($"--bind={bindings}");
     return this;
@@ -49,7 +49,7 @@ public partial class FZFBuilder
   /// Enables cyclic scrolling.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithCycle()
+  public FzfBuilder WithCycle()
   {
     _arguments.Add("--cycle");
     return this;
@@ -59,7 +59,7 @@ public partial class FZFBuilder
   /// Keeps the right end of the line visible on overflow.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithKeepRight()
+  public FzfBuilder WithKeepRight()
   {
     _arguments.Add("--keep-right");
     return this;
@@ -70,7 +70,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="lines">Number of lines to keep</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithScrollOff(int lines)
+  public FzfBuilder WithScrollOff(int lines)
   {
     _arguments.Add($"--scroll-off={lines}");
     return this;
@@ -80,7 +80,7 @@ public partial class FZFBuilder
   /// Disables horizontal scrolling.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithNoHScroll()
+  public FzfBuilder WithNoHScroll()
   {
     _arguments.Add("--no-hscroll");
     return this;
@@ -91,7 +91,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="cols">Number of columns to keep</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithHScrollOff(int cols)
+  public FzfBuilder WithHScrollOff(int cols)
   {
     _arguments.Add($"--hscroll-off={cols}");
     return this;
@@ -101,7 +101,7 @@ public partial class FZFBuilder
   /// Makes word-wise movements respect path separators.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithFilepathWord()
+  public FzfBuilder WithFilepathWord()
   {
     _arguments.Add("--filepath-word");
     return this;
@@ -112,7 +112,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="chars">Characters to use for jump labels</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithJumpLabels(string chars)
+  public FzfBuilder WithJumpLabels(string chars)
   {
     _arguments.Add($"--jump-labels={chars}");
     return this;

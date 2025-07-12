@@ -23,15 +23,15 @@ public static class GwqExtensions
   /// <param name="builder">The gwq builder configured for list</param>
   /// <param name="configureFzf">Optional FZF configuration</param>
   /// <returns>A CommandResult with the selected worktree</returns>
-  public static CommandResult SelectWithFzf(this GwqBuilder builder, Action<FZFBuilder>? configureFzf = null)
+  public static CommandResult SelectWithFzf(this GwqBuilder builder, Action<FzfBuilder>? configureFzf = null)
   {
-    FZFBuilder fzfBuilder = FZF.Run();
+    FzfBuilder fzfBuilder = Fzf.Run();
     configureFzf?.Invoke(fzfBuilder);
     
     return builder.Build().Pipe("fzf", ExtractFzfArguments(fzfBuilder));
   }
 
-  private static string[] ExtractFzfArguments(FZFBuilder fzfBuilder)
+  private static string[] ExtractFzfArguments(FzfBuilder fzfBuilder)
   {
     // This would need to be implemented to extract arguments from FZFBuilder
     // For now, return empty array

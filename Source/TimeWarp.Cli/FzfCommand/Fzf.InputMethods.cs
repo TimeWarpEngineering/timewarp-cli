@@ -1,6 +1,6 @@
 namespace TimeWarp.Cli;
 
-public partial class FZFBuilder
+public partial class FzfBuilder
 {
   // Input Methods
   /// <summary>
@@ -8,7 +8,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="items">Items to select from</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder FromInput(params string[] items)
+  public FzfBuilder FromInput(params string[] items)
   {
     _inputItems.AddRange(items);
     return this;
@@ -19,7 +19,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="items">Items to select from</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder FromInput(IEnumerable<string> items)
+  public FzfBuilder FromInput(IEnumerable<string> items)
   {
     _inputItems.AddRange(items);
     return this;
@@ -30,7 +30,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="pattern">File glob pattern</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder FromFiles(string pattern)
+  public FzfBuilder FromFiles(string pattern)
   {
     _inputGlob = pattern;
     return this;
@@ -41,7 +41,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="command">Command to execute for input</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder FromCommand(string command)
+  public FzfBuilder FromCommand(string command)
   {
     _inputCommand = command;
     return this;
@@ -51,7 +51,7 @@ public partial class FZFBuilder
   /// Uses standard input as the input source.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder FromStdin()
+  public FzfBuilder FromStdin()
   {
     _useStdin = true;
     return this;

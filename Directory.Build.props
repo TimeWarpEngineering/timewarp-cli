@@ -20,6 +20,6 @@
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     
     <!-- Use local packages directory instead of global cache -->
-    <RestorePackagesPath>./LocalNuGetCache</RestorePackagesPath>
+    <RestorePackagesPath>$(MSBuildThisFileDirectory)LocalNuGetCache</RestorePackagesPath>
   </PropertyGroup>
 </Project>

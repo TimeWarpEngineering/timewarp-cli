@@ -1,13 +1,13 @@
 namespace TimeWarp.Cli;
 
-public partial class FZFBuilder
+public partial class FzfBuilder
 {
   // Display Options
   /// <summary>
   /// Enables processing of ANSI color codes.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithAnsi()
+  public FzfBuilder WithAnsi()
   {
     _arguments.Add("--ansi");
     return this;
@@ -18,7 +18,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="spaces">Number of spaces per tab</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithTabstop(int spaces)
+  public FzfBuilder WithTabstop(int spaces)
   {
     _arguments.Add($"--tabstop={spaces}");
     return this;
@@ -29,7 +29,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="colors">Color specification</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithColor(string colors)
+  public FzfBuilder WithColor(string colors)
   {
     _arguments.Add($"--color={colors}");
     return this;
@@ -39,7 +39,7 @@ public partial class FZFBuilder
   /// Disables bold text.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithNoBold()
+  public FzfBuilder WithNoBold()
   {
     _arguments.Add("--no-bold");
     return this;

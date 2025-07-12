@@ -1,6 +1,6 @@
 namespace TimeWarp.Cli;
 
-public partial class FZFBuilder
+public partial class FzfBuilder
 {
   // Scripting Options
   /// <summary>
@@ -8,7 +8,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="query">Initial query</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithQuery(string query)
+  public FzfBuilder WithQuery(string query)
   {
     _arguments.Add($"--query={query}");
     return this;
@@ -18,7 +18,7 @@ public partial class FZFBuilder
   /// Automatically selects the only match.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithSelect1()
+  public FzfBuilder WithSelect1()
   {
     _arguments.Add("--select-1");
     return this;
@@ -28,7 +28,7 @@ public partial class FZFBuilder
   /// Exits immediately when there's no match.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithExit0()
+  public FzfBuilder WithExit0()
   {
     _arguments.Add("--exit-0");
     return this;
@@ -39,7 +39,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="filter">Filter string</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithFilter(string filter)
+  public FzfBuilder WithFilter(string filter)
   {
     _arguments.Add($"--filter={filter}");
     return this;
@@ -49,7 +49,7 @@ public partial class FZFBuilder
   /// Prints the query as the first line of output.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithPrintQuery()
+  public FzfBuilder WithPrintQuery()
   {
     _arguments.Add("--print-query");
     return this;
@@ -60,7 +60,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="keys">Comma-separated list of keys</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithExpect(string keys)
+  public FzfBuilder WithExpect(string keys)
   {
     _arguments.Add($"--expect={keys}");
     return this;
@@ -70,7 +70,7 @@ public partial class FZFBuilder
   /// Reads input delimited by ASCII NUL characters.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithRead0()
+  public FzfBuilder WithRead0()
   {
     _arguments.Add("--read0");
     return this;
@@ -80,7 +80,7 @@ public partial class FZFBuilder
   /// Prints output delimited by ASCII NUL characters.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithPrint0()
+  public FzfBuilder WithPrint0()
   {
     _arguments.Add("--print0");
     return this;
@@ -90,7 +90,7 @@ public partial class FZFBuilder
   /// Enables synchronous search for multi-staged filtering.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithSync()
+  public FzfBuilder WithSync()
   {
     _arguments.Add("--sync");
     return this;
@@ -100,7 +100,7 @@ public partial class FZFBuilder
   /// Starts HTTP server on default port.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithListen()
+  public FzfBuilder WithListen()
   {
     _arguments.Add("--listen");
     return this;
@@ -111,7 +111,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="port">Port number</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithListen(int port)
+  public FzfBuilder WithListen(int port)
   {
     _arguments.Add($"--listen={port}");
     return this;
@@ -122,7 +122,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="address">Address and port</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithListen(string address)
+  public FzfBuilder WithListen(string address)
   {
     _arguments.Add($"--listen={address}");
     return this;

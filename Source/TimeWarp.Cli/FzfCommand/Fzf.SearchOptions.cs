@@ -1,13 +1,13 @@
 namespace TimeWarp.Cli;
 
-public partial class FZFBuilder
+public partial class FzfBuilder
 {
   // Search Options
   /// <summary>
   /// Enables extended search mode (enabled by default).
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithExtended()
+  public FzfBuilder WithExtended()
   {
     _arguments.Add("--extended");
     return this;
@@ -17,7 +17,7 @@ public partial class FZFBuilder
   /// Disables extended search mode.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithNoExtended()
+  public FzfBuilder WithNoExtended()
   {
     _arguments.Add("--no-extended");
     return this;
@@ -27,7 +27,7 @@ public partial class FZFBuilder
   /// Enables exact match mode.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithExact()
+  public FzfBuilder WithExact()
   {
     _arguments.Add("--exact");
     return this;
@@ -37,7 +37,7 @@ public partial class FZFBuilder
   /// Enables case-insensitive matching.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithCaseInsensitive()
+  public FzfBuilder WithCaseInsensitive()
   {
     _arguments.Add("-i");
     return this;
@@ -47,7 +47,7 @@ public partial class FZFBuilder
   /// Enables case-sensitive matching.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithCaseSensitive()
+  public FzfBuilder WithCaseSensitive()
   {
     _arguments.Add("+i");
     return this;
@@ -58,7 +58,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="scheme">The scoring scheme (default, path, history)</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithScheme(string scheme)
+  public FzfBuilder WithScheme(string scheme)
   {
     _arguments.Add($"--scheme={scheme}");
     return this;
@@ -68,7 +68,7 @@ public partial class FZFBuilder
   /// Enables literal matching (do not normalize latin script letters).
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithLiteral()
+  public FzfBuilder WithLiteral()
   {
     _arguments.Add("--literal");
     return this;
@@ -79,7 +79,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="nth">Comma-separated list of field indices</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithNth(string nth)
+  public FzfBuilder WithNth(string nth)
   {
     _arguments.Add($"--nth={nth}");
     return this;
@@ -90,7 +90,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="withNth">Field index expressions for presentation</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithWithNth(string withNth)
+  public FzfBuilder WithWithNth(string withNth)
   {
     _arguments.Add($"--with-nth={withNth}");
     return this;
@@ -101,7 +101,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="delimiter">The delimiter regex</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithDelimiter(string delimiter)
+  public FzfBuilder WithDelimiter(string delimiter)
   {
     _arguments.Add($"--delimiter={delimiter}");
     return this;
@@ -111,7 +111,7 @@ public partial class FZFBuilder
   /// Disables sorting of results.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithNoSort()
+  public FzfBuilder WithNoSort()
   {
     _arguments.Add("--no-sort");
     return this;
@@ -121,7 +121,7 @@ public partial class FZFBuilder
   /// Enables tracking of current selection when results are updated.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithTrack()
+  public FzfBuilder WithTrack()
   {
     _arguments.Add("--track");
     return this;
@@ -131,7 +131,7 @@ public partial class FZFBuilder
   /// Reverses the order of input.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithTac()
+  public FzfBuilder WithTac()
   {
     _arguments.Add("--tac");
     return this;
@@ -141,7 +141,7 @@ public partial class FZFBuilder
   /// Disables search functionality.
   /// </summary>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithDisabled()
+  public FzfBuilder WithDisabled()
   {
     _arguments.Add("--disabled");
     return this;
@@ -152,7 +152,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="tiebreak">Comma-separated list of criteria (length, chunk, begin, end, index)</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithTiebreak(string tiebreak)
+  public FzfBuilder WithTiebreak(string tiebreak)
   {
     _arguments.Add($"--tiebreak={tiebreak}");
     return this;

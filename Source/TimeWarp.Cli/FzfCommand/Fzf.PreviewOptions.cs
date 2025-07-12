@@ -1,6 +1,6 @@
 namespace TimeWarp.Cli;
 
-public partial class FZFBuilder
+public partial class FzfBuilder
 {
   // Preview Options
   /// <summary>
@@ -8,7 +8,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="command">Command to preview highlighted line</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithPreview(string command)
+  public FzfBuilder WithPreview(string command)
   {
     _arguments.Add($"--preview={command}");
     return this;
@@ -19,7 +19,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="options">Preview window layout options</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithPreviewWindow(string options)
+  public FzfBuilder WithPreviewWindow(string options)
   {
     _arguments.Add($"--preview-window={options}");
     return this;
@@ -30,7 +30,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="label">Preview window label</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithPreviewLabel(string label)
+  public FzfBuilder WithPreviewLabel(string label)
   {
     _arguments.Add($"--preview-label={label}");
     return this;
@@ -41,7 +41,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="position">Label position</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithPreviewLabelPos(int position)
+  public FzfBuilder WithPreviewLabelPos(int position)
   {
     _arguments.Add($"--preview-label-pos={position}");
     return this;

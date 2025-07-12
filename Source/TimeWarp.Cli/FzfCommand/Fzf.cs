@@ -1,24 +1,24 @@
 namespace TimeWarp.Cli;
 
 /// <summary>
-/// Fluent API for FZF (fuzzy finder) integration.
+/// Fluent API for Fzf (fuzzy finder) integration.
 /// </summary>
-public static class FZF
+public static class Fzf
 {
   /// <summary>
   /// Creates a fluent builder for the 'fzf' command.
   /// </summary>
-  /// <returns>A FZFBuilder for configuring the fzf command</returns>
-  public static FZFBuilder Run()
+  /// <returns>A FzfBuilder for configuring the fzf command</returns>
+  public static FzfBuilder Run()
   {
-    return new FZFBuilder();
+    return new FzfBuilder();
   }
 }
 
 /// <summary>
 /// Fluent builder for configuring 'fzf' commands.
 /// </summary>
-public partial class FZFBuilder
+public partial class FzfBuilder
 {
   private CommandOptions _options = new();
   private List<string> _arguments = new();
@@ -32,7 +32,7 @@ public partial class FZFBuilder
   /// </summary>
   /// <param name="directory">The working directory path</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithWorkingDirectory(string directory)
+  public FzfBuilder WithWorkingDirectory(string directory)
   {
     _options = _options.WithWorkingDirectory(directory);
     return this;
@@ -44,7 +44,7 @@ public partial class FZFBuilder
   /// <param name="key">The environment variable name</param>
   /// <param name="value">The environment variable value</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithEnvironmentVariable(string key, string? value)
+  public FzfBuilder WithEnvironmentVariable(string key, string? value)
   {
     _options = _options.WithEnvironmentVariable(key, value);
     return this;
