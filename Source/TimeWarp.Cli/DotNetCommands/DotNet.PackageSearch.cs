@@ -197,7 +197,7 @@ public class DotNetPackageSearchBuilder
     }
 
     // Add sources
-    foreach (var source in _sources)
+    foreach (string source in _sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
@@ -207,14 +207,14 @@ public class DotNetPackageSearchBuilder
     if (_take.HasValue)
     {
       arguments.Add("--take");
-      arguments.Add(_take.Value.ToString());
+      arguments.Add(_take.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }
 
     // Add skip if specified
     if (_skip.HasValue)
     {
       arguments.Add("--skip");
-      arguments.Add(_skip.Value.ToString());
+      arguments.Add(_skip.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }
 
     // Add config file if specified

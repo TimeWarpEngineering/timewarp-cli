@@ -316,7 +316,7 @@ public class GwqBuilder
   public GwqBuilder WithStaleDays(int days)
   {
     _subCommandArguments.Add("--stale-days");
-    _subCommandArguments.Add(days.ToString());
+    _subCommandArguments.Add(days.ToString(System.Globalization.CultureInfo.InvariantCulture));
     return this;
   }
 
@@ -480,7 +480,7 @@ public class GwqBuilder
     }
     
     // Add exec command if specified
-    if (_execCommand.Any() && _subCommand == "exec")
+    if (_execCommand.Count > 0 && _subCommand == "exec")
     {
       arguments.Add("--");
       arguments.AddRange(_execCommand);
@@ -533,7 +533,7 @@ public static class GwqExtensions
   /// <returns>A CommandResult with the selected worktree</returns>
   public static CommandResult SelectWithFzf(this GwqBuilder builder, Action<FZFBuilder>? configureFzf = null)
   {
-    var fzfBuilder = FZF.Run();
+    FZFBuilder fzfBuilder = FZF.Run();
     configureFzf?.Invoke(fzfBuilder);
     
     return builder.Build().Pipe("fzf", ExtractFzfArguments(fzfBuilder));

@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var nugetBuilder = DotNet.NuGet();
+  DotNetNuGetBuilder nugetBuilder = DotNet.NuGet();
   if (nugetBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.NuGet() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.NuGet()
+  CommandResult command = DotNet.NuGet()
     .Push("package.nupkg")
     .WithSource("https://api.nuget.org/v3/index.json")
     .WithApiKey("test-key")
@@ -64,7 +64,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.NuGet()
+  CommandResult command = DotNet.NuGet()
     .Delete("MyPackage", "1.0.0")
     .WithSource("https://api.nuget.org/v3/index.json")
     .WithApiKey("test-key")
@@ -90,7 +90,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.NuGet()
+  CommandResult command = DotNet.NuGet()
     .ListSources()
     .WithFormat("Detailed")
     .WithConfigFile("nuget.config")
@@ -115,7 +115,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.NuGet()
+  CommandResult command = DotNet.NuGet()
     .AddSource("https://my-private-feed.com/v3/index.json")
     .WithName("MyPrivateFeed")
     .WithUsername("testuser")
@@ -141,10 +141,10 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var enableCommand = DotNet.NuGet().EnableSource("MySource").Build();
-  var disableCommand = DotNet.NuGet().DisableSource("MySource").Build();
-  var removeCommand = DotNet.NuGet().RemoveSource("MySource").Build();
-  var updateCommand = DotNet.NuGet().UpdateSource("MySource").WithSource("https://new-url.com").Build();
+  CommandResult enableCommand = DotNet.NuGet().EnableSource("MySource").Build();
+  CommandResult disableCommand = DotNet.NuGet().DisableSource("MySource").Build();
+  CommandResult removeCommand = DotNet.NuGet().RemoveSource("MySource").Build();
+  CommandResult updateCommand = DotNet.NuGet().UpdateSource("MySource").WithSource("https://new-url.com").Build();
   
   if (enableCommand != null && disableCommand != null && removeCommand != null && updateCommand != null)
   {
@@ -165,8 +165,8 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var clearCommand = DotNet.NuGet().Locals().Clear("http-cache").Build();
-  var listCommand = DotNet.NuGet().Locals().List("global-packages").Build();
+  CommandResult clearCommand = DotNet.NuGet().Locals().Clear("http-cache").Build();
+  CommandResult listCommand = DotNet.NuGet().Locals().List("global-packages").Build();
   
   if (clearCommand != null && listCommand != null)
   {
@@ -187,7 +187,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.NuGet()
+  CommandResult command = DotNet.NuGet()
     .Why("Microsoft.Extensions.Logging")
     .WithProject("MyApp.csproj")
     .WithFramework("net10.0")
@@ -212,7 +212,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.NuGet()
+  CommandResult command = DotNet.NuGet()
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("NUGET_ENV", "test")
     .ListSources()
@@ -238,7 +238,7 @@ totalTests++;
 try
 {
   // This should show configured NuGet sources
-  var output = await DotNet.NuGet()
+  string output = await DotNet.NuGet()
     .ListSources()
     .WithFormat("Short")
     .GetStringAsync();

@@ -16,8 +16,8 @@ int totalTests = 0;
 totalTests++;
 try
 {
-    var result = await Run("nonexistentcommand12345").GetStringAsync();
-    if (result == string.Empty)
+    string result = await Run("nonexistentcommand12345").GetStringAsync();
+    if (string.IsNullOrEmpty(result))
     {
         Console.WriteLine("✅ Test 1 PASSED: Non-existent command returned empty string");
         passCount++;
@@ -36,7 +36,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await Run("ls", "/nonexistent/path/12345").GetStringAsync();
+    string result = await Run("ls", "/nonexistent/path/12345").GetStringAsync();
     Console.WriteLine("✅ Test 2 PASSED: Command with non-zero exit code didn't throw");
     passCount++;
 }
@@ -62,7 +62,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var lines = await Run("ls", "/nonexistent/path/12345").GetLinesAsync();
+    string[] lines = await Run("ls", "/nonexistent/path/12345").GetLinesAsync();
     Console.WriteLine("✅ Test 4 PASSED: GetLinesAsync with non-zero exit code didn't throw");
     passCount++;
 }
@@ -75,8 +75,8 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await Run("echo", "Hello & World | Test").GetStringAsync();
-    if (result.Contains("Hello") && result.Contains("World") && result.Contains("Test"))
+    string result = await Run("echo", "Hello & World | Test").GetStringAsync();
+    if (result.Contains("Hello", StringComparison.Ordinal) && result.Contains("World", StringComparison.Ordinal) && result.Contains("Test", StringComparison.Ordinal))
     {
         Console.WriteLine("✅ Test 5 PASSED: Special characters in arguments handled correctly");
         passCount++;
@@ -95,8 +95,8 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await Run("").GetStringAsync();
-    if (result == string.Empty)
+    string result = await Run("").GetStringAsync();
+    if (string.IsNullOrEmpty(result))
     {
         Console.WriteLine("✅ Test 6 PASSED: Empty command returned empty string gracefully");
         passCount++;
@@ -115,8 +115,8 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await Run("   ").GetStringAsync();
-    if (result == string.Empty)
+    string result = await Run("   ").GetStringAsync();
+    if (string.IsNullOrEmpty(result))
     {
         Console.WriteLine("✅ Test 7 PASSED: Whitespace-only command returned empty string gracefully");
         passCount++;

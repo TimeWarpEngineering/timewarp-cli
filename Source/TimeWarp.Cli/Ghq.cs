@@ -353,7 +353,7 @@ public static class GhqExtensions
   /// <returns>A CommandResult with the selected repository</returns>
   public static CommandResult SelectWithFzf(this GhqBuilder builder, Action<FZFBuilder>? configureFzf = null)
   {
-    var fzfBuilder = FZF.Run();
+    FZFBuilder fzfBuilder = FZF.Run();
     configureFzf?.Invoke(fzfBuilder);
     
     return builder.Build().Pipe("fzf", ExtractFzfArguments(fzfBuilder));

@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var workloadBuilder = DotNet.Workload();
+  DotNetWorkloadBuilder workloadBuilder = DotNet.Workload();
   if (workloadBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.Workload() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Info()
     .Build();
   
@@ -61,7 +61,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Version()
     .Build();
   
@@ -84,7 +84,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Install("maui")
     .Build();
   
@@ -107,7 +107,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Install("maui", "android", "ios")
     .WithConfigFile("nuget.config")
     .WithIncludePreview()
@@ -135,7 +135,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .List()
     .Build();
   
@@ -158,7 +158,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .List()
     .WithVerbosity("detailed")
     .Build();
@@ -182,7 +182,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Search()
     .Build();
   
@@ -205,7 +205,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Search("maui")
     .WithVerbosity("minimal")
     .Build();
@@ -229,7 +229,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Uninstall("maui")
     .Build();
   
@@ -252,7 +252,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Uninstall("maui", "android", "ios")
     .Build();
   
@@ -275,7 +275,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Update()
     .Build();
   
@@ -298,7 +298,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Update()
     .WithAdvertisingManifestsOnly()
     .WithConfigFile("nuget.config")
@@ -331,7 +331,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Repair()
     .Build();
   
@@ -354,7 +354,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Repair()
     .WithConfigFile("nuget.config")
     .WithDisableParallel()
@@ -385,7 +385,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Clean()
     .Build();
   
@@ -408,7 +408,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Clean()
     .WithAll()
     .Build();
@@ -432,7 +432,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Restore()
     .Build();
   
@@ -455,7 +455,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Restore("MyApp.csproj")
     .Build();
   
@@ -478,7 +478,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Restore("MyApp.csproj")
     .WithConfigFile("nuget.config")
     .WithDisableParallel()
@@ -510,7 +510,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Config()
     .Build();
   
@@ -533,7 +533,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Config()
     .WithUpdateModeWorkloadSet()
     .Build();
@@ -557,7 +557,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Config()
     .WithUpdateModeManifests()
     .Build();
@@ -581,7 +581,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .Config()
     .WithUpdateMode("manifests")
     .Build();
@@ -605,7 +605,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Workload()
+  CommandResult command = DotNet.Workload()
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("DOTNET_ENV", "test")
     .List()
@@ -631,7 +631,7 @@ totalTests++;
 try
 {
   // This should show installed workloads or handle gracefully
-  var output = await DotNet.Workload()
+  string output = await DotNet.Workload()
     .List()
     .WithVerbosity("quiet")
     .GetStringAsync();
@@ -650,7 +650,7 @@ totalTests++;
 try
 {
   // This should show available workloads or handle gracefully
-  var output = await DotNet.Workload()
+  string output = await DotNet.Workload()
     .Search("maui")
     .WithVerbosity("quiet")
     .GetStringAsync();
@@ -669,7 +669,7 @@ totalTests++;
 try
 {
   // This should show workload information or handle gracefully
-  var output = await DotNet.Workload()
+  string output = await DotNet.Workload()
     .Info()
     .GetStringAsync();
   

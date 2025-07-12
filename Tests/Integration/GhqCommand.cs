@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var ghqBuilder = Ghq.Run();
+  GhqBuilder ghqBuilder = Ghq.Run();
   if (ghqBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: Ghq.Run() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .Get("github.com/TimeWarpEngineering/timewarp-cli")
     .Build();
   
@@ -61,7 +61,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .Clone("github.com/user/repo")
     .Build();
   
@@ -84,7 +84,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .Get("github.com/user/repo")
     .WithShallow()
     .WithBranch("develop")
@@ -110,7 +110,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .List()
     .Build();
   
@@ -133,7 +133,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .List()
     .WithFullPath()
     .WithExact()
@@ -159,7 +159,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .Remove("github.com/old/repo")
     .Build();
   
@@ -182,7 +182,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .Rm("github.com/old/repo")
     .WithDryRun()
     .Build();
@@ -206,7 +206,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .Root()
     .Build();
   
@@ -229,7 +229,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .Root()
     .WithAll()
     .Build();
@@ -253,7 +253,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .Create("github.com/user/new-repo")
     .Build();
   
@@ -276,7 +276,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("GHQ_ROOT", "/tmp/ghq")
     .List()
@@ -301,7 +301,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .Get("github.com/example/repo")
     .WithLook()
     .WithParallel()
@@ -328,7 +328,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .Get("gitlab.com/user/project")
     .WithVcs("gitlab")
     .Build();
@@ -352,7 +352,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .List()
     .WithUnique()
     .Build();
@@ -376,7 +376,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .Get("github.com/user/bare-repo")
     .WithBare()
     .Build();
@@ -400,7 +400,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .List()
     .PipeTo("grep", "timewarp");
   
@@ -424,7 +424,7 @@ totalTests++;
 try
 {
   // This tests that the command builds correctly even if ghq might not be installed
-  var command = Ghq.Run()
+  CommandResult command = Ghq.Run()
     .List()
     .WithFullPath()
     .Build();
@@ -448,7 +448,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var result = await Ghq.Run()
+  string result = await Ghq.Run()
     .Root()
     .GetStringAsync();
   
@@ -465,7 +465,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var lines = await Ghq.Run()
+  string[] lines = await Ghq.Run()
     .List()
     .GetLinesAsync();
   

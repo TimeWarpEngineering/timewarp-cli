@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var devCertsBuilder = DotNet.DevCerts();
+  DotNetDevCertsBuilder devCertsBuilder = DotNet.DevCerts();
   if (devCertsBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.DevCerts() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var httpsBuilder = DotNet.DevCerts().Https();
+  DotNetDevCertsHttpsBuilder httpsBuilder = DotNet.DevCerts().Https();
   if (httpsBuilder != null)
   {
     Console.WriteLine("✅ Test 2 PASSED: DotNet.DevCerts().Https() builder created successfully");
@@ -58,7 +58,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.DevCerts()
+  CommandResult command = DotNet.DevCerts()
     .Https()
     .WithCheck()
     .Build();
@@ -82,7 +82,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.DevCerts()
+  CommandResult command = DotNet.DevCerts()
     .Https()
     .WithClean()
     .Build();
@@ -106,7 +106,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.DevCerts()
+  CommandResult command = DotNet.DevCerts()
     .Https()
     .WithExport()
     .WithExportPath("./localhost.pfx")
@@ -133,7 +133,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.DevCerts()
+  CommandResult command = DotNet.DevCerts()
     .Https()
     .WithTrust()
     .Build();
@@ -157,7 +157,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.DevCerts()
+  CommandResult command = DotNet.DevCerts()
     .Https()
     .WithExport()
     .WithExportPath("./localhost.pfx")
@@ -183,8 +183,8 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var verboseCommand = DotNet.DevCerts().Https().WithVerbose().Build();
-  var quietCommand = DotNet.DevCerts().Https().WithQuiet().Build();
+  CommandResult verboseCommand = DotNet.DevCerts().Https().WithVerbose().Build();
+  CommandResult quietCommand = DotNet.DevCerts().Https().WithQuiet().Build();
   
   if (verboseCommand != null && quietCommand != null)
   {
@@ -205,7 +205,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.DevCerts()
+  CommandResult command = DotNet.DevCerts()
     .Https()
     .WithExport()
     .WithExportPath("./localhost.pem")
@@ -232,7 +232,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.DevCerts()
+  CommandResult command = DotNet.DevCerts()
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("DOTNET_ENV", "test")
     .Https()
@@ -259,7 +259,7 @@ totalTests++;
 try
 {
   // This checks if a certificate exists without making changes
-  var output = await DotNet.DevCerts()
+  string output = await DotNet.DevCerts()
     .Https()
     .WithCheck()
     .WithQuiet()

@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var testBuilder = DotNet.Test();
+  DotNetTestBuilder testBuilder = DotNet.Test();
   if (testBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.Test() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Test()
+  CommandResult command = DotNet.Test()
     .WithProject("test.csproj")
     .WithConfiguration("Debug")
     .WithFramework("net10.0")
@@ -66,7 +66,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var chainedCommand = DotNet.Test()
+  CommandResult chainedCommand = DotNet.Test()
     .WithProject("test.csproj")
     .WithConfiguration("Release")
     .WithArchitecture("x64")
@@ -102,7 +102,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var envCommand = DotNet.Test()
+  CommandResult envCommand = DotNet.Test()
     .WithProject("test.csproj")
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("TEST_ENV", "integration")
@@ -130,7 +130,7 @@ totalTests++;
 try
 {
   // This should handle gracefully since the project doesn't exist
-  var output = await DotNet.Test()
+  string output = await DotNet.Test()
     .WithProject("nonexistent.csproj")
     .WithConfiguration("Debug")
     .WithNoRestore()

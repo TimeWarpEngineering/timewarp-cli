@@ -1,0 +1,12 @@
+#\!/bin/bash
+echo "Remaining test files to fix:"
+echo "- DotNetUserSecretsCommand"
+echo "- DotNetTestCommand"
+echo "- DotNetListPackagesCommand"
+echo "- DotNetBuildCommand"
+echo "- DotNetWorkloadCommand"
+echo "- CachingCommands"
+echo "- CancellationCommands"
+echo "- DotNetPackageSearchCommand"
+echo "- DotNetNuGetCommand"
+echo "- ConfigurationCommands"

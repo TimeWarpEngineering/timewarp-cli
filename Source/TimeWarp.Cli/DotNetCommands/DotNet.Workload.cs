@@ -328,7 +328,7 @@ public class DotNetWorkloadInstallBuilder
       arguments.Add("--skip-manifest-update");
     }
 
-    foreach (var source in _sources)
+    foreach (string source in _sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
@@ -676,7 +676,7 @@ public class DotNetWorkloadUpdateBuilder
       arguments.Add("--no-cache");
     }
 
-    foreach (var source in _sources)
+    foreach (string source in _sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
@@ -847,7 +847,7 @@ public class DotNetWorkloadRepairBuilder
       arguments.Add("--no-cache");
     }
 
-    foreach (var source in _sources)
+    foreach (string source in _sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
@@ -1088,7 +1088,7 @@ public class DotNetWorkloadRestoreBuilder
       arguments.Add("--no-cache");
     }
 
-    foreach (var source in _sources)
+    foreach (string source in _sources)
     {
       arguments.Add("--source");
       arguments.Add(source);

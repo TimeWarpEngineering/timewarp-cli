@@ -339,7 +339,7 @@ public class DotNetPackBuilder
     }
 
     // Add sources
-    foreach (var source in _sources)
+    foreach (string source in _sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
@@ -392,7 +392,7 @@ public class DotNetPackBuilder
     }
 
     // Add MSBuild properties
-    foreach (var property in _properties)
+    foreach (KeyValuePair<string, string> property in _properties)
     {
       arguments.Add($"--property:{property.Key}={property.Value}");
     }

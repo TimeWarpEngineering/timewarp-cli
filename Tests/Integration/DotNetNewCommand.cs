@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var newBuilder = DotNet.New("console");
+  DotNetNewBuilder newBuilder = DotNet.New("console");
   if (newBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.New() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var newBuilder = DotNet.New();
+  DotNetNewBuilder newBuilder = DotNet.New();
   if (newBuilder != null)
   {
     Console.WriteLine("✅ Test 2 PASSED: DotNet.New() without template created successfully");
@@ -58,7 +58,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.New("console")
+  CommandResult command = DotNet.New("console")
     .WithName("TestApp")
     .WithOutput("./test-output")
     .WithForce()
@@ -84,7 +84,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.New("web")
+  CommandResult command = DotNet.New("web")
     .WithName("MyWebApp")
     .WithOutput("./web-output")
     .WithTemplateArg("--framework")
@@ -113,7 +113,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.New("classlib")
+  CommandResult command = DotNet.New("classlib")
     .WithName("MyLibrary")
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("TEMPLATE_ENV", "test")
@@ -139,7 +139,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var listCommand = DotNet.New().List("console");
+  DotNetNewListBuilder listCommand = DotNet.New().List("console");
   if (listCommand != null)
   {
     Console.WriteLine("✅ Test 6 PASSED: New List() subcommand works correctly");
@@ -159,7 +159,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var searchCommand = DotNet.New().Search("blazor");
+  DotNetNewSearchBuilder searchCommand = DotNet.New().Search("blazor");
   if (searchCommand != null)
   {
     Console.WriteLine("✅ Test 7 PASSED: New Search() subcommand works correctly");
@@ -180,7 +180,7 @@ totalTests++;
 try
 {
   // This should show what would happen without actually creating files
-  var output = await DotNet.New("console")
+  string output = await DotNet.New("console")
     .WithName("TestConsoleApp")
     .WithOutput("./dry-run-test")
     .WithDryRun()

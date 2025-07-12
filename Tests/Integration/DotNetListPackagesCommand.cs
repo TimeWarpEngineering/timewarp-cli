@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var listPackagesBuilder = DotNet.ListPackages();
+  DotNetListPackagesBuilder listPackagesBuilder = DotNet.ListPackages();
   if (listPackagesBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.ListPackages() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.ListPackages()
+  CommandResult command = DotNet.ListPackages()
     .WithProject("test.csproj")
     .WithFramework("net10.0")
     .WithVerbosity("minimal")
@@ -65,7 +65,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var chainedCommand = DotNet.ListPackages()
+  CommandResult chainedCommand = DotNet.ListPackages()
     .WithProject("test.csproj")
     .IncludeTransitive()
     .Vulnerable()
@@ -94,7 +94,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var jsonCommand = DotNet.ListPackages()
+  CommandResult jsonCommand = DotNet.ListPackages()
     .WithProject("test.csproj")
     .WithFormat("json")
     .WithOutputVersion("1")
@@ -125,7 +125,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var overloadCommand = DotNet.ListPackages("test.csproj")
+  CommandResult overloadCommand = DotNet.ListPackages("test.csproj")
     .WithFramework("net8.0")
     .IncludeTransitive()
     .WithVerbosity("quiet")
@@ -150,7 +150,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var packages = await DotNet.ListPackages()
+  string[] packages = await DotNet.ListPackages()
     .WithProject("nonexistent.csproj")
     .IncludeTransitive()
     .Outdated()
@@ -177,7 +177,7 @@ totalTests++;
 try
 {
   // This should handle gracefully since the project doesn't exist
-  var output = await DotNet.ListPackages()
+  string output = await DotNet.ListPackages()
     .WithProject("nonexistent.csproj")
     .Outdated()
     .GetStringAsync();

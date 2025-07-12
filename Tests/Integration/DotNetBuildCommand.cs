@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var buildBuilder = DotNet.Build();
+  DotNetBuildBuilder buildBuilder = DotNet.Build();
   if (buildBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.Build() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Build()
+  CommandResult command = DotNet.Build()
     .WithProject("test.csproj")
     .WithConfiguration("Debug")
     .WithFramework("net10.0")
@@ -65,7 +65,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var chainedCommand = DotNet.Build()
+  CommandResult chainedCommand = DotNet.Build()
     .WithProject("test.csproj")
     .WithConfiguration("Release")
     .WithArchitecture("x64")
@@ -96,7 +96,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var envCommand = DotNet.Build()
+  CommandResult envCommand = DotNet.Build()
     .WithProject("test.csproj")
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("BUILD_ENV", "test")
@@ -122,7 +122,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var propsCommand = DotNet.Build()
+  CommandResult propsCommand = DotNet.Build()
     .WithProject("test.csproj")
     .WithConfiguration("Debug")
     .WithProperty("RestoreNoCache", "true")
@@ -149,7 +149,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var overloadCommand = DotNet.Build("test.csproj")
+  CommandResult overloadCommand = DotNet.Build("test.csproj")
     .WithConfiguration("Debug")
     .WithNoRestore()
     .Build();
@@ -174,7 +174,7 @@ totalTests++;
 try
 {
   // This should handle gracefully since the project doesn't exist
-  var output = await DotNet.Build()
+  string output = await DotNet.Build()
     .WithProject("nonexistent.csproj")
     .WithConfiguration("Debug")
     .WithNoRestore()

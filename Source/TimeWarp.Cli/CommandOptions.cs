@@ -13,10 +13,10 @@ public class CommandOptions
   public string? WorkingDirectory { get; set; }
   
   /// <summary>
-  /// Gets or sets additional environment variables for the command execution.
+  /// Gets additional environment variables for the command execution.
   /// These are added to the inherited environment variables from the parent process.
   /// </summary>
-  public Dictionary<string, string?>? EnvironmentVariables { get; set; }
+  public Dictionary<string, string?>? EnvironmentVariables { get; init; }
   
   /// <summary>
   /// Creates a new instance of CommandOptions with default settings.
@@ -81,7 +81,7 @@ public class CommandOptions
   /// <returns>The configured CliWrap Command</returns>
   internal Command ApplyTo(Command command)
   {
-    var configuredCommand = command;
+    Command configuredCommand = command;
     
     // Apply working directory if specified
     if (!string.IsNullOrWhiteSpace(WorkingDirectory))

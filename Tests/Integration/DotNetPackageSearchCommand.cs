@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var searchBuilder = DotNet.PackageSearch("TimeWarp.Cli");
+  DotNetPackageSearchBuilder searchBuilder = DotNet.PackageSearch("TimeWarp.Cli");
   if (searchBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.PackageSearch() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var searchBuilder = DotNet.PackageSearch();
+  DotNetPackageSearchBuilder searchBuilder = DotNet.PackageSearch();
   if (searchBuilder != null)
   {
     Console.WriteLine("✅ Test 2 PASSED: DotNet.PackageSearch() without search term created successfully");
@@ -58,7 +58,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.PackageSearch("Microsoft.Extensions.Logging")
+  CommandResult command = DotNet.PackageSearch("Microsoft.Extensions.Logging")
     .WithSource("https://api.nuget.org/v3/index.json")
     .WithTake(5)
     .WithSkip(0)
@@ -84,7 +84,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.PackageSearch("Newtonsoft.Json")
+  CommandResult command = DotNet.PackageSearch("Newtonsoft.Json")
     .WithExactMatch()
     .WithPrerelease()
     .WithFormat("json")
@@ -111,7 +111,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.PackageSearch("TestPackage")
+  CommandResult command = DotNet.PackageSearch("TestPackage")
     .WithSource("https://api.nuget.org/v3/index.json")
     .WithSource("https://pkgs.dev.azure.com/example/feed")
     .WithTake(10)
@@ -137,7 +137,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.PackageSearch("TestPackage")
+  CommandResult command = DotNet.PackageSearch("TestPackage")
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("NUGET_ENV", "test")
     .WithTake(1)
@@ -163,7 +163,7 @@ totalTests++;
 try
 {
   // Search for a well-known package that should exist
-  var output = await DotNet.PackageSearch("Microsoft.Extensions.Logging")
+  string output = await DotNet.PackageSearch("Microsoft.Extensions.Logging")
     .WithTake(1)
     .WithFormat("table")
     .GetStringAsync();
@@ -182,7 +182,7 @@ totalTests++;
 try
 {
   // Search for TimeWarp.Cli with exact match and prerelease
-  var output = await DotNet.PackageSearch("TimeWarp.Cli")
+  string output = await DotNet.PackageSearch("TimeWarp.Cli")
     .WithExactMatch()
     .WithPrerelease()
     .GetStringAsync();

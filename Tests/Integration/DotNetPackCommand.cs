@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var packBuilder = DotNet.Pack();
+  DotNetPackBuilder packBuilder = DotNet.Pack();
   if (packBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.Pack() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Pack()
+  CommandResult command = DotNet.Pack()
     .WithProject("test.csproj")
     .WithConfiguration("Release")
     .WithFramework("net10.0")
@@ -66,7 +66,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var packageCommand = DotNet.Pack()
+  CommandResult packageCommand = DotNet.Pack()
     .WithProject("test.csproj")
     .WithConfiguration("Release")
     .WithVersionSuffix("beta")
@@ -95,7 +95,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var envCommand = DotNet.Pack()
+  CommandResult envCommand = DotNet.Pack()
     .WithProject("test.csproj")
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("PACK_ENV", "production")
@@ -122,7 +122,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var propsCommand = DotNet.Pack()
+  CommandResult propsCommand = DotNet.Pack()
     .WithProject("test.csproj")
     .WithConfiguration("Release")
     .WithProperty("PackageVersion", "1.0.0")
@@ -151,7 +151,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var overloadCommand = DotNet.Pack("test.csproj")
+  CommandResult overloadCommand = DotNet.Pack("test.csproj")
     .WithConfiguration("Release")
     .WithOutput("./dist")
     .WithVersionSuffix("rc1")
@@ -178,7 +178,7 @@ totalTests++;
 try
 {
   // This should handle gracefully since the project doesn't exist
-  var output = await DotNet.Pack()
+  string output = await DotNet.Pack()
     .WithProject("nonexistent.csproj")
     .WithConfiguration("Release")
     .WithOutput("./packages")

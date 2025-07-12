@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var cleanBuilder = DotNet.Clean();
+  DotNetCleanBuilder cleanBuilder = DotNet.Clean();
   if (cleanBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.Clean() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Clean()
+  CommandResult command = DotNet.Clean()
     .WithProject("test.csproj")
     .WithConfiguration("Debug")
     .WithFramework("net10.0")
@@ -65,7 +65,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var chainedCommand = DotNet.Clean()
+  CommandResult chainedCommand = DotNet.Clean()
     .WithProject("test.csproj")
     .WithConfiguration("Release")
     .WithRuntime("linux-x64")
@@ -93,7 +93,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var envCommand = DotNet.Clean()
+  CommandResult envCommand = DotNet.Clean()
     .WithProject("test.csproj")
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("CLEAN_ENV", "test")
@@ -119,7 +119,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var overloadCommand = DotNet.Clean("test.csproj")
+  CommandResult overloadCommand = DotNet.Clean("test.csproj")
     .WithConfiguration("Debug")
     .WithNoLogo()
     .Build();
@@ -144,7 +144,7 @@ totalTests++;
 try
 {
   // This should handle gracefully since the project doesn't exist
-  var output = await DotNet.Clean()
+  string output = await DotNet.Clean()
     .WithProject("nonexistent.csproj")
     .WithConfiguration("Debug")
     .GetStringAsync();

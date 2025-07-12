@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var referenceBuilder = DotNet.Reference();
+  DotNetReferenceBuilder referenceBuilder = DotNet.Reference();
   if (referenceBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.Reference() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var referenceBuilder = DotNet.Reference("MyApp.csproj");
+  DotNetReferenceBuilder referenceBuilder = DotNet.Reference("MyApp.csproj");
   if (referenceBuilder != null)
   {
     Console.WriteLine("✅ Test 2 PASSED: DotNet.Reference() with project created successfully");
@@ -58,7 +58,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Reference("MyApp.csproj")
+  CommandResult command = DotNet.Reference("MyApp.csproj")
     .Add("MyLibrary.csproj")
     .Build();
   
@@ -81,7 +81,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Reference("MyApp.csproj")
+  CommandResult command = DotNet.Reference("MyApp.csproj")
     .Add("MyLibrary.csproj", "MyOtherLibrary.csproj")
     .Build();
   
@@ -104,7 +104,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Reference("MyApp.csproj")
+  CommandResult command = DotNet.Reference("MyApp.csproj")
     .List()
     .Build();
   
@@ -127,7 +127,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Reference("MyApp.csproj")
+  CommandResult command = DotNet.Reference("MyApp.csproj")
     .Remove("MyLibrary.csproj")
     .Build();
   
@@ -150,7 +150,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Reference()
+  CommandResult command = DotNet.Reference()
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("DOTNET_ENV", "test")
     .List()
@@ -176,7 +176,7 @@ totalTests++;
 try
 {
   // This should handle gracefully since the project doesn't exist
-  var output = await DotNet.Reference("nonexistent.csproj")
+  string output = await DotNet.Reference("nonexistent.csproj")
     .List()
     .GetStringAsync();
   

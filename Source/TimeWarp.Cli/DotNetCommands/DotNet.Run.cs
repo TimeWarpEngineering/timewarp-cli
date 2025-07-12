@@ -252,10 +252,11 @@ public class DotNetRunBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithProperties(Dictionary<string, string> properties)
   {
-    foreach (var kvp in properties)
+    foreach (KeyValuePair<string, string> kvp in properties)
     {
       _properties[kvp.Key] = kvp.Value;
     }
+    
     return this;
   }
 
@@ -374,13 +375,13 @@ public class DotNetRunBuilder
     }
 
     // Add MSBuild properties
-    foreach (var property in _properties)
+    foreach (KeyValuePair<string, string> property in _properties)
     {
       arguments.Add($"--property:{property.Key}={property.Value}");
     }
 
     // Add process environment variables
-    foreach (var envVar in _environmentVariables)
+    foreach (KeyValuePair<string, string> envVar in _environmentVariables)
     {
       arguments.Add("-e");
       arguments.Add($"{envVar.Key}={envVar.Value}");

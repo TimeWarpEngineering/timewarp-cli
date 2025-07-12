@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var publishBuilder = DotNet.Publish();
+  DotNetPublishBuilder publishBuilder = DotNet.Publish();
   if (publishBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.Publish() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Publish()
+  CommandResult command = DotNet.Publish()
     .WithProject("test.csproj")
     .WithConfiguration("Release")
     .WithFramework("net10.0")
@@ -66,7 +66,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var deployCommand = DotNet.Publish()
+  CommandResult deployCommand = DotNet.Publish()
     .WithProject("test.csproj")
     .WithConfiguration("Release")
     .WithRuntime("linux-x64")
@@ -96,7 +96,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var envCommand = DotNet.Publish()
+  CommandResult envCommand = DotNet.Publish()
     .WithProject("test.csproj")
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("PUBLISH_ENV", "production")
@@ -123,7 +123,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var propsCommand = DotNet.Publish()
+  CommandResult propsCommand = DotNet.Publish()
     .WithProject("test.csproj")
     .WithConfiguration("Release")
     .WithProperty("PublishProfile", "Production")
@@ -151,7 +151,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var overloadCommand = DotNet.Publish("test.csproj")
+  CommandResult overloadCommand = DotNet.Publish("test.csproj")
     .WithConfiguration("Release")
     .WithRuntime("win-x64")
     .WithNoSelfContained()
@@ -178,7 +178,7 @@ totalTests++;
 try
 {
   // This should handle gracefully since the project doesn't exist
-  var output = await DotNet.Publish()
+  string output = await DotNet.Publish()
     .WithProject("nonexistent.csproj")
     .WithConfiguration("Release")
     .WithRuntime("win-x64")

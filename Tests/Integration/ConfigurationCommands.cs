@@ -12,25 +12,33 @@ Console.WriteLine("🧪 Testing ConfigurationCommands...");
 int passCount = 0;
 int totalTests = 0;
 
+// Arrays to avoid CA1861
+string[] TestArray = { "test" };
+string[] MultiEnvTestArray = { "multi-env-test" };
+string[] CombinedTestArray = { "combined_test" };
+string[] FluentTestArray = { "fluent_test" };
+string[] LineTestArray = { "line1\nline2\nline3" };
+string[] NullTestArray = { "null_test" };
+
 // Test 1: Working directory configuration
 totalTests++;
 try
 {
     // Create a temporary directory for testing
-    var tempDir = Path.GetTempPath();
-    var testDir = Path.Combine(tempDir, "timewarp-test-" + Guid.NewGuid().ToString("N")[..8]);
+    string tempDir = Path.GetTempPath();
+    string testDir = Path.Combine(tempDir, "timewarp-test-" + Guid.NewGuid().ToString("N")[..8]);
     Directory.CreateDirectory(testDir);
     
     try
     {
-        var options = new CommandOptions().WithWorkingDirectory(testDir);
-        var result = await Run("pwd", new string[0], options).GetStringAsync();
+        CommandOptions options = new CommandOptions().WithWorkingDirectory(testDir);
+        string result = await Run("pwd", Array.Empty<string>(), options).GetStringAsync();
         
         // On Windows, pwd might not exist, try different approach
         if (string.IsNullOrEmpty(result))
         {
             // Try with echo command that should work on all platforms
-            result = await Run("echo", new[] { "test" }, options).GetStringAsync();
+            result = await Run("echo", TestArray, options).GetStringAsync();
             if (result.Trim() == "test")
             {
                 Console.WriteLine("✅ Test 1 PASSED: Working directory configuration works (verified via echo)");
@@ -41,7 +49,7 @@ try
                 Console.WriteLine($"❌ Test 1 FAILED: Echo test failed with result: '{result}'");
             }
         }
-        else if (result.Trim().EndsWith(Path.GetFileName(testDir)))
+        else if (result.Trim().EndsWith(Path.GetFileName(testDir), StringComparison.Ordinal))
         {
             Console.WriteLine("✅ Test 1 PASSED: Working directory configuration works");
             passCount++;
@@ -69,18 +77,18 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var options = new CommandOptions()
+    CommandOptions options = new CommandOptions()
         .WithEnvironmentVariable("TEST_VAR", "test_value_123");
     
     // Use a command that can echo environment variables
-    var isWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
+    bool isWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
     string[] echoArgs = isWindows 
         ? new[] { "%TEST_VAR%" }  // Windows batch style
         : new[] { "$TEST_VAR" };  // Unix shell style
     
-    var result = await Run("echo", echoArgs, options).GetStringAsync();
+    string result = await Run("echo", echoArgs, options).GetStringAsync();
     
-    if (result.Trim().Contains("test_value_123"))
+    if (result.Trim().Contains("test_value_123", StringComparison.Ordinal))
     {
         Console.WriteLine("✅ Test 2 PASSED: Environment variable configuration works");
         passCount++;
@@ -88,8 +96,8 @@ try
     else
     {
         // Fallback test - just verify the command ran successfully with options
-        var fallbackResult = await Run("echo", new[] { "fallback_test" }, options).GetStringAsync();
-        if (fallbackResult.Trim() == "fallback_test")
+        string fallbackResult = await Run("echo", TestArray, options).GetStringAsync();
+        if (fallbackResult.Trim() == "test")
         {
             Console.WriteLine("✅ Test 2 PASSED: Configuration with environment variables doesn't break execution");
             passCount++;
@@ -109,14 +117,14 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var envVars = new Dictionary<string, string?>
+    Dictionary<string, string?> envVars = new()
     {
         { "VAR1", "value1" },
         { "VAR2", "value2" }
     };
     
-    var options = new CommandOptions().WithEnvironmentVariables(envVars);
-    var result = await Run("echo", new[] { "multi-env-test" }, options).GetStringAsync();
+    CommandOptions options = new CommandOptions().WithEnvironmentVariables(envVars);
+    string result = await Run("echo", MultiEnvTestArray, options).GetStringAsync();
     
     if (result.Trim() == "multi-env-test")
     {
@@ -137,12 +145,12 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var tempDir = Path.GetTempPath();
-    var options = new CommandOptions()
+    string tempDir = Path.GetTempPath();
+    CommandOptions options = new CommandOptions()
         .WithWorkingDirectory(tempDir)
         .WithEnvironmentVariable("COMBINED_TEST", "success");
     
-    var result = await Run("echo", new[] { "combined_test" }, options).GetStringAsync();
+    string result = await Run("echo", CombinedTestArray, options).GetStringAsync();
     
     if (result.Trim() == "combined_test")
     {
@@ -163,12 +171,12 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var options = new CommandOptions()
+    CommandOptions options = new CommandOptions()
         .WithWorkingDirectory(Path.GetTempPath())
         .WithEnvironmentVariable("FLUENT1", "value1")
         .WithEnvironmentVariable("FLUENT2", "value2");
     
-    var result = await Run("echo", new[] { "fluent_test" }, options).GetStringAsync();
+    string result = await Run("echo", FluentTestArray, options).GetStringAsync();
     
     if (result.Trim() == "fluent_test")
     {
@@ -189,7 +197,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await Run("echo", "backward_compatibility_test").GetStringAsync();
+    string result = await Run("echo", "backward_compatibility_test").GetStringAsync();
     
     if (result.Trim() == "backward_compatibility_test")
     {
@@ -210,10 +218,10 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var options = new CommandOptions()
+    CommandOptions options = new CommandOptions()
         .WithEnvironmentVariable("PIPELINE_TEST", "pipeline_value");
     
-    var result = await Run("echo", new[] { "line1\nline2\nline3" }, options)
+    string[] result = await Run("echo", LineTestArray, options)
         .Pipe("grep", "line")
         .GetLinesAsync();
     
@@ -236,9 +244,9 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await Run("echo", new[] { "null_test" }, null!).GetStringAsync();
+    string result = await Run("echo", NullTestArray, null!).GetStringAsync();
     
-    if (result == string.Empty)
+    if (string.IsNullOrEmpty(result))
     {
         Console.WriteLine("✅ Test 8 PASSED: Null options handled gracefully");
         passCount++;

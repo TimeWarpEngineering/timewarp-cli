@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var slnBuilder = DotNet.Sln();
+  DotNetSlnBuilder slnBuilder = DotNet.Sln();
   if (slnBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.Sln() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var slnBuilder = DotNet.Sln("MySolution.sln");
+  DotNetSlnBuilder slnBuilder = DotNet.Sln("MySolution.sln");
   if (slnBuilder != null)
   {
     Console.WriteLine("✅ Test 2 PASSED: DotNet.Sln() with solution file created successfully");
@@ -58,7 +58,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Sln("MySolution.sln")
+  CommandResult command = DotNet.Sln("MySolution.sln")
     .Add("MyApp.csproj")
     .Build();
   
@@ -81,7 +81,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Sln("MySolution.sln")
+  CommandResult command = DotNet.Sln("MySolution.sln")
     .Add("MyApp.csproj", "MyLibrary.csproj", "MyTests.csproj")
     .Build();
   
@@ -104,7 +104,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Sln("MySolution.sln")
+  CommandResult command = DotNet.Sln("MySolution.sln")
     .List()
     .Build();
   
@@ -127,7 +127,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Sln("MySolution.sln")
+  CommandResult command = DotNet.Sln("MySolution.sln")
     .Remove("MyApp.csproj")
     .Build();
   
@@ -150,7 +150,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Sln("MySolution.sln")
+  CommandResult command = DotNet.Sln("MySolution.sln")
     .Migrate()
     .Build();
   
@@ -173,7 +173,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Sln()
+  CommandResult command = DotNet.Sln()
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("DOTNET_ENV", "test")
     .List()
@@ -199,7 +199,7 @@ totalTests++;
 try
 {
   // This should handle gracefully since the solution doesn't exist
-  var output = await DotNet.Sln("nonexistent.sln")
+  string output = await DotNet.Sln("nonexistent.sln")
     .List()
     .GetStringAsync();
   

@@ -509,11 +509,11 @@ public class FZFBuilder
   /// <summary>
   /// Specifies the pointer to the current line.
   /// </summary>
-  /// <param name="pointer">Pointer string</param>
+  /// <param name="pointerString">Pointer string</param>
   /// <returns>The builder instance for method chaining</returns>
-  public FZFBuilder WithPointer(string pointer)
+  public FZFBuilder WithPointer(string pointerString)
   {
-    _arguments.Add($"--pointer={pointer}");
+    _arguments.Add($"--pointer={pointerString}");
     return this;
   }
 
@@ -868,13 +868,13 @@ public class FZFBuilder
     var arguments = new List<string> { "fzf" };
     arguments.AddRange(_arguments);
 
-    var command = CommandExtensions.Run("fzf", arguments.Skip(1).ToArray(), _options);
+    CommandResult command = CommandExtensions.Run("fzf", arguments.Skip(1).ToArray(), _options);
 
     // Handle input sources
-    if (_inputItems.Any())
+    if (_inputItems.Count > 0)
     {
       // Create a pipeline with echo for the input items
-      var input = string.Join("\n", _inputItems);
+      string input = string.Join("\n", _inputItems);
       command = CommandExtensions.Run("echo", new[] { input }, _options).Pipe("fzf", arguments.Skip(1).ToArray());
     }
     else if (!string.IsNullOrEmpty(_inputGlob))
@@ -885,11 +885,11 @@ public class FZFBuilder
     else if (!string.IsNullOrEmpty(_inputCommand))
     {
       // Parse and execute the input command
-      var parts = _inputCommand.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+      string[] parts = _inputCommand.Split(' ', StringSplitOptions.RemoveEmptyEntries);
       if (parts.Length > 0)
       {
-        var exe = parts[0];
-        var args = parts.Skip(1).ToArray();
+        string exe = parts[0];
+        string[] args = parts.Skip(1).ToArray();
         command = CommandExtensions.Run(exe, args, _options).Pipe("fzf", arguments.Skip(1).ToArray());
       }
     }
@@ -934,7 +934,7 @@ public static class FZFExtensions
     var fzfBuilder = new FZFBuilder();
     configure?.Invoke(fzfBuilder);
     
-    var fzfArguments = fzfBuilder.Build();
+    CommandResult fzfArguments = fzfBuilder.Build();
     return command.Pipe("fzf", ExtractFzfArguments(fzfArguments));
   }
 
@@ -942,6 +942,6 @@ public static class FZFExtensions
   {
     // This is a simplified implementation
     // In a real implementation, you'd extract the arguments from the FZFBuilder
-    return new string[0];
+    return Array.Empty<string>();
   }
 }

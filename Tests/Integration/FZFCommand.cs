@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var fzfBuilder = FZF.Run();
+  FZFBuilder fzfBuilder = FZF.Run();
   if (fzfBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: FZF.Run() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .FromInput("apple", "banana", "cherry")
     .Build();
   
@@ -61,7 +61,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithMulti()
     .FromInput("item1", "item2", "item3")
     .Build();
@@ -85,7 +85,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithPreview("echo {}")
     .FromInput("file1.txt", "file2.txt", "file3.txt")
     .Build();
@@ -109,7 +109,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithHeightPercent(50)
     .WithLayout("reverse")
     .WithBorder("rounded")
@@ -135,7 +135,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithExact()
     .WithCaseInsensitive()
     .WithScheme("path")
@@ -161,7 +161,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithCycle()
     .WithNoMouse()
     .WithScrollOff(3)
@@ -188,7 +188,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithAnsi()
     .WithColor("dark")
     .WithTabstop(4)
@@ -215,7 +215,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithHistory("/tmp/fzf_history")
     .WithHistorySize(100)
     .FromInput("history1", "history2", "history3")
@@ -240,7 +240,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithQuery("initial")
     .WithSelect1()
     .WithExit0()
@@ -267,7 +267,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithMulti(5)
     .WithPreview("echo 'Preview: {}'")
     .WithPreviewWindow("right:50%")
@@ -299,7 +299,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .FromFiles("*.cs")
     .WithPreview("head -20 {}")
     .Build();
@@ -323,7 +323,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .FromCommand("echo hello world")
     .WithPrompt("Select output: ")
     .Build();
@@ -347,7 +347,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("FZF_DEFAULT_OPTS", "--height 40%")
     .FromInput("env1", "env2", "env3")
@@ -372,7 +372,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithLayout("reverse-list")
     .WithBorderLabel("Selection")
     .WithBorderLabelPos("10")
@@ -402,7 +402,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithNth("1,2")
     .WithWithNth("2..")
     .WithDelimiter(":")
@@ -428,7 +428,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithNoSort()
     .WithTac()
     .WithTrack()
@@ -455,7 +455,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithScrollbar("█░")
     .WithEllipsis("...")
     .WithHeaderLines(2)
@@ -482,7 +482,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithPreview("cat {}")
     .WithPreviewLabel("File Contents")
     .WithPreviewLabelPos(5)
@@ -510,7 +510,7 @@ totalTests++;
 try
 {
   var items = new List<string> { "collection1", "collection2", "collection3" };
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .FromInput(items)
     .WithPrompt("From collection: ")
     .Build();
@@ -535,7 +535,7 @@ totalTests++;
 try
 {
   // This tests that the command builds correctly even if fzf might not be installed
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithFilter("test")  // Use filter mode to avoid interactive requirement
     .FromInput("test1", "test2", "test3")
     .Build();
@@ -559,7 +559,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithListen(8080)
     .WithSync()
     .FromInput("server1", "server2", "server3")
@@ -584,7 +584,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithRead0()
     .WithPrint0()
     .FromInput("null1", "null2", "null3")
@@ -609,7 +609,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithExpect("ctrl-a,ctrl-b")
     .WithPrintQuery()
     .FromInput("expect1", "expect2", "expect3")
@@ -634,7 +634,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = FZF.Run()
+  CommandResult command = FZF.Run()
     .WithBind("ctrl-a:select-all")
     .WithJumpLabels("abcdefghij")
     .WithFilepathWord()

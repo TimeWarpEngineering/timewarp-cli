@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var removePackageBuilder = DotNet.RemovePackage("TestPackage");
+  DotNetRemovePackageBuilder removePackageBuilder = DotNet.RemovePackage("TestPackage");
   if (removePackageBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.RemovePackage() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.RemovePackage("Microsoft.Extensions.Logging")
+  CommandResult command = DotNet.RemovePackage("Microsoft.Extensions.Logging")
     .WithProject("test.csproj")
     .Build();
   
@@ -61,7 +61,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var dirCommand = DotNet.RemovePackage("Newtonsoft.Json")
+  CommandResult dirCommand = DotNet.RemovePackage("Newtonsoft.Json")
     .WithProject("test.csproj")
     .WithWorkingDirectory("/tmp")
     .Build();
@@ -85,7 +85,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var envCommand = DotNet.RemovePackage("TestPackage")
+  CommandResult envCommand = DotNet.RemovePackage("TestPackage")
     .WithProject("test.csproj")
     .WithEnvironmentVariable("NUGET_ENV", "test")
     .WithEnvironmentVariable("REMOVE_PACKAGE_LOG", "verbose")
@@ -110,7 +110,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var validationCommand = DotNet.RemovePackage("Valid.Package.Name")
+  CommandResult validationCommand = DotNet.RemovePackage("Valid.Package.Name")
     .WithProject("MyProject.csproj")
     .Build();
   
@@ -133,7 +133,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var chainCommand = DotNet.RemovePackage("ChainedPackage")
+  CommandResult chainCommand = DotNet.RemovePackage("ChainedPackage")
     .WithProject("test.csproj")
     .WithWorkingDirectory("/project")
     .WithEnvironmentVariable("BUILD_ENV", "test")
@@ -159,7 +159,7 @@ totalTests++;
 try
 {
   // This should handle gracefully since the project doesn't exist
-  var output = await DotNet.RemovePackage("TestPackage")
+  string output = await DotNet.RemovePackage("TestPackage")
     .WithProject("nonexistent.csproj")
     .GetStringAsync();
   

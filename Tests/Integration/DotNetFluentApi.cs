@@ -16,7 +16,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var runBuilder = DotNet.Run();
+  DotNetRunBuilder runBuilder = DotNet.Run();
   if (runBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.Run() builder created successfully");
@@ -36,7 +36,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Run()
+  CommandResult command = DotNet.Run()
     .WithProject("test.csproj")
     .WithConfiguration("Debug")
     .WithFramework("net10.0")
@@ -63,7 +63,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var chainedCommand = DotNet.Run()
+  CommandResult chainedCommand = DotNet.Run()
     .WithProject("test.csproj")
     .WithConfiguration("Release")
     .WithNoRestore()
@@ -91,7 +91,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var envCommand = DotNet.Run()
+  CommandResult envCommand = DotNet.Run()
     .WithProject("test.csproj")
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("TEST_VAR", "test_value")
@@ -116,7 +116,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var extendedCommand = DotNet.Run()
+  CommandResult extendedCommand = DotNet.Run()
     .WithProject("test.csproj")
     .WithArchitecture("x64")
     .WithOperatingSystem("linux")
@@ -150,7 +150,7 @@ totalTests++;
 try
 {
   // This should handle gracefully since the project doesn't exist
-  var output = await DotNet.Run()
+  string output = await DotNet.Run()
     .WithProject("nonexistent.csproj")
     .WithConfiguration("Debug")
     .WithNoRestore()

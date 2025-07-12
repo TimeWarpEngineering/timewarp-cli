@@ -319,7 +319,7 @@ public class DotNetToolInstallBuilder
       arguments.Add(_arch);
     }
 
-    foreach (var source in _sources)
+    foreach (string source in _sources)
     {
       arguments.Add("--add-source");
       arguments.Add(source);
@@ -617,7 +617,7 @@ public class DotNetToolUpdateBuilder
       arguments.Add(_toolManifest);
     }
 
-    foreach (var source in _sources)
+    foreach (string source in _sources)
     {
       arguments.Add("--add-source");
       arguments.Add(source);
@@ -877,13 +877,13 @@ public class DotNetToolSearchBuilder
     if (_skip.HasValue)
     {
       arguments.Add("--skip");
-      arguments.Add(_skip.Value.ToString());
+      arguments.Add(_skip.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }
 
     if (_take.HasValue)
     {
       arguments.Add("--take");
-      arguments.Add(_take.Value.ToString());
+      arguments.Add(_take.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }
 
     if (_prerelease)
@@ -996,7 +996,7 @@ public class DotNetToolRestoreBuilder
       arguments.Add(_toolManifest);
     }
 
-    foreach (var source in _sources)
+    foreach (string source in _sources)
     {
       arguments.Add("--add-source");
       arguments.Add(source);

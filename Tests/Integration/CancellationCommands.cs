@@ -19,7 +19,7 @@ try
     using var cts = new CancellationTokenSource();
     cts.CancelAfter(TimeSpan.FromSeconds(10)); // Long timeout, command should complete
     
-    var result = await Run("echo", "Hello World").GetStringAsync(cts.Token);
+    string result = await Run("echo", "Hello World").GetStringAsync(cts.Token);
     if (result.Trim() == "Hello World")
     {
         Console.WriteLine("✅ Test 1 PASSED: Quick command with cancellation token works");
@@ -44,11 +44,11 @@ totalTests++;
 try
 {
     using var cts = new CancellationTokenSource();
-    cts.Cancel(); // Cancel immediately
+    await cts.CancelAsync(); // Cancel immediately
     
-    var result = await Run("echo", "test").GetStringAsync(cts.Token);
+    string result = await Run("echo", "test").GetStringAsync(cts.Token);
     // Should return empty string due to cancellation
-    if (result == string.Empty)
+    if (string.IsNullOrEmpty(result))
     {
         Console.WriteLine("✅ Test 2 PASSED: Already cancelled token returns empty result");
         passCount++;
@@ -76,7 +76,7 @@ try
     using var cts = new CancellationTokenSource();
     cts.CancelAfter(TimeSpan.FromSeconds(5));
     
-    var lines = await Run("echo", "line1\nline2\nline3").GetLinesAsync(cts.Token);
+    string[] lines = await Run("echo", "line1\nline2\nline3").GetLinesAsync(cts.Token);
     if (lines.Length == 3 && lines[0] == "line1" && lines[1] == "line2" && lines[2] == "line3")
     {
         Console.WriteLine("✅ Test 3 PASSED: GetLinesAsync with cancellation token works");
@@ -124,13 +124,13 @@ try
     cts.CancelAfter(TimeSpan.FromMilliseconds(100)); // Very short timeout
     
     // Use sleep command that should be cancelled (works on both Unix and Windows with different commands)
-    var isWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
-    var result = isWindows 
+    bool isWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
+    string result = isWindows 
         ? await Run("timeout", "5").GetStringAsync(cts.Token)  // Windows: timeout 5 seconds
         : await Run("sleep", "5").GetStringAsync(cts.Token);   // Unix: sleep 5 seconds
     
     // If we get here, either the command completed very quickly or returned empty due to cancellation
-    if (result == string.Empty)
+    if (string.IsNullOrEmpty(result))
     {
         Console.WriteLine("✅ Test 5 PASSED: Timeout cancellation returns empty result");
         passCount++;
@@ -158,11 +158,11 @@ try
     using var cts = new CancellationTokenSource();
     cts.CancelAfter(TimeSpan.FromSeconds(5));
     
-    var result = await Run("echo", "line1\nline2\nline3")
+    string result = await Run("echo", "line1\nline2\nline3")
         .Pipe("grep", "line")
         .GetStringAsync(cts.Token);
     
-    if (!string.IsNullOrEmpty(result) && result.Contains("line"))
+    if (!string.IsNullOrEmpty(result) && result.Contains("line", StringComparison.Ordinal))
     {
         Console.WriteLine("✅ Test 6 PASSED: Pipeline with cancellation token works");
         passCount++;
@@ -185,7 +185,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await Run("echo", "default token test").GetStringAsync();
+    string result = await Run("echo", "default token test").GetStringAsync();
     if (result.Trim() == "default token test")
     {
         Console.WriteLine("✅ Test 7 PASSED: Default cancellation token behavior preserved");

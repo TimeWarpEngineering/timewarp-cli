@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var gwqBuilder = Gwq.Run();
+  GwqBuilder gwqBuilder = Gwq.Run();
   if (gwqBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: Gwq.Run() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Add("feature/new-branch")
     .Build();
   
@@ -61,7 +61,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Add("feature/branch", "~/worktrees/feature")
     .Build();
   
@@ -84,7 +84,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .AddInteractive()
     .Build();
   
@@ -107,7 +107,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Add("feature/new")
     .WithNewBranch()
     .WithForce()
@@ -132,7 +132,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .List()
     .Build();
   
@@ -155,7 +155,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .List()
     .WithGlobal()
     .WithVerbose()
@@ -181,7 +181,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Remove()
     .Build();
   
@@ -204,7 +204,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Remove("feature/old")
     .WithDeleteBranch()
     .WithDryRun()
@@ -229,7 +229,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Rm("feature/completed")
     .WithForceDeleteBranch()
     .Build();
@@ -253,7 +253,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Status()
     .Build();
   
@@ -276,7 +276,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Status()
     .WithGlobal()
     .WithJson()
@@ -305,7 +305,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Status()
     .WithWatch()
     .WithInterval(10)
@@ -331,7 +331,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Get("feature")
     .Build();
   
@@ -354,7 +354,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Get("main")
     .WithGlobal()
     .WithNull()
@@ -379,7 +379,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Exec("feature")
     .WithCommand("npm", "test")
     .Build();
@@ -403,7 +403,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Exec("main")
     .WithCommand("git", "pull")
     .WithStay()
@@ -429,7 +429,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .ConfigList()
     .Build();
   
@@ -452,11 +452,11 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var getCommand = Gwq.Run()
+  CommandResult getCommand = Gwq.Run()
     .ConfigGet("worktree.basedir")
     .Build();
   
-  var setCommand = Gwq.Run()
+  CommandResult setCommand = Gwq.Run()
     .ConfigSet("worktree.basedir", "~/worktrees")
     .Build();
   
@@ -479,7 +479,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Prune()
     .Build();
   
@@ -502,7 +502,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .Version()
     .Build();
   
@@ -525,7 +525,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("GIT_DIR", "/tmp/.git")
     .List()
@@ -550,7 +550,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .List()
     .PipeTo("grep", "feature");
   
@@ -573,7 +573,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = Gwq.Run()
+  CommandResult command = Gwq.Run()
     .List()
     .WithGlobal()
     .Build();
@@ -597,7 +597,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var result = await Gwq.Run()
+  string result = await Gwq.Run()
     .Version()
     .GetStringAsync();
   

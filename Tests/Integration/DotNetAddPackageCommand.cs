@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var addPackageBuilder = DotNet.AddPackage("TestPackage");
+  DotNetAddPackageBuilder addPackageBuilder = DotNet.AddPackage("TestPackage");
   if (addPackageBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.AddPackage() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var versionCommand = DotNet.AddPackage("TestPackage", "1.0.0");
+  DotNetAddPackageBuilder versionCommand = DotNet.AddPackage("TestPackage", "1.0.0");
   if (versionCommand != null)
   {
     Console.WriteLine("✅ Test 2 PASSED: AddPackage with version overload works correctly");
@@ -58,7 +58,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.AddPackage("Microsoft.Extensions.Logging")
+  CommandResult command = DotNet.AddPackage("Microsoft.Extensions.Logging")
     .WithProject("test.csproj")
     .WithFramework("net10.0")
     .WithVersion("8.0.0")
@@ -84,7 +84,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var packageCommand = DotNet.AddPackage("Newtonsoft.Json")
+  CommandResult packageCommand = DotNet.AddPackage("Newtonsoft.Json")
     .WithProject("test.csproj")
     .WithVersion("13.0.3")
     .WithPrerelease()
@@ -111,7 +111,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var envCommand = DotNet.AddPackage("TestPackage")
+  CommandResult envCommand = DotNet.AddPackage("TestPackage")
     .WithProject("test.csproj")
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("NUGET_ENV", "test")
@@ -137,7 +137,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var sourcesCommand = DotNet.AddPackage("TestPackage")
+  CommandResult sourcesCommand = DotNet.AddPackage("TestPackage")
     .WithProject("test.csproj")
     .WithSource("https://api.nuget.org/v3/index.json")
     .WithSource("https://my-private-feed.com/v3/index.json")
@@ -165,7 +165,7 @@ totalTests++;
 try
 {
   // This should handle gracefully since the project doesn't exist
-  var output = await DotNet.AddPackage("TestPackage")
+  string output = await DotNet.AddPackage("TestPackage")
     .WithProject("nonexistent.csproj")
     .WithVersion("1.0.0")
     .WithNoRestore()

@@ -29,7 +29,7 @@ try
     var testResults = new List<(string TestName, bool Passed, string Output)>();
 
     // Discover all test files
-var testFiles = await Run("find", "Integration", "-name", "*.cs", "-type", "f").GetLinesAsync();
+    string[] testFiles = await Run("find", "Integration", "-name", "*.cs", "-type", "f").GetLinesAsync();
 
 if (testFiles.Length == 0)
 {
@@ -38,22 +38,23 @@ if (testFiles.Length == 0)
 }
 
 Console.WriteLine($"Found {testFiles.Length} test files:");
-foreach (var file in testFiles)
+foreach (string file in testFiles)
 {
     Console.WriteLine($"  - {file}");
 }
+
 Console.WriteLine();
 
 // Run each test
-foreach (var testFile in testFiles)
+foreach (string testFile in testFiles)
 {
-    var testName = Path.GetFileNameWithoutExtension(testFile);
+    string testName = Path.GetFileNameWithoutExtension(testFile);
     Console.WriteLine($"🏃 Running {testName}...");
     
     try
     {
         // Run the test script
-        var process = new Process
+        using var process = new Process()
         {
             StartInfo = new ProcessStartInfo
             {
@@ -66,12 +67,12 @@ foreach (var testFile in testFiles)
         };
 
         process.Start();
-        var output = await process.StandardOutput.ReadToEndAsync();
-        var error = await process.StandardError.ReadToEndAsync();
+        string output = await process.StandardOutput.ReadToEndAsync();
+        string error = await process.StandardError.ReadToEndAsync();
         await process.WaitForExitAsync();
 
-        var passed = process.ExitCode == 0;
-        var fullOutput = output + (!string.IsNullOrEmpty(error) ? $"\nSTDERR:\n{error}" : "");
+        bool passed = process.ExitCode == 0;
+        string fullOutput = output + (!string.IsNullOrEmpty(error) ? $"\nSTDERR:\n{error}" : "");
         
         testResults.Add((testName, passed, fullOutput));
         
@@ -85,8 +86,8 @@ foreach (var testFile in testFiles)
         }
         
         // Show test output with indentation
-        var lines = fullOutput.Split('\n');
-        foreach (var line in lines)
+        string[] lines = fullOutput.Split('\n');
+        foreach (string line in lines)
         {
             if (!string.IsNullOrEmpty(line))
             {
@@ -105,9 +106,9 @@ foreach (var testFile in testFiles)
 }
 
 // Summary
-var totalTests = testResults.Count;
-var passedTests = testResults.Count(r => r.Passed);
-var failedTests = totalTests - passedTests;
+int totalTests = testResults.Count;
+int passedTests = testResults.Count(r => r.Passed);
+int failedTests = totalTests - passedTests;
 
 Console.WriteLine(new string('=', 60));
 Console.WriteLine($"🎯 TEST SUMMARY");
@@ -119,7 +120,7 @@ Console.WriteLine($"Success Rate: {(double)passedTests / totalTests * 100:F1}%")
 if (failedTests > 0)
 {
     Console.WriteLine("\n❌ FAILED TESTS:");
-    foreach (var result in testResults.Where(r => !r.Passed))
+    foreach ((string TestName, bool Passed, string Output) result in testResults.Where(r => !r.Passed))
     {
         Console.WriteLine($"  - {result.TestName}");
     }

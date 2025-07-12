@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var restoreBuilder = DotNet.Restore();
+  DotNetRestoreBuilder restoreBuilder = DotNet.Restore();
   if (restoreBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.Restore() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Restore()
+  CommandResult command = DotNet.Restore()
     .WithProject("test.csproj")
     .WithRuntime("linux-x64")
     .WithVerbosity("minimal")
@@ -65,7 +65,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var chainedCommand = DotNet.Restore()
+  CommandResult chainedCommand = DotNet.Restore()
     .WithProject("test.csproj")
     .WithSource("https://api.nuget.org/v3/index.json")
     .WithSource("https://nuget.pkg.github.com/MyOrg/index.json")
@@ -95,7 +95,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var lockCommand = DotNet.Restore()
+  CommandResult lockCommand = DotNet.Restore()
     .WithProject("test.csproj")
     .WithLockFilePath("./packages.lock.json")
     .WithLockedMode()
@@ -123,7 +123,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var overloadCommand = DotNet.Restore("test.csproj")
+  CommandResult overloadCommand = DotNet.Restore("test.csproj")
     .WithRuntime("win-x64")
     .WithVerbosity("quiet")
     .WithNoCache()
@@ -149,7 +149,7 @@ totalTests++;
 try
 {
   // This should handle gracefully since the project doesn't exist
-  var output = await DotNet.Restore()
+  string output = await DotNet.Restore()
     .WithProject("nonexistent.csproj")
     .WithNoCache()
     .GetStringAsync();

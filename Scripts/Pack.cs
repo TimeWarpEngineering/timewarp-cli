@@ -25,11 +25,11 @@ try
     try
     {
         // First, clean any existing packages
-    var packagesPath = "../Source/TimeWarp.Cli/bin/Release";
+    string packagesPath = "../Source/TimeWarp.Cli/bin/Release";
     if (Directory.Exists(packagesPath))
     {
-        var nupkgFiles = Directory.GetFiles(packagesPath, "*.nupkg", SearchOption.AllDirectories);
-        foreach (var file in nupkgFiles)
+        string[] nupkgFiles = Directory.GetFiles(packagesPath, "*.nupkg", SearchOption.AllDirectories);
+        foreach (string file in nupkgFiles)
         {
             File.Delete(file);
             Console.WriteLine($"Deleted existing package: {file}");
@@ -68,22 +68,22 @@ try
     }
 
     // Find the generated package
-    var newNupkgFiles = Directory.GetFiles(packagesPath, "*.nupkg", SearchOption.AllDirectories);
+    string[] newNupkgFiles = Directory.GetFiles(packagesPath, "*.nupkg", SearchOption.AllDirectories);
     if (newNupkgFiles.Length == 0)
     {
         Console.WriteLine("❌ No package file found after packing");
         Environment.Exit(1);
     }
 
-    var packagePath = newNupkgFiles[0];
+    string packagePath = newNupkgFiles[0];
     Console.WriteLine($"📦 Package created: {packagePath}");
 
     // Clean LocalNuGetFeed directory to ensure only one version at a time
-    var localFeedPath = "../LocalNuGetFeed";
+    string localFeedPath = "../LocalNuGetFeed";
     if (Directory.Exists(localFeedPath))
     {
-        var existingPackages = Directory.GetFiles(localFeedPath, "*.nupkg");
-        foreach (var existingPackage in existingPackages)
+        string[] existingPackages = Directory.GetFiles(localFeedPath, "*.nupkg");
+        foreach (string existingPackage in existingPackages)
         {
             File.Delete(existingPackage);
             Console.WriteLine($"🗑️  Deleted existing package from local feed: {Path.GetFileName(existingPackage)}");

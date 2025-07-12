@@ -16,7 +16,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-    var result = await Run("echo", "Hello World").GetStringAsync();
+    string result = await Run("echo", "Hello World").GetStringAsync();
     if (result.Trim() == "Hello World")
     {
         Console.WriteLine("✅ Test 1 PASSED: Echo command works");
@@ -36,7 +36,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await Run("echo", "arg1", "arg2", "arg3").GetStringAsync();
+    string result = await Run("echo", "arg1", "arg2", "arg3").GetStringAsync();
     if (result.Trim() == "arg1 arg2 arg3")
     {
         Console.WriteLine("✅ Test 2 PASSED: Multiple arguments work");
@@ -69,7 +69,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await Run("date").GetStringAsync();
+    string result = await Run("date").GetStringAsync();
     if (!string.IsNullOrEmpty(result.Trim()))
     {
         Console.WriteLine("✅ Test 4 PASSED: Date command returns non-empty result");

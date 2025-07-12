@@ -305,7 +305,7 @@ public class DotNetNuGetPushBuilder
     if (_timeout.HasValue)
     {
       arguments.Add("--timeout");
-      arguments.Add(_timeout.Value.ToString());
+      arguments.Add(_timeout.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }
 
     if (!string.IsNullOrWhiteSpace(_apiKey))

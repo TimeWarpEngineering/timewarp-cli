@@ -226,10 +226,11 @@ public class DotNetBuildBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithProperties(Dictionary<string, string> properties)
   {
-    foreach (var kvp in properties)
+    foreach (KeyValuePair<string, string> kvp in properties)
     {
       _properties[kvp.Key] = kvp.Value;
     }
+    
     return this;
   }
 
@@ -358,7 +359,7 @@ public class DotNetBuildBuilder
     }
 
     // Add MSBuild properties
-    foreach (var property in _properties)
+    foreach (KeyValuePair<string, string> property in _properties)
     {
       arguments.Add($"--property:{property.Key}={property.Value}");
     }

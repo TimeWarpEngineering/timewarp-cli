@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var userSecretsBuilder = DotNet.UserSecrets();
+  DotNetUserSecretsBuilder userSecretsBuilder = DotNet.UserSecrets();
   if (userSecretsBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.UserSecrets() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.UserSecrets()
+  CommandResult command = DotNet.UserSecrets()
     .Init()
     .Build();
   
@@ -61,7 +61,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.UserSecrets()
+  CommandResult command = DotNet.UserSecrets()
     .WithProject("MyApp.csproj")
     .Init()
     .Build();
@@ -85,7 +85,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.UserSecrets()
+  CommandResult command = DotNet.UserSecrets()
     .WithId("my-app-secrets")
     .Init()
     .Build();
@@ -109,7 +109,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.UserSecrets()
+  CommandResult command = DotNet.UserSecrets()
     .Set("ConnectionString", "Server=localhost;Database=MyApp;")
     .Build();
   
@@ -132,7 +132,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.UserSecrets()
+  CommandResult command = DotNet.UserSecrets()
     .WithProject("MyApp.csproj")
     .Set("ApiKey", "secret-key-value")
     .Build();
@@ -156,7 +156,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.UserSecrets()
+  CommandResult command = DotNet.UserSecrets()
     .Remove("ConnectionString")
     .Build();
   
@@ -179,7 +179,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.UserSecrets()
+  CommandResult command = DotNet.UserSecrets()
     .List()
     .Build();
   
@@ -202,7 +202,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.UserSecrets()
+  CommandResult command = DotNet.UserSecrets()
     .Clear()
     .Build();
   
@@ -225,7 +225,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.UserSecrets()
+  CommandResult command = DotNet.UserSecrets()
     .WithProject("MyApp.csproj")
     .WithId("my-app-secrets")
     .Set("DatabaseConnection", "Server=localhost;")
@@ -250,7 +250,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.UserSecrets()
+  CommandResult command = DotNet.UserSecrets()
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("DOTNET_ENV", "test")
     .List()
@@ -276,7 +276,7 @@ totalTests++;
 try
 {
   // This will fail gracefully without a project but tests the execution path
-  var output = await DotNet.UserSecrets()
+  string output = await DotNet.UserSecrets()
     .List()
     .GetStringAsync();
   

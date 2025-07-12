@@ -325,19 +325,19 @@ public class DotNetWatchBuilder
       arguments.Add("--no-build");
     }
 
-    foreach (var pattern in _include)
+    foreach (string pattern in _include)
     {
       arguments.Add("--include");
       arguments.Add(pattern);
     }
 
-    foreach (var pattern in _exclude)
+    foreach (string pattern in _exclude)
     {
       arguments.Add("--exclude");
       arguments.Add(pattern);
     }
 
-    foreach (var property in _properties)
+    foreach (string property in _properties)
     {
       arguments.Add("--property");
       arguments.Add(property);
@@ -394,7 +394,7 @@ public class DotNetWatchRunBuilder
 
   public CommandResult Build()
   {
-    var arguments = _watchBuilder.BuildBaseArguments();
+    List<string> arguments = _watchBuilder.BuildBaseArguments();
     arguments.Add("run");
     arguments.AddRange(_watchBuilder.GetAdditionalArguments());
 
@@ -431,7 +431,7 @@ public class DotNetWatchTestBuilder
 
   public CommandResult Build()
   {
-    var arguments = _watchBuilder.BuildBaseArguments();
+    List<string> arguments = _watchBuilder.BuildBaseArguments();
     arguments.Add("test");
     arguments.AddRange(_watchBuilder.GetAdditionalArguments());
 
@@ -468,7 +468,7 @@ public class DotNetWatchBuildBuilder
 
   public CommandResult Build()
   {
-    var arguments = _watchBuilder.BuildBaseArguments();
+    List<string> arguments = _watchBuilder.BuildBaseArguments();
     arguments.Add("build");
     arguments.AddRange(_watchBuilder.GetAdditionalArguments());
 

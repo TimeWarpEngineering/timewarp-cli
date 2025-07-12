@@ -16,7 +16,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-    var result = await Run("echo", "hello\nworld\ntest")
+    string result = await Run("echo", "hello\nworld\ntest")
         .Pipe("grep", "world")
         .GetStringAsync();
     
@@ -39,7 +39,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await Run("echo", "line1\nline2\nline3\nline4")
+    string result = await Run("echo", "line1\nline2\nline3\nline4")
         .Pipe("grep", "line")
         .Pipe("wc", "-l")
         .GetStringAsync();
@@ -63,7 +63,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var lines = await Run("echo", "apple\nbanana\ncherry")
+    string[] lines = await Run("echo", "apple\nbanana\ncherry")
         .Pipe("grep", "a")
         .GetLinesAsync();
     
@@ -102,11 +102,11 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await Run("nonexistentcommand12345")
+    string result = await Run("nonexistentcommand12345")
         .Pipe("grep", "anything")
         .GetStringAsync();
     
-    if (result == string.Empty)
+    if (string.IsNullOrEmpty(result))
     {
         Console.WriteLine("✅ Test 5 PASSED: Pipeline with failed first command returns empty string");
         passCount++;
@@ -125,11 +125,11 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await Run("echo", "test")
+    string result = await Run("echo", "test")
         .Pipe("nonexistentcommand12345")
         .GetStringAsync();
     
-    if (result == string.Empty)
+    if (string.IsNullOrEmpty(result))
     {
         Console.WriteLine("✅ Test 6 PASSED: Pipeline with failed second command returns empty string");
         passCount++;
@@ -148,11 +148,11 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var files = await Run("find", ".", "-name", "*.cs", "-type", "f")
+    string[] files = await Run("find", ".", "-name", "*.cs", "-type", "f")
         .Pipe("head", "-5")
         .GetLinesAsync();
     
-    if (files.Length <= 5 && files.All(f => f.EndsWith(".cs")))
+    if (files.Length <= 5 && files.All(f => f.EndsWith(".cs", StringComparison.Ordinal)))
     {
         Console.WriteLine($"✅ Test 7 PASSED: Real-world pipeline found {files.Length} .cs files");
         passCount++;
@@ -171,7 +171,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    var result = await Run("echo", "The quick brown fox jumps over the lazy dog")
+    string result = await Run("echo", "The quick brown fox jumps over the lazy dog")
         .Pipe("tr", " ", "\n")
         .Pipe("grep", "o")
         .Pipe("wc", "-l")

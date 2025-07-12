@@ -207,7 +207,7 @@ public class DotNetAddPackageBuilder
     }
 
     // Add sources
-    foreach (var source in _sources)
+    foreach (string source in _sources)
     {
       arguments.Add("--source");
       arguments.Add(source);

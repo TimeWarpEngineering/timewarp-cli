@@ -202,10 +202,11 @@ public class DotNetRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithProperties(Dictionary<string, string> properties)
   {
-    foreach (var kvp in properties)
+    foreach (KeyValuePair<string, string> kvp in properties)
     {
       _properties[kvp.Key] = kvp.Value;
     }
+    
     return this;
   }
 
@@ -282,7 +283,7 @@ public class DotNetRestoreBuilder
     }
 
     // Add sources
-    foreach (var source in _sources)
+    foreach (string source in _sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
@@ -315,7 +316,7 @@ public class DotNetRestoreBuilder
     }
 
     // Add MSBuild properties
-    foreach (var property in _properties)
+    foreach (KeyValuePair<string, string> property in _properties)
     {
       arguments.Add($"--property:{property.Key}={property.Value}");
     }

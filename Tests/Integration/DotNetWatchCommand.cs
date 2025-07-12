@@ -18,7 +18,7 @@ int totalTests = 0;
 totalTests++;
 try
 {
-  var watchBuilder = DotNet.Watch();
+  DotNetWatchBuilder watchBuilder = DotNet.Watch();
   if (watchBuilder != null)
   {
     Console.WriteLine("✅ Test 1 PASSED: DotNet.Watch() builder created successfully");
@@ -38,7 +38,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Watch()
+  CommandResult command = DotNet.Watch()
     .Run()
     .Build();
   
@@ -61,7 +61,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Watch()
+  CommandResult command = DotNet.Watch()
     .Test()
     .Build();
   
@@ -84,7 +84,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Watch()
+  CommandResult command = DotNet.Watch()
     .Build()
     .Build();
   
@@ -107,7 +107,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Watch()
+  CommandResult command = DotNet.Watch()
     .WithProject("MyApp.csproj")
     .Run()
     .Build();
@@ -131,7 +131,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Watch()
+  CommandResult command = DotNet.Watch()
     .WithQuiet()
     .WithVerbose()
     .WithList()
@@ -157,7 +157,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Watch()
+  CommandResult command = DotNet.Watch()
     .WithNoRestore()
     .WithNoLaunchProfile()
     .WithNoHotReload()
@@ -184,7 +184,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Watch()
+  CommandResult command = DotNet.Watch()
     .WithInclude("**/*.cs")
     .WithInclude("**/*.cshtml")
     .WithExclude("**/bin/**")
@@ -211,7 +211,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Watch()
+  CommandResult command = DotNet.Watch()
     .WithConfiguration("Release")
     .WithTargetFramework("net10.0")
     .WithRuntime("linux-x64")
@@ -238,7 +238,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Watch()
+  CommandResult command = DotNet.Watch()
     .WithProperty("Configuration=Debug")
     .WithProperty("Platform=x64")
     .WithLaunchProfile("Development")
@@ -264,7 +264,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Watch()
+  CommandResult command = DotNet.Watch()
     .WithArguments("--environment", "Development")
     .WithArgument("--port")
     .WithArgument("5000")
@@ -290,7 +290,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Watch()
+  CommandResult command = DotNet.Watch()
     .WithWorkingDirectory("/tmp")
     .WithEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development")
     .Run()
@@ -315,7 +315,7 @@ catch (Exception ex)
 totalTests++;
 try
 {
-  var command = DotNet.Watch()
+  CommandResult command = DotNet.Watch()
     .WithProject("MyApp.csproj")
     .WithConfiguration("Release")
     .WithTargetFramework("net10.0")
@@ -348,7 +348,7 @@ totalTests++;
 try
 {
   // This lists watched files without actually starting the watcher
-  var output = await DotNet.Watch()
+  string output = await DotNet.Watch()
     .WithList()
     .Run()
     .GetStringAsync();
