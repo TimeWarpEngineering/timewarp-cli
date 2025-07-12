@@ -91,7 +91,7 @@ totalTests++;
 try
 {
   string result = await Run(testScript).GetStringAsync();
-  if (result.Contains("Args:", StringComparison.Ordinal) && !result.Contains("Args: ", StringComparison.Ordinal))
+  if (result.Trim() == "Args:")
   {
     Console.WriteLine("✅ Test 4 PASSED: No arguments handled correctly");
     passCount++;
