@@ -77,7 +77,8 @@ public partial class FzfBuilder
   /// <summary>
   /// Specifies field index expressions for limiting search scope.
   /// </summary>
-  /// <param name="nth">Comma-separated list of field indices</param>
+  /// <param name="nth">Field index expression string. Examples: "1" (first field), "1,3" (first and third), 
+  /// "2..4" (fields 2-4), "-1" (last field), "2.." (all from second), "..-2" (all except last 2)</param>
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithNth(string nth)
   {
@@ -88,7 +89,8 @@ public partial class FzfBuilder
   /// <summary>
   /// Transforms the presentation of each line using field index expressions.
   /// </summary>
-  /// <param name="withNth">Field index expressions for presentation</param>
+  /// <param name="withNth">Field index expression string for display. Same format as WithNth.
+  /// Controls which fields are shown while searching all fields</param>
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithWithNth(string withNth)
   {
@@ -99,7 +101,8 @@ public partial class FzfBuilder
   /// <summary>
   /// Specifies the field delimiter regex.
   /// </summary>
-  /// <param name="delimiter">The delimiter regex</param>
+  /// <param name="delimiter">Field delimiter regex. Examples: "\t" (tab), ":" (colon), 
+  /// "\s+" (whitespace), "[,:]" (comma or colon). Default is AWK-style (whitespace)</param>
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithDelimiter(string delimiter)
   {

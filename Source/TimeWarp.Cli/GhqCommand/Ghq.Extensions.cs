@@ -33,7 +33,7 @@ public static class GhqExtensions
 
   private static string[] ExtractFzfArguments(FzfBuilder fzfBuilder)
   {
-    // This would need to be implemented to extract arguments from FZFBuilder
+    // This would need to be implemented to extract arguments from FzfBuilder
     // For now, return empty array
     return Array.Empty<string>();
   }
