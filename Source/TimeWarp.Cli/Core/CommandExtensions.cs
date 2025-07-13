@@ -30,28 +30,20 @@ public static class CommandExtensions
       return CommandResult.NullCommandResult;
     }
     
-    try
+    // Handle .cs script files specially
+    if (executable.EndsWith(CSharpScriptExtension, StringComparison.OrdinalIgnoreCase))
     {
-      // Handle .cs script files specially
-      if (executable.EndsWith(CSharpScriptExtension, StringComparison.OrdinalIgnoreCase))
-      {
-        // Insert -- at the beginning of arguments to prevent dotnet from intercepting them
-        List<string> newArgs = ["--", .. arguments];
-        arguments = [.. newArgs];
-      }
-      
-      Command cliCommand = CliWrap.Cli.Wrap(executable)
-        .WithArguments(arguments);
-      
-      // Apply configuration options
-      cliCommand = commandOptions.ApplyTo(cliCommand);
-        
-      return new CommandResult(cliCommand);
+      // Insert -- at the beginning of arguments to prevent dotnet from intercepting them
+      List<string> newArgs = ["--", .. arguments];
+      arguments = [.. newArgs];
     }
-    catch
-    {
-      // If command creation fails, return a result that will return empty values
-      return CommandResult.NullCommandResult;
-    }
+    
+    Command cliCommand = CliWrap.Cli.Wrap(executable)
+      .WithArguments(arguments);
+    
+    // Apply configuration options
+    cliCommand = commandOptions.ApplyTo(cliCommand);
+      
+    return new CommandResult(cliCommand);
   }
 }
