@@ -8,6 +8,6 @@
     <PackageVersion Include="CliWrap" Version="3.9.0" />
     
     <!-- Our packages -->
-    <PackageVersion Include="TimeWarp.Cli" Version="0.6.0-beta11" />
+    <PackageVersion Include="TimeWarp.Cli" Version="0.6.0-beta12" />
   </ItemGroup>
 </Project>

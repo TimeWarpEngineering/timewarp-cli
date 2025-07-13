@@ -1,11 +1,6 @@
 #!/usr/bin/dotnet run
-#:package TimeWarp.Cli
 
 #pragma warning disable IDE0005 // Using directive is unnecessary
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using TimeWarp.Cli;
-using static TimeWarp.Cli.CommandExtensions;
 #pragma warning restore IDE0005
 
 // Get script directory using CallerFilePath (C# equivalent of PowerShell's $PSScriptRoot)

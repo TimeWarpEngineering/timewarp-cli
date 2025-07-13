@@ -1,9 +1,6 @@
 #!/usr/bin/dotnet run
-#:package TimeWarp.Cli
 
 #pragma warning disable IDE0005 // Using directive is unnecessary
-using TimeWarp.Cli;
-using static TimeWarp.Cli.CommandExtensions;
 #pragma warning restore IDE0005
 
 Console.WriteLine("🧪 Testing DotNetNewCommand...");
