@@ -35,7 +35,8 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    string result = await Run("ls", new[] { "/nonexistent/path/12345" }, noValidation).GetStringAsync();
+    string[] lsArgs = { "/nonexistent/path/12345" };
+    string result = await Run("ls", lsArgs, noValidation).GetStringAsync();
     Console.WriteLine("✅ Test 2 PASSED: Command with non-zero exit code didn't throw when validation disabled");
     passCount++;
 }
@@ -61,7 +62,8 @@ catch (Exception)
 totalTests++;
 try
 {
-    string[] lines = await Run("ls", new[] { "/nonexistent/path/12345" }, noValidation).GetLinesAsync();
+    string[] lsArgs2 = { "/nonexistent/path/12345" };
+    string[] lines = await Run("ls", lsArgs2, noValidation).GetLinesAsync();
     if (lines.Length == 0)
     {
         Console.WriteLine("✅ Test 4 PASSED: GetLinesAsync with non-zero exit code returned empty array");
@@ -167,7 +169,8 @@ catch (Exception)
 totalTests++;
 try
 {
-    await Run("ls", new[] { "/nonexistent/path/12345" }, noValidation).ExecuteAsync();
+    string[] lsArgs3 = { "/nonexistent/path/12345" };
+    await Run("ls", lsArgs3, noValidation).ExecuteAsync();
     Console.WriteLine("✅ Test 10 PASSED: ExecuteAsync with no validation didn't throw");
     passCount++;
 }

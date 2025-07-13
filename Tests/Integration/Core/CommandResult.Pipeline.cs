@@ -124,7 +124,8 @@ catch (Exception ex)
 totalTests++;
 try
 {
-    string result = await Run("echo", new[] { "test" }, noValidation)
+    string[] echoArgs = { "test" };
+    string result = await Run("echo", echoArgs, noValidation)
         .Pipe("nonexistentcommand12345")
         .GetStringAsync();
     
