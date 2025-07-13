@@ -19,6 +19,12 @@ public class CommandOptions
   public Dictionary<string, string?>? EnvironmentVariables { get; init; }
   
   /// <summary>
+  /// Gets or sets the command result validation behavior.
+  /// If not specified, defaults to CommandResultValidation.None for graceful error handling.
+  /// </summary>
+  public CommandResultValidation? Validation { get; set; }
+  
+  /// <summary>
   /// Creates a new instance of CommandOptions with default settings.
   /// </summary>
   public CommandOptions()
@@ -36,7 +42,8 @@ public class CommandOptions
     return new CommandOptions
     {
       WorkingDirectory = directory,
-      EnvironmentVariables = EnvironmentVariables
+      EnvironmentVariables = EnvironmentVariables,
+      Validation = Validation
     };
   }
   
@@ -53,7 +60,8 @@ public class CommandOptions
       WorkingDirectory = WorkingDirectory,
       EnvironmentVariables = EnvironmentVariables != null 
         ? new Dictionary<string, string?>(EnvironmentVariables)
-        : new Dictionary<string, string?>()
+        : new Dictionary<string, string?>(),
+      Validation = Validation
     };
     
     newOptions.EnvironmentVariables[key] = value;
@@ -70,7 +78,22 @@ public class CommandOptions
     return new CommandOptions
     {
       WorkingDirectory = WorkingDirectory,
-      EnvironmentVariables = new Dictionary<string, string?>(variables)
+      EnvironmentVariables = new Dictionary<string, string?>(variables),
+      Validation = Validation
+    };
+  }
+  
+  /// <summary>
+  /// Disables command result validation, allowing commands to exit with non-zero codes without throwing exceptions.
+  /// </summary>
+  /// <returns>A new CommandOptions instance with validation disabled</returns>
+  public CommandOptions WithNoValidation()
+  {
+    return new CommandOptions
+    {
+      WorkingDirectory = WorkingDirectory,
+      EnvironmentVariables = EnvironmentVariables,
+      Validation = CommandResultValidation.None
     };
   }
   
@@ -93,6 +116,12 @@ public class CommandOptions
     if (EnvironmentVariables != null && EnvironmentVariables.Count > 0)
     {
       configuredCommand = configuredCommand.WithEnvironmentVariables(EnvironmentVariables);
+    }
+    
+    // Apply validation if specified (otherwise keep the default from CommandExtensions)
+    if (Validation.HasValue)
+    {
+      configuredCommand = configuredCommand.WithValidation(Validation.Value);
     }
     
     return configuredCommand;

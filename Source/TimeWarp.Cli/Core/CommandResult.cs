@@ -1,5 +1,24 @@
 namespace TimeWarp.Cli;
 
+public class ExecutionResult
+{
+  public CliWrap.CommandResult Result { get; }
+  public string StandardOutput { get; }
+  public string StandardError { get; }
+  
+  public ExecutionResult(CliWrap.CommandResult result, string standardOutput, string standardError)
+  {
+    Result = result;
+    StandardOutput = standardOutput;
+    StandardError = standardError;
+  }
+  
+  public int ExitCode => Result.ExitCode;
+  public DateTimeOffset StartTime => Result.StartTime;
+  public DateTimeOffset ExitTime => Result.ExitTime;
+  public TimeSpan RunTime => Result.RunTime;
+}
+
 public class CommandResult
 {
   private readonly Command? Command;
@@ -14,9 +33,10 @@ public class CommandResult
   private Command? InternalCommand => Command;
   
   // Caching support
-  private BufferedCommandResult? _cachedResult;
-  private bool _hasExecuted;
-  private readonly bool _enableCaching;
+  private BufferedCommandResult? CachedResult;
+  private ExecutionResult? CachedExecuteResult;
+  private bool HasExecuted;
+  private readonly bool EnableCaching;
   
   internal CommandResult(Command? command) : this(command, false)
   {
@@ -25,7 +45,7 @@ public class CommandResult
   private CommandResult(Command? command, bool enableCaching)
   {
     Command = command;
-    _enableCaching = enableCaching;
+    EnableCaching = enableCaching;
   }
   
   /// <summary>
@@ -50,17 +70,17 @@ public class CommandResult
     try
     {
       // Check cache if caching is enabled
-      if (_enableCaching && _cachedResult != null)
+      if (EnableCaching && CachedResult != null)
       {
-        return _cachedResult.StandardOutput;
+        return CachedResult.StandardOutput;
       }
       
       BufferedCommandResult result = await Command.ExecuteBufferedAsync(cancellationToken);
       
       // Store in cache if caching is enabled
-      if (_enableCaching)
+      if (EnableCaching)
       {
-        _cachedResult = result;
+        CachedResult = result;
       }
       
       return result.StandardOutput;
@@ -82,9 +102,9 @@ public class CommandResult
     try
     {
       // Check cache if caching is enabled
-      if (_enableCaching && _cachedResult != null)
+      if (EnableCaching && CachedResult != null)
       {
-        return _cachedResult.StandardOutput.Split
+        return CachedResult.StandardOutput.Split
         (
           NewlineCharacters, 
           StringSplitOptions.RemoveEmptyEntries
@@ -94,9 +114,9 @@ public class CommandResult
       BufferedCommandResult result = await Command.ExecuteBufferedAsync(cancellationToken);
       
       // Store in cache if caching is enabled
-      if (_enableCaching)
+      if (EnableCaching)
       {
-        _cachedResult = result;
+        CachedResult = result;
       }
       
       return result.StandardOutput.Split
@@ -112,34 +132,47 @@ public class CommandResult
     }
   }
   
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
     if (Command == null)
     {
-      return;
+      return new ExecutionResult(
+        new CliWrap.CommandResult(0, DateTimeOffset.MinValue, DateTimeOffset.MinValue),
+        string.Empty,
+        string.Empty
+      );
     }
     
-    // If caching is enabled and already executed, return immediately
-    if (_enableCaching && _hasExecuted)
+    // If caching is enabled and already executed, return cached result
+    if (EnableCaching && HasExecuted && CachedExecuteResult != null)
     {
-      return;
+      return CachedExecuteResult;
     }
     
-    try
+    // Use ExecuteBufferedAsync to capture stdout and stderr
+    BufferedCommandResult bufferedResult = await Command.ExecuteBufferedAsync(cancellationToken);
+    
+    // Create our result with captured output
+    var result = new ExecutionResult(
+      new CliWrap.CommandResult(
+        bufferedResult.ExitCode,
+        bufferedResult.StartTime,
+        bufferedResult.ExitTime
+      ),
+      bufferedResult.StandardOutput,
+      bufferedResult.StandardError
+    );
+    
+    // Store result and mark as executed if caching is enabled
+    if (EnableCaching)
     {
-      await Command.ExecuteAsync(cancellationToken);
-      
-      // Mark as executed if caching is enabled
-      if (_enableCaching)
-      {
-        _hasExecuted = true;
-      }
+      HasExecuted = true;
+      CachedExecuteResult = result;
+      // Also cache the buffered result for GetStringAsync/GetLinesAsync
+      CachedResult = bufferedResult;
     }
-    catch
-    {
-      // Process start failures (non-existent commands, etc.) are silently ignored
-      // This matches shell behavior where failed commands don't crash the shell
-    }
+    
+    return result;
   }
   
   public CommandResult Pipe
@@ -174,7 +207,7 @@ public class CommandResult
       Command pipedCommand = Command | nextCommandResult.InternalCommand;
       
       // Preserve caching state in the pipeline
-      return new CommandResult(pipedCommand, _enableCaching);
+      return new CommandResult(pipedCommand, EnableCaching);
     }
     catch
     {

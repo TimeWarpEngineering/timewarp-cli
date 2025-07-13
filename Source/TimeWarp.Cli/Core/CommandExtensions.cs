@@ -16,7 +16,7 @@ public static class CommandExtensions
   (
     string executable,
     string[] arguments,
-    CommandOptions options
+    CommandOptions commandOptions
   )
   {
     // Input validation
@@ -25,7 +25,7 @@ public static class CommandExtensions
       return CommandResult.NullCommandResult;
     }
     
-    if (options == null)
+    if (commandOptions == null)
     {
       return CommandResult.NullCommandResult;
     }
@@ -41,11 +41,10 @@ public static class CommandExtensions
       }
       
       Command cliCommand = CliWrap.Cli.Wrap(executable)
-        .WithArguments(arguments)
-        .WithValidation(CommandResultValidation.None);
+        .WithArguments(arguments);
       
       // Apply configuration options
-      cliCommand = options.ApplyTo(cliCommand);
+      cliCommand = commandOptions.ApplyTo(cliCommand);
         
       return new CommandResult(cliCommand);
     }
