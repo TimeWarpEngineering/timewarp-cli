@@ -8,10 +8,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Reference test helpers library -->
+    <ProjectReference Include="$(MSBuildThisFileDirectory)TimeWarp.Cli.Test.Helpers/TimeWarp.Cli.Test.Helpers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Global usings for all test projects -->
     <Using Include="TimeWarp.Cli" />
     <Using Include="TimeWarp.Cli.CommandExtensions" Static="true" />
     <Using Include="System.Diagnostics" />
+    <Using Include="System.Reflection" />
     <Using Include="System.Runtime.CompilerServices" />
+    <Using Include="TimeWarp.Cli.Test.Helpers.TestHelpers" Static="true" />
+    <Using Include="TimeWarp.Cli.Test.Helpers.Asserts" Static="true" />
   </ItemGroup>
 </Project>

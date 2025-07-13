@@ -1,232 +1,156 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await TestRunner.RunTests<ErrorHandlingTests>();
 
-Console.WriteLine("🧪 Testing ErrorHandling...");
-
-int PassCount = 0;
-int TotalTests = 0;
-
-// Create options with no validation for graceful degradation tests
-CommandOptions NoValidationCommandOptions = new CommandOptions().WithNoValidation();
-
-// Test Functions
-#pragma warning disable CS8321 // Local function is declared but never used
-
-string FormatTestName(string name) => System.Text.RegularExpressions.Regex.Replace(name, "([A-Z])", " $1").Trim();
-void TestPassed(string testName) => Console.WriteLine($"✅ {FormatTestName(testName)}");
-void TestFailed(string testName, string reason) => Console.WriteLine($"❌ {FormatTestName(testName)}: {reason}");
-
-async Task<bool> TestNonExistentCommandWithNoValidation()
+// Define a class to hold the test methods (NOT static so it can be used as generic parameter)
+#pragma warning disable CA1812 // Avoid uninstantiated internal classes
+internal sealed class ErrorHandlingTests
+#pragma warning restore CA1812
 {
-    const string TestName = nameof(TestNonExistentCommandWithNoValidation);
-    try
-    {
-        string result = await Run("nonexistentcommand12345", Array.Empty<string>(), NoValidationCommandOptions).GetStringAsync();
-        TestFailed(TestName, "should have thrown for non-existent command");
-        return false;
-    }
-    catch (Exception)
-    {
-        // This is expected - process start failures should always throw
-        TestPassed(TestName);
-        return true;
-    }
+
+  // Create options with no validation for graceful degradation tests
+  static CommandOptions NoValidationCommandOptions = new CommandOptions().WithNoValidation();
+
+  public static async Task TestNonExistentCommandWithNoValidation()
+  {
+    await AssertThrowsAsync<Exception>(
+      async () => await Run("nonexistentcommand12345", Array.Empty<string>(), NoValidationCommandOptions).GetStringAsync(),
+      "should have thrown for non-existent command"
+    );
+  }
+
+  public static async Task TestCommandWithNonZeroExitCodeAndNoValidation()
+  {
+    string[] lsArgs = ["/nonexistent/path/12345"];
+
+    string lines = await Run("ls", lsArgs, NoValidationCommandOptions).GetStringAsync();
+
+    AssertTrue(
+      string.IsNullOrEmpty(lines),
+      "should return empty string for command with non-zero exit code and no validation"
+    );
+  }
+
+  public static async Task TestExecuteAsyncThrowsOnNonZeroExit()
+  {
+    await AssertThrowsAsync<Exception>(
+      async () => await Run("ls", "/nonexistent/path/12345").ExecuteAsync(),
+      "should have thrown for command with non-zero exit code"
+    );
+  }
+
+  public static async Task TestGetLinesAsyncWithNoValidation()
+  {
+    string[] lsArgs2 = ["/nonexistent/path/12345"];
+
+    string[] lines = await Run("ls", lsArgs2, NoValidationCommandOptions).GetLinesAsync();
+
+    AssertTrue(lines.Length == 0, "should return empty array for non-existent path with no validation");
+  }
+
+  public static async Task TestSpecialCharactersInArguments()
+  {
+    string result = await Run("echo", "Hello \"World\" with 'quotes' and $pecial chars!").GetStringAsync();
+
+    AssertTrue(
+      !string.IsNullOrEmpty(result),
+      "should not return empty string for command with special characters"
+    );
+  }
+
+  public static async Task TestEmptyCommandReturnsEmptyString()
+  {
+    string result = await Run("").GetStringAsync();
+    AssertTrue(
+      string.IsNullOrEmpty(result),
+      "should return empty string for empty command"
+    );
+  }
+
+  public static async Task TestWhitespaceCommandReturnsEmptyString()
+  {
+    string result = await Run("   ").GetStringAsync();
+    AssertTrue(
+      string.IsNullOrEmpty(result),
+      "should return empty string for whitespace command"
+    );
+  }
+
+  public static async Task TestDefaultGetStringThrowsOnError()
+  {
+    await AssertThrowsAsync<Exception>(
+      async () => await Run("ls", "/nonexistent/path/12345").GetStringAsync(),
+      "should have thrown for command with non-zero exit code"
+    );
+  }
+
+  public static async Task TestDefaultGetLinesThrowsOnError()
+  {
+    await AssertThrowsAsync<Exception>(
+      async () => await Run("ls", "/nonexistent/path/12345").GetLinesAsync(),
+      "should have thrown for command with non-zero exit code"
+    );
+  }
+
+  public static async Task TestExecuteAsyncWithNoValidation()
+  {
+    string[] lsArgs3 = ["/nonexistent/path/12345"];
+    await Run("ls", lsArgs3, NoValidationCommandOptions).ExecuteAsync();
+    AssertTrue(
+      true,
+      "should not throw for command with no validation"
+    );
+  }
 }
 
-async Task<bool> TestCommandWithNonZeroExitCodeAndNoValidation()
+internal static class TestRunner
 {
-    const string TestName = nameof(TestCommandWithNonZeroExitCodeAndNoValidation);
+  static int PassCount;
+  static int TotalTests;
+
+  public static async Task RunTests<T>() where T : class
+  {
+    Console.WriteLine("🧪 Testing ErrorHandling...");
+    // get all public methods in the class
+    MethodInfo[] testMethods = typeof(T).GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+
+    // and run them as tests
+
+    foreach (MethodInfo method in testMethods)
+    {
+      await RunTest(method);
+    }
+    // Summary
+    Console.WriteLine($"\n📊 ErrorHandling Results: {PassCount}/{TotalTests} tests passed");
+    Environment.Exit(PassCount == TotalTests ? 0 : 1);
+
+  }
+
+  private static async Task RunTest(MethodInfo method)
+  {
+    if (!method.IsPublic || !method.IsStatic || method.ReturnType != typeof(Task))
+    {
+      // Skip non-test methods
+      return;
+    }
+
+    // Increment total tests and run the test
+
+    TotalTests++;
+    string testName = method.Name;
+    Console.WriteLine($"Running {testName}...");
+
     try
     {
-        string[] lsArgs = ["/nonexistent/path/12345"];
-        string result = await Run("ls", lsArgs, NoValidationCommandOptions).GetStringAsync();
-        TestPassed(TestName);
-        return true;
+      var task = method.Invoke(null, null) as Task;
+      if (task != null) await task;
+      PassCount++;
+      TestPassed(testName);
     }
     catch (Exception ex)
     {
-        TestFailed(TestName, ex.Message);
-        return false;
+      TestFailed(testName, ex.Message);
     }
+
+  }
 }
-
-async Task<bool> TestExecuteAsyncThrowsOnNonZeroExit()
-{
-    const string TestName = nameof(TestExecuteAsyncThrowsOnNonZeroExit);
-    try
-    {
-        await Run("ls", "/nonexistent/path/12345").ExecuteAsync();
-        TestFailed(TestName, "didn't throw as expected");
-        return false;
-    }
-    catch (Exception)
-    {
-        TestPassed(TestName);
-        return true;
-    }
-}
-
-async Task<bool> TestGetLinesAsyncWithNoValidation()
-{
-    const string TestName = nameof(TestGetLinesAsyncWithNoValidation);
-    try
-    {
-        string[] lsArgs2 = ["/nonexistent/path/12345"];
-        string[] lines = await Run("ls", lsArgs2, NoValidationCommandOptions).GetLinesAsync();
-        if (lines.Length == 0)
-        {
-            TestPassed(TestName);
-            return true;
-        }
-        else
-        {
-            TestFailed(TestName, $"returned {lines.Length} lines instead of empty array");
-            return false;
-        }
-    }
-    catch (Exception ex)
-    {
-        TestFailed(TestName, ex.Message);
-        return false;
-    }
-}
-
-async Task<bool> TestSpecialCharactersInArguments()
-{
-    const string TestName = nameof(TestSpecialCharactersInArguments);
-    try
-    {
-        string result = await Run("echo", "Hello \"World\" with 'quotes' and $pecial chars!").GetStringAsync();
-        if (result.Contains("Hello", StringComparison.Ordinal) && result.Contains("World", StringComparison.Ordinal) && result.Contains("quotes", StringComparison.Ordinal))
-        {
-            TestPassed(TestName);
-            return true;
-        }
-        else
-        {
-            TestFailed(TestName, $"Got: {result}");
-            return false;
-        }
-    }
-    catch (Exception ex)
-    {
-        TestFailed(TestName, ex.Message);
-        return false;
-    }
-}
-
-async Task<bool> TestEmptyCommandReturnsEmptyString()
-{
-    const string TestName = nameof(TestEmptyCommandReturnsEmptyString);
-    try
-    {
-        string result = await Run("").GetStringAsync();
-        if (string.IsNullOrEmpty(result))
-        {
-            TestPassed(TestName);
-            return true;
-        }
-        else
-        {
-            TestFailed(TestName, $"returned '{result}'");
-            return false;
-        }
-    }
-    catch (Exception ex)
-    {
-        TestFailed(TestName, ex.Message);
-        return false;
-    }
-}
-
-async Task<bool> TestWhitespaceCommandReturnsEmptyString()
-{
-    const string TestName = nameof(TestWhitespaceCommandReturnsEmptyString);
-    try
-    {
-        string result = await Run("   ").GetStringAsync();
-        if (string.IsNullOrEmpty(result))
-        {
-            TestPassed(TestName);
-            return true;
-        }
-        else
-        {
-            TestFailed(TestName, $"returned '{result}'");
-            return false;
-        }
-    }
-    catch (Exception ex)
-    {
-        TestFailed(TestName, ex.Message);
-        return false;
-    }
-}
-
-async Task<bool> TestDefaultGetStringThrowsOnError()
-{
-    const string TestName = nameof(TestDefaultGetStringThrowsOnError);
-    try
-    {
-        string result = await Run("ls", "/nonexistent/path/12345").GetStringAsync();
-        TestFailed(TestName, "didn't throw as expected");
-        return false;
-    }
-    catch (Exception)
-    {
-        TestPassed(TestName);
-        return true;
-    }
-}
-
-async Task<bool> TestDefaultGetLinesThrowsOnError()
-{
-    const string TestName = nameof(TestDefaultGetLinesThrowsOnError);
-    try
-    {
-        string[] lines = await Run("ls", "/nonexistent/path/12345").GetLinesAsync();
-        TestFailed(TestName, "didn't throw as expected");
-        return false;
-    }
-    catch (Exception)
-    {
-        TestPassed(TestName);
-        return true;
-    }
-}
-
-async Task<bool> TestExecuteAsyncWithNoValidation()
-{
-    const string TestName = nameof(TestExecuteAsyncWithNoValidation);
-    try
-    {
-        string[] lsArgs3 = ["/nonexistent/path/12345"];
-        await Run("ls", lsArgs3, NoValidationCommandOptions).ExecuteAsync();
-        TestPassed(TestName);
-        return true;
-    }
-    catch (Exception ex)
-    {
-        TestFailed(TestName, ex.Message);
-        return false;
-    }
-}
-
-// Run all tests
-TotalTests++; if (await TestDefaultGetStringThrowsOnError()) PassCount++;
-TotalTests++; if (await TestNonExistentCommandWithNoValidation()) PassCount++;
-TotalTests++; if (await TestCommandWithNonZeroExitCodeAndNoValidation()) PassCount++;
-TotalTests++; if (await TestExecuteAsyncThrowsOnNonZeroExit()) PassCount++;
-TotalTests++; if (await TestGetLinesAsyncWithNoValidation()) PassCount++;
-TotalTests++; if (await TestSpecialCharactersInArguments()) PassCount++;
-TotalTests++; if (await TestEmptyCommandReturnsEmptyString()) PassCount++;
-TotalTests++; if (await TestWhitespaceCommandReturnsEmptyString()) PassCount++;
-TotalTests++; if (await TestDefaultGetLinesThrowsOnError()) PassCount++;
-TotalTests++; if (await TestExecuteAsyncWithNoValidation()) PassCount++;
-#pragma warning restore CS8321
-
-// Summary
-Console.WriteLine($"\n📊 ErrorHandling Results: {PassCount}/{TotalTests} tests passed");
-Environment.Exit(PassCount == TotalTests ? 0 : 1);
