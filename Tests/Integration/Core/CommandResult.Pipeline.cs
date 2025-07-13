@@ -8,6 +8,9 @@ Console.WriteLine("🧪 Testing PipelineCommands...");
 int passCount = 0;
 int totalTests = 0;
 
+// Create options with no validation for graceful degradation tests
+CommandOptions noValidation = new CommandOptions().WithNoValidation();
+
 // Test 1: Basic pipeline - echo | grep
 totalTests++;
 try
@@ -94,11 +97,11 @@ catch (Exception ex)
     Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
 }
 
-// Test 5: Pipeline with failed first command (graceful degradation)
+// Test 5: Pipeline with failed first command (graceful degradation with no validation)
 totalTests++;
 try
 {
-    string result = await Run("nonexistentcommand12345")
+    string result = await Run("nonexistentcommand12345", Array.Empty<string>(), noValidation)
         .Pipe("grep", "anything")
         .GetStringAsync();
     
@@ -117,11 +120,11 @@ catch (Exception ex)
     Console.WriteLine($"❌ Test 5 FAILED: Exception - {ex.Message}");
 }
 
-// Test 6: Pipeline with failed second command (graceful degradation)
+// Test 6: Pipeline with failed second command (graceful degradation with no validation)
 totalTests++;
 try
 {
-    string result = await Run("echo", "test")
+    string result = await Run("echo", new[] { "test" }, noValidation)
         .Pipe("nonexistentcommand12345")
         .GetStringAsync();
     

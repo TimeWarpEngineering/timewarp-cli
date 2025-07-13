@@ -99,8 +99,8 @@ try
     using var cts = new CancellationTokenSource();
     cts.CancelAfter(TimeSpan.FromSeconds(5));
     
-    await Run("echo", "execute test").ExecuteAsync(cts.Token);
-    Console.WriteLine("✅ Test 4 PASSED: ExecuteAsync with cancellation token works");
+    ExecutionResult result = await Run("echo", "execute test").ExecuteAsync(cts.Token);
+    Console.WriteLine($"✅ Test 4 PASSED: ExecuteAsync with cancellation token works (exit code: {result.ExitCode})");
     passCount++;
 }
 catch (OperationCanceledException)
@@ -110,6 +110,20 @@ catch (OperationCanceledException)
 catch (Exception ex)
 {
     Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
+    
+    // Debug: Let's see what's in stderr
+    try
+    {
+        string[] echoArgs = { "execute test" };
+        ExecutionResult debugResult = await Run("echo", echoArgs, new CommandOptions().WithNoValidation()).ExecuteAsync();
+        Console.WriteLine($"   Debug - Exit code: {debugResult.ExitCode}");
+        Console.WriteLine($"   Debug - Stdout: '{debugResult.StandardOutput.Trim()}'");
+        Console.WriteLine($"   Debug - Stderr: '{debugResult.StandardError.Trim()}'");
+    }
+    catch
+    {
+        // Ignore debug errors
+    }
 }
 
 // Test 5: Timeout scenario with a longer running command
