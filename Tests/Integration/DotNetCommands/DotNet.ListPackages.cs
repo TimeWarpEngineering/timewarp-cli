@@ -1,7 +1,5 @@
 #!/usr/bin/dotnet run
 #:package TimeWarp.Cli
-#:property RestoreNoCache true
-#:property DisableImplicitNuGetFallbackFolder true
 
 #pragma warning disable IDE0005 // Using directive is unnecessary
 using TimeWarp.Cli;
