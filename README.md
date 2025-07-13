@@ -103,7 +103,7 @@ Check out the latest NuGet package: [TimeWarp.Cli](https://www.nuget.org/package
 - **Simple Static API**: Global `Run()` method for immediate access
 - **Fluent Interface**: Chain operations naturally with `.Pipe()`, `.Cached()`, etc.
 - **Async-First Design**: All operations support modern async/await patterns
-- **Graceful Error Handling**: Failed commands return empty results instead of throwing exceptions
+- **Smart Error Handling**: Commands throw on errors by default, with opt-in graceful degradation
 - **Pipeline Support**: Chain commands with Unix-like pipe semantics
 - **Opt-in Caching**: Cache expensive command results with `.Cached()` method
 - **Configuration Options**: Working directory, environment variables, and more
@@ -112,6 +112,34 @@ Check out the latest NuGet package: [TimeWarp.Cli](https://www.nuget.org/package
 - **C# Script Support**: Seamless execution of C# scripts with proper argument handling
 - **Command Builders**: Fluent builders for complex commands (DotNet, Fzf, Ghq, Gwq)
 
+## Error Handling
+
+TimeWarp.Cli provides intelligent error handling that distinguishes between different failure types:
+
+### Default Behavior (Throws Exceptions)
+```csharp
+// Throws CommandExecutionException on non-zero exit code
+await Run("ls", "/nonexistent").GetStringAsync();
+
+// Throws exception if command not found
+await Run("nonexistentcommand").GetStringAsync();
+```
+
+### Graceful Degradation (Opt-in)
+```csharp
+// Returns empty string/array on command failure
+var options = new CommandOptions().WithValidation(CommandResultValidation.None);
+var result = await Run("ls", "/nonexistent", options).GetStringAsync(); // ""
+
+// Note: Process start failures (command not found) always throw
+await Run("nonexistentcommand", options).GetStringAsync(); // Still throws!
+```
+
+### Special Cases
+- Empty/whitespace commands return empty results (no exception)
+- Null command options return empty results (defensive programming)
+- Pipeline failures propagate based on validation settings
+
 ## Architecture
 
 TimeWarp.Cli is built on several key architectural principles:
@@ -119,7 +147,7 @@ TimeWarp.Cli is built on several key architectural principles:
 - **Static Entry Point**: Minimal ceremony with global `Run()` method
 - **Immutable Design**: Thread-safe, readonly objects throughout
 - **Integration Testing**: Real command validation over mocking
-- **Graceful Failure Philosophy**: Predictable behavior in error scenarios
+- **Predictable Error Handling**: Clear distinction between failure types
 - **Opt-in Complexity**: Advanced features available when needed
 
 See our [Architectural Decision Records](Documentation/Conceptual/ArchitecturalDecisionRecords/Overview.md) for detailed design rationale.
