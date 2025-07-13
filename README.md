@@ -19,7 +19,7 @@
 
 # TimeWarp.Cli
 
-**TimeWarp.Cli** is a powerful fluent API library for elegant command-line execution in C#. It transforms shell scripting into a type-safe, IntelliSense-friendly experience with a simple static `Run()` method, async operations, and graceful error handling.
+**TimeWarp.Cli** is a powerful fluent API library for elegant command-line execution in C#. It transforms shell scripting into a type-safe, IntelliSense-friendly experience with a simple static `Run()` method, async operations, and proper error handling.
 
 Designed for modern C# developers, TimeWarp.Cli brings the power of shell scripting directly into your C# code. Whether you're building automation tools, DevOps scripts, or integrating command-line tools into your applications, TimeWarp.Cli provides the elegant, type-safe API you need.
 

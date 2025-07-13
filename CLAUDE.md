@@ -119,11 +119,23 @@ var count = await Run("git", "log", "--oneline", "-n", "10")
 ```
 
 ### Error Handling
-- Commands that fail return empty results (no exceptions thrown)
-- `GetStringAsync()` returns empty string on failure
-- `GetLinesAsync()` returns empty array on failure
-- Pipeline commands maintain graceful degradation - if any command fails, entire pipeline returns empty results
-- Designed for scripting scenarios where graceful degradation is preferred
+- **Default behavior**: Commands throw `CommandExecutionException` on non-zero exit codes
+- Use `.WithValidation(CommandResultValidation.None)` to disable exception throwing:
+  ```csharp
+  // Disable validation for graceful degradation
+  var options = new CommandOptions().WithValidation(CommandResultValidation.None);
+  await Run("git", new[] { "status" }, options).ExecuteAsync();
+  
+  // Or with builders
+  await DotNet.Build()
+    .WithValidation(CommandResultValidation.None)
+    .ExecuteAsync();
+  ```
+- When validation is disabled with `CommandResultValidation.None`:
+  - `GetStringAsync()` returns empty string on failure
+  - `GetLinesAsync()` returns empty array on failure
+  - `ExecuteAsync()` completes without throwing
+  - Pipeline commands maintain graceful degradation
 
 ## Key Architecture Decisions
 
