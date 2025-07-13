@@ -67,29 +67,21 @@ public class CommandResult
       return string.Empty;
     }
     
-    try
+    // Check cache if caching is enabled
+    if (EnableCaching && CachedResult != null)
     {
-      // Check cache if caching is enabled
-      if (EnableCaching && CachedResult != null)
-      {
-        return CachedResult.StandardOutput;
-      }
-      
-      BufferedCommandResult result = await Command.ExecuteBufferedAsync(cancellationToken);
-      
-      // Store in cache if caching is enabled
-      if (EnableCaching)
-      {
-        CachedResult = result;
-      }
-      
-      return result.StandardOutput;
+      return CachedResult.StandardOutput;
     }
-    catch
+    
+    BufferedCommandResult result = await Command.ExecuteBufferedAsync(cancellationToken);
+    
+    // Store in cache if caching is enabled
+    if (EnableCaching)
     {
-      // Process start failures (non-existent commands, etc.) return empty string
-      return string.Empty;
+      CachedResult = result;
     }
+    
+    return result.StandardOutput;
   }
   
   public async Task<string[]> GetLinesAsync(CancellationToken cancellationToken = default)
@@ -99,37 +91,29 @@ public class CommandResult
       return Array.Empty<string>();
     }
     
-    try
+    // Check cache if caching is enabled
+    if (EnableCaching && CachedResult != null)
     {
-      // Check cache if caching is enabled
-      if (EnableCaching && CachedResult != null)
-      {
-        return CachedResult.StandardOutput.Split
-        (
-          NewlineCharacters, 
-          StringSplitOptions.RemoveEmptyEntries
-        );
-      }
-      
-      BufferedCommandResult result = await Command.ExecuteBufferedAsync(cancellationToken);
-      
-      // Store in cache if caching is enabled
-      if (EnableCaching)
-      {
-        CachedResult = result;
-      }
-      
-      return result.StandardOutput.Split
+      return CachedResult.StandardOutput.Split
       (
         NewlineCharacters, 
         StringSplitOptions.RemoveEmptyEntries
       );
     }
-    catch
+    
+    BufferedCommandResult result = await Command.ExecuteBufferedAsync(cancellationToken);
+    
+    // Store in cache if caching is enabled
+    if (EnableCaching)
     {
-      // Process start failures (non-existent commands, etc.) return empty array
-      return Array.Empty<string>();
+      CachedResult = result;
     }
+    
+    return result.StandardOutput.Split
+    (
+      NewlineCharacters, 
+      StringSplitOptions.RemoveEmptyEntries
+    );
   }
   
   public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
