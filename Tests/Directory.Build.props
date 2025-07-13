@@ -21,5 +21,6 @@
     <Using Include="System.Runtime.CompilerServices" />
     <Using Include="TimeWarp.Cli.Test.Helpers.TestHelpers" Static="true" />
     <Using Include="TimeWarp.Cli.Test.Helpers.Asserts" Static="true" />
+    <Using Include="TimeWarp.Cli.Test.Helpers.TestRunner" Static="true" />
   </ItemGroup>
 </Project>

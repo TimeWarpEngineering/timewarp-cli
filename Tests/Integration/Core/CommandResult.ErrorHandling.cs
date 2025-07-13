@@ -1,6 +1,6 @@
 #!/usr/bin/dotnet run
 
-await TestRunner.RunTests<ErrorHandlingTests>();
+await RunTests<ErrorHandlingTests>();
 
 // Define a class to hold the test methods (NOT static so it can be used as generic parameter)
 #pragma warning disable CA1812 // Avoid uninstantiated internal classes
@@ -100,57 +100,5 @@ internal sealed class ErrorHandlingTests
       true,
       "should not throw for command with no validation"
     );
-  }
-}
-
-internal static class TestRunner
-{
-  static int PassCount;
-  static int TotalTests;
-
-  public static async Task RunTests<T>() where T : class
-  {
-    Console.WriteLine("🧪 Testing ErrorHandling...");
-    // get all public methods in the class
-    MethodInfo[] testMethods = typeof(T).GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-
-    // and run them as tests
-
-    foreach (MethodInfo method in testMethods)
-    {
-      await RunTest(method);
-    }
-    // Summary
-    Console.WriteLine($"\n📊 ErrorHandling Results: {PassCount}/{TotalTests} tests passed");
-    Environment.Exit(PassCount == TotalTests ? 0 : 1);
-
-  }
-
-  private static async Task RunTest(MethodInfo method)
-  {
-    if (!method.IsPublic || !method.IsStatic || method.ReturnType != typeof(Task))
-    {
-      // Skip non-test methods
-      return;
-    }
-
-    // Increment total tests and run the test
-
-    TotalTests++;
-    string testName = method.Name;
-    Console.WriteLine($"Running {testName}...");
-
-    try
-    {
-      var task = method.Invoke(null, null) as Task;
-      if (task != null) await task;
-      PassCount++;
-      TestPassed(testName);
-    }
-    catch (Exception ex)
-    {
-      TestFailed(testName, ex.Message);
-    }
-
   }
 }
