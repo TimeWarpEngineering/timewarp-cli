@@ -37,7 +37,6 @@ jobs:
       - name: Make scripts executable
         run: |
           chmod +x Scripts/Build.cs
-          chmod +x Scripts/Pack.cs
           chmod +x Scripts/Clean.cs
           chmod +x Tests/RunTests.cs
           chmod +x Tests/Integration/*.cs
