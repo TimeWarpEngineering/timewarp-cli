@@ -1,8 +1,6 @@
 #!/usr/bin/dotnet run
 // Clean.cs - Clean build artifacts and local NuGet packages
 #pragma warning disable IDE0005 // Using directive is unnecessary
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 #pragma warning restore IDE0005
 
 // Get script directory using CallerFilePath (C# equivalent of PowerShell's $PSScriptRoot)
@@ -59,18 +57,18 @@ try
     }
 
     // Clean local NuGet feed
-    var localFeedPath = "../LocalNuGetFeed";
+    string localFeedPath = "../LocalNuGetFeed";
     if (Directory.Exists(localFeedPath))
     {
-        var timeWarpPackages = Directory.GetDirectories(localFeedPath, "timewarp.cli", SearchOption.AllDirectories);
-        foreach (var packageDir in timeWarpPackages)
+        string[] timeWarpPackages = Directory.GetDirectories(localFeedPath, "timewarp.cli", SearchOption.AllDirectories);
+        foreach (string packageDir in timeWarpPackages)
         {
             Directory.Delete(packageDir, true);
             Console.WriteLine($"🗑️  Removed: {packageDir}");
         }
 
-        var nupkgFiles = Directory.GetFiles(localFeedPath, "TimeWarp.Cli.*.nupkg", SearchOption.AllDirectories);
-        foreach (var file in nupkgFiles)
+        string[] nupkgFiles = Directory.GetFiles(localFeedPath, "TimeWarp.Cli.*.nupkg", SearchOption.AllDirectories);
+        foreach (string file in nupkgFiles)
         {
             File.Delete(file);
             Console.WriteLine($"🗑️  Removed: {file}");
