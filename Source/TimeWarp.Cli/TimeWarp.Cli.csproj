@@ -7,7 +7,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageOutputPath>../../LocalNuGetFeed</PackageOutputPath>
     <PackageId>TimeWarp.Cli</PackageId>
-    <Version>0.6.0-beta12</Version>
+    <Version>0.6.0-beta13</Version>
     <Authors>Steven T. Cramer</Authors>
     <Description>Fluent API for elegant C# scripting with pipeline support</Description>
     <PackageTags>cli;scripting;fluent;shell;pipeline</PackageTags>
