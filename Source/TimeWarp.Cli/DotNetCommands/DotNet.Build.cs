@@ -258,6 +258,16 @@ public class DotNetBuildBuilder
   }
 
   /// <summary>
+  /// Disables command result validation, allowing the build to exit with non-zero codes without throwing exceptions.
+  /// </summary>
+  /// <returns>The builder instance for method chaining</returns>
+  public DotNetBuildBuilder WithNoValidation()
+  {
+    _options = _options.WithNoValidation();
+    return this;
+  }
+
+  /// <summary>
   /// Builds the command arguments and executes the dotnet build command.
   /// </summary>
   /// <returns>A CommandResult for further processing</returns>
