@@ -9,7 +9,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithMulti()
   {
-    _arguments.Add("--multi");
+    Arguments.Add("--multi");
     return this;
   }
 
@@ -20,7 +20,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithMulti(int max)
   {
-    _arguments.Add($"--multi={max}");
+    Arguments.Add($"--multi={max}");
     return this;
   }
 
@@ -30,7 +30,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithNoMouse()
   {
-    _arguments.Add("--no-mouse");
+    Arguments.Add("--no-mouse");
     return this;
   }
 
@@ -41,7 +41,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithBind(string bindings)
   {
-    _arguments.Add($"--bind={bindings}");
+    Arguments.Add($"--bind={bindings}");
     return this;
   }
 
@@ -51,7 +51,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithCycle()
   {
-    _arguments.Add("--cycle");
+    Arguments.Add("--cycle");
     return this;
   }
 
@@ -61,7 +61,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithKeepRight()
   {
-    _arguments.Add("--keep-right");
+    Arguments.Add("--keep-right");
     return this;
   }
 
@@ -72,7 +72,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithScrollOff(int lines)
   {
-    _arguments.Add($"--scroll-off={lines}");
+    Arguments.Add($"--scroll-off={lines}");
     return this;
   }
 
@@ -82,7 +82,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithNoHScroll()
   {
-    _arguments.Add("--no-hscroll");
+    Arguments.Add("--no-hscroll");
     return this;
   }
 
@@ -93,7 +93,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithHScrollOff(int cols)
   {
-    _arguments.Add($"--hscroll-off={cols}");
+    Arguments.Add($"--hscroll-off={cols}");
     return this;
   }
 
@@ -103,7 +103,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithFilepathWord()
   {
-    _arguments.Add("--filepath-word");
+    Arguments.Add("--filepath-word");
     return this;
   }
 
@@ -114,7 +114,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithJumpLabels(string chars)
   {
-    _arguments.Add($"--jump-labels={chars}");
+    Arguments.Add($"--jump-labels={chars}");
     return this;
   }
 }

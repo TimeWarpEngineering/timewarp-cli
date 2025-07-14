@@ -10,7 +10,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithQuery(string query)
   {
-    _arguments.Add($"--query={query}");
+    Arguments.Add($"--query={query}");
     return this;
   }
 
@@ -20,7 +20,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithSelect1()
   {
-    _arguments.Add("--select-1");
+    Arguments.Add("--select-1");
     return this;
   }
 
@@ -30,7 +30,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithExit0()
   {
-    _arguments.Add("--exit-0");
+    Arguments.Add("--exit-0");
     return this;
   }
 
@@ -41,7 +41,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithFilter(string filter)
   {
-    _arguments.Add($"--filter={filter}");
+    Arguments.Add($"--filter={filter}");
     return this;
   }
 
@@ -51,7 +51,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithPrintQuery()
   {
-    _arguments.Add("--print-query");
+    Arguments.Add("--print-query");
     return this;
   }
 
@@ -62,7 +62,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithExpect(string keys)
   {
-    _arguments.Add($"--expect={keys}");
+    Arguments.Add($"--expect={keys}");
     return this;
   }
 
@@ -72,7 +72,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithRead0()
   {
-    _arguments.Add("--read0");
+    Arguments.Add("--read0");
     return this;
   }
 
@@ -82,7 +82,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithPrint0()
   {
-    _arguments.Add("--print0");
+    Arguments.Add("--print0");
     return this;
   }
 
@@ -92,7 +92,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithSync()
   {
-    _arguments.Add("--sync");
+    Arguments.Add("--sync");
     return this;
   }
 
@@ -102,7 +102,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithListen()
   {
-    _arguments.Add("--listen");
+    Arguments.Add("--listen");
     return this;
   }
 
@@ -113,7 +113,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithListen(int port)
   {
-    _arguments.Add($"--listen={port}");
+    Arguments.Add($"--listen={port}");
     return this;
   }
 
@@ -124,7 +124,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithListen(string address)
   {
-    _arguments.Add($"--listen={address}");
+    Arguments.Add($"--listen={address}");
     return this;
   }
 }

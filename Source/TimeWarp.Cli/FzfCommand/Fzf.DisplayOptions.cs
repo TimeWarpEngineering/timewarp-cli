@@ -9,7 +9,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithAnsi()
   {
-    _arguments.Add("--ansi");
+    Arguments.Add("--ansi");
     return this;
   }
 
@@ -20,7 +20,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithTabstop(int spaces)
   {
-    _arguments.Add($"--tabstop={spaces}");
+    Arguments.Add($"--tabstop={spaces}");
     return this;
   }
 
@@ -31,7 +31,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithColor(string colors)
   {
-    _arguments.Add($"--color={colors}");
+    Arguments.Add($"--color={colors}");
     return this;
   }
 
@@ -41,7 +41,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithNoBold()
   {
-    _arguments.Add("--no-bold");
+    Arguments.Add("--no-bold");
     return this;
   }
 }

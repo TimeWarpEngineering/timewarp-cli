@@ -10,7 +10,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithPreview(string command)
   {
-    _arguments.Add($"--preview={command}");
+    Arguments.Add($"--preview={command}");
     return this;
   }
 
@@ -21,7 +21,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithPreviewWindow(string options)
   {
-    _arguments.Add($"--preview-window={options}");
+    Arguments.Add($"--preview-window={options}");
     return this;
   }
 
@@ -32,7 +32,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithPreviewLabel(string label)
   {
-    _arguments.Add($"--preview-label={label}");
+    Arguments.Add($"--preview-label={label}");
     return this;
   }
 
@@ -43,7 +43,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithPreviewLabelPos(int position)
   {
-    _arguments.Add($"--preview-label-pos={position}");
+    Arguments.Add($"--preview-label-pos={position}");
     return this;
   }
 }

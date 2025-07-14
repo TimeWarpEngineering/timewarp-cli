@@ -10,7 +10,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithHistory(string file)
   {
-    _arguments.Add($"--history={file}");
+    Arguments.Add($"--history={file}");
     return this;
   }
 
@@ -21,7 +21,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithHistorySize(int size)
   {
-    _arguments.Add($"--history-size={size}");
+    Arguments.Add($"--history-size={size}");
     return this;
   }
 }

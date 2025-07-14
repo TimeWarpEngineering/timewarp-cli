@@ -20,12 +20,12 @@ public static class Fzf
 /// </summary>
 public partial class FzfBuilder
 {
-  private CommandOptions _options = new();
-  private List<string> _arguments = new();
-  private List<string> _inputItems = new();
-  private string? _inputCommand;
-  private string? _inputGlob;
-  private bool _useStdin;
+  private CommandOptions Options = new();
+  private List<string> Arguments = new();
+  private List<string> InputItems = new();
+  private string? InputCommand;
+  private string? InputGlob;
+  private bool UseStdin;
 
   /// <summary>
   /// Specifies the working directory for the command.
@@ -34,7 +34,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -46,44 +46,44 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "fzf" };
-    arguments.AddRange(_arguments);
+    List<string> arguments = new() { "fzf" };
+    arguments.AddRange(Arguments);
 
-    CommandResult command = CommandExtensions.Run("fzf", arguments.Skip(1).ToArray(), _options);
+    CommandResult command = CommandExtensions.Run("fzf", arguments.Skip(1).ToArray(), Options);
 
     // Handle input sources
-    if (_inputItems.Count > 0)
+    if (InputItems.Count > 0)
     {
       // Create a pipeline with echo for the input items
-      string input = string.Join("\n", _inputItems);
-      command = CommandExtensions.Run("echo", new[] { input }, _options).Pipe("fzf", arguments.Skip(1).ToArray());
+      string input = string.Join("\n", InputItems);
+      command = CommandExtensions.Run("echo", new[] { input }, Options).Pipe("fzf", arguments.Skip(1).ToArray());
     }
-    else if (!string.IsNullOrEmpty(_inputGlob))
+    else if (!string.IsNullOrEmpty(InputGlob))
     {
       // Use find command for file glob
-      command = CommandExtensions.Run("find", new[] { ".", "-name", _inputGlob }, _options).Pipe("fzf", arguments.Skip(1).ToArray());
+      command = CommandExtensions.Run("find", new[] { ".", "-name", InputGlob }, Options).Pipe("fzf", arguments.Skip(1).ToArray());
     }
-    else if (!string.IsNullOrEmpty(_inputCommand))
+    else if (!string.IsNullOrEmpty(InputCommand))
     {
       // Parse and execute the input command
-      string[] parts = _inputCommand.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+      string[] parts = InputCommand.Split(' ', StringSplitOptions.RemoveEmptyEntries);
       if (parts.Length > 0)
       {
         string exe = parts[0];
         string[] args = parts.Skip(1).ToArray();
-        command = CommandExtensions.Run(exe, args, _options).Pipe("fzf", arguments.Skip(1).ToArray());
+        command = CommandExtensions.Run(exe, args, Options).Pipe("fzf", arguments.Skip(1).ToArray());
       }
     }
-    else if (_useStdin)
+    else if (UseStdin)
     {
       // Use fzf directly with stdin (no pipeline needed)
-      command = CommandExtensions.Run("fzf", arguments.Skip(1).ToArray(), _options);
+      command = CommandExtensions.Run("fzf", arguments.Skip(1).ToArray(), Options);
     }
 
     return command;

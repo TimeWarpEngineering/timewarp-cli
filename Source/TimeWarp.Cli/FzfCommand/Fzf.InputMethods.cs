@@ -10,7 +10,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder FromInput(params string[] items)
   {
-    _inputItems.AddRange(items);
+    InputItems.AddRange(items);
     return this;
   }
 
@@ -21,7 +21,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder FromInput(IEnumerable<string> items)
   {
-    _inputItems.AddRange(items);
+    InputItems.AddRange(items);
     return this;
   }
 
@@ -32,7 +32,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder FromFiles(string pattern)
   {
-    _inputGlob = pattern;
+    InputGlob = pattern;
     return this;
   }
 
@@ -43,7 +43,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder FromCommand(string command)
   {
-    _inputCommand = command;
+    InputCommand = command;
     return this;
   }
 
@@ -53,7 +53,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder FromStdin()
   {
-    _useStdin = true;
+    UseStdin = true;
     return this;
   }
 }

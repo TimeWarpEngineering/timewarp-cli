@@ -10,7 +10,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithHeight(int height)
   {
-    _arguments.Add($"--height={height}");
+    Arguments.Add($"--height={height}");
     return this;
   }
 
@@ -21,7 +21,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithHeightPercent(int heightPercent)
   {
-    _arguments.Add($"--height={heightPercent}%");
+    Arguments.Add($"--height={heightPercent}%");
     return this;
   }
 
@@ -32,7 +32,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithMinHeight(int minHeight)
   {
-    _arguments.Add($"--min-height={minHeight}");
+    Arguments.Add($"--min-height={minHeight}");
     return this;
   }
 
@@ -43,7 +43,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithLayout(string layout)
   {
-    _arguments.Add($"--layout={layout}");
+    Arguments.Add($"--layout={layout}");
     return this;
   }
 
@@ -53,7 +53,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithBorder()
   {
-    _arguments.Add("--border");
+    Arguments.Add("--border");
     return this;
   }
 
@@ -64,7 +64,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithBorder(string style)
   {
-    _arguments.Add($"--border={style}");
+    Arguments.Add($"--border={style}");
     return this;
   }
 
@@ -75,7 +75,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithBorderLabel(string label)
   {
-    _arguments.Add($"--border-label={label}");
+    Arguments.Add($"--border-label={label}");
     return this;
   }
 
@@ -86,7 +86,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithBorderLabelPos(string position)
   {
-    _arguments.Add($"--border-label-pos={position}");
+    Arguments.Add($"--border-label-pos={position}");
     return this;
   }
 
@@ -97,7 +97,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithMargin(string margin)
   {
-    _arguments.Add($"--margin={margin}");
+    Arguments.Add($"--margin={margin}");
     return this;
   }
 
@@ -108,7 +108,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithPadding(string padding)
   {
-    _arguments.Add($"--padding={padding}");
+    Arguments.Add($"--padding={padding}");
     return this;
   }
 
@@ -119,7 +119,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithInfo(string style)
   {
-    _arguments.Add($"--info={style}");
+    Arguments.Add($"--info={style}");
     return this;
   }
 
@@ -130,7 +130,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithSeparator(string separator)
   {
-    _arguments.Add($"--separator={separator}");
+    Arguments.Add($"--separator={separator}");
     return this;
   }
 
@@ -140,7 +140,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithNoSeparator()
   {
-    _arguments.Add("--no-separator");
+    Arguments.Add("--no-separator");
     return this;
   }
 
@@ -150,7 +150,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithScrollbar()
   {
-    _arguments.Add("--scrollbar");
+    Arguments.Add("--scrollbar");
     return this;
   }
 
@@ -161,7 +161,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithScrollbar(string chars)
   {
-    _arguments.Add($"--scrollbar={chars}");
+    Arguments.Add($"--scrollbar={chars}");
     return this;
   }
 
@@ -171,7 +171,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithNoScrollbar()
   {
-    _arguments.Add("--no-scrollbar");
+    Arguments.Add("--no-scrollbar");
     return this;
   }
 
@@ -182,7 +182,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithPrompt(string prompt)
   {
-    _arguments.Add($"--prompt={prompt}");
+    Arguments.Add($"--prompt={prompt}");
     return this;
   }
 
@@ -193,7 +193,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithPointer(string pointerString)
   {
-    _arguments.Add($"--pointer={pointerString}");
+    Arguments.Add($"--pointer={pointerString}");
     return this;
   }
 
@@ -204,7 +204,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithMarker(string marker)
   {
-    _arguments.Add($"--marker={marker}");
+    Arguments.Add($"--marker={marker}");
     return this;
   }
 
@@ -215,7 +215,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithHeader(string header)
   {
-    _arguments.Add($"--header={header}");
+    Arguments.Add($"--header={header}");
     return this;
   }
 
@@ -226,7 +226,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithHeaderLines(int lines)
   {
-    _arguments.Add($"--header-lines={lines}");
+    Arguments.Add($"--header-lines={lines}");
     return this;
   }
 
@@ -236,7 +236,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithHeaderFirst()
   {
-    _arguments.Add("--header-first");
+    Arguments.Add("--header-first");
     return this;
   }
 
@@ -247,7 +247,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithEllipsis(string ellipsis)
   {
-    _arguments.Add($"--ellipsis={ellipsis}");
+    Arguments.Add($"--ellipsis={ellipsis}");
     return this;
   }
 }

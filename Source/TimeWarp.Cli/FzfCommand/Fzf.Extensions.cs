@@ -13,7 +13,7 @@ public static class FzfExtensions
   /// <returns>A CommandResult with Fzf selection</returns>
   public static CommandResult SelectWithFzf(this CommandResult command, Action<FzfBuilder>? configure = null)
   {
-    var fzfBuilder = new FzfBuilder();
+    FzfBuilder fzfBuilder = new();
     configure?.Invoke(fzfBuilder);
     
     CommandResult fzfArguments = fzfBuilder.Build();

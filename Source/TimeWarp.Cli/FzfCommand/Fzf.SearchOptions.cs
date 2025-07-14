@@ -9,7 +9,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithExtended()
   {
-    _arguments.Add("--extended");
+    Arguments.Add("--extended");
     return this;
   }
 
@@ -19,7 +19,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithNoExtended()
   {
-    _arguments.Add("--no-extended");
+    Arguments.Add("--no-extended");
     return this;
   }
 
@@ -29,7 +29,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithExact()
   {
-    _arguments.Add("--exact");
+    Arguments.Add("--exact");
     return this;
   }
 
@@ -39,7 +39,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithCaseInsensitive()
   {
-    _arguments.Add("-i");
+    Arguments.Add("-i");
     return this;
   }
 
@@ -49,7 +49,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithCaseSensitive()
   {
-    _arguments.Add("+i");
+    Arguments.Add("+i");
     return this;
   }
 
@@ -60,7 +60,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithScheme(string scheme)
   {
-    _arguments.Add($"--scheme={scheme}");
+    Arguments.Add($"--scheme={scheme}");
     return this;
   }
 
@@ -70,7 +70,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithLiteral()
   {
-    _arguments.Add("--literal");
+    Arguments.Add("--literal");
     return this;
   }
 
@@ -82,7 +82,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithNth(string nth)
   {
-    _arguments.Add($"--nth={nth}");
+    Arguments.Add($"--nth={nth}");
     return this;
   }
 
@@ -94,7 +94,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithWithNth(string withNth)
   {
-    _arguments.Add($"--with-nth={withNth}");
+    Arguments.Add($"--with-nth={withNth}");
     return this;
   }
 
@@ -106,7 +106,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithDelimiter(string delimiter)
   {
-    _arguments.Add($"--delimiter={delimiter}");
+    Arguments.Add($"--delimiter={delimiter}");
     return this;
   }
 
@@ -116,7 +116,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithNoSort()
   {
-    _arguments.Add("--no-sort");
+    Arguments.Add("--no-sort");
     return this;
   }
 
@@ -126,7 +126,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithTrack()
   {
-    _arguments.Add("--track");
+    Arguments.Add("--track");
     return this;
   }
 
@@ -136,7 +136,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithTac()
   {
-    _arguments.Add("--tac");
+    Arguments.Add("--tac");
     return this;
   }
 
@@ -146,7 +146,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithDisabled()
   {
-    _arguments.Add("--disabled");
+    Arguments.Add("--disabled");
     return this;
   }
 
@@ -157,7 +157,7 @@ public partial class FzfBuilder
   /// <returns>The builder instance for method chaining</returns>
   public FzfBuilder WithTiebreak(string tiebreak)
   {
-    _arguments.Add($"--tiebreak={tiebreak}");
+    Arguments.Add($"--tiebreak={tiebreak}");
     return this;
   }
 }
