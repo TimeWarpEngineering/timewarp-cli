@@ -261,6 +261,16 @@ public class DotNetRunBuilder
   }
 
   /// <summary>
+  /// Disables command validation, allowing the command to complete without throwing exceptions on non-zero exit codes.
+  /// </summary>
+  /// <returns>The builder instance for method chaining</returns>
+  public DotNetRunBuilder WithNoValidation()
+  {
+    _options = _options.WithValidation(CommandResultValidation.None);
+    return this;
+  }
+
+  /// <summary>
   /// Sets an environment variable for the running process (uses -e option).
   /// </summary>
   /// <param name="key">The environment variable name</param>
