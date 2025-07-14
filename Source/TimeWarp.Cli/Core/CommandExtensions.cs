@@ -30,6 +30,9 @@ public static class CommandExtensions
       return CommandResult.NullCommandResult;
     }
     
+    // Check for configured command path override
+    executable = CliConfiguration.GetCommandPath(executable);
+    
     // Handle .cs script files specially
     if (executable.EndsWith(CSharpScriptExtension, StringComparison.OrdinalIgnoreCase))
     {

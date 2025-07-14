@@ -140,6 +140,47 @@ await Run("nonexistentcommand", options).GetStringAsync(); // Still throws!
 - Null command options return empty results (defensive programming)
 - Pipeline failures propagate based on validation settings
 
+## Testing and Mocking
+
+TimeWarp.Cli provides built-in support for mocking commands during testing through the `CliConfiguration` class:
+
+### Basic Mocking
+```csharp
+// Set up mock commands for testing
+CliConfiguration.SetCommandPath("fzf", "/path/to/mock/fzf");
+CliConfiguration.SetCommandPath("git", "/path/to/mock/git");
+
+// Your code using these commands will now use the mocks
+var selected = await Fzf.Run()
+    .FromInput("option1", "option2", "option3")
+    .GetStringAsync(); // Uses mock fzf
+
+// Clean up after tests
+CliConfiguration.Reset();
+```
+
+### Creating Mock Executables
+```csharp
+// Create a simple mock script
+File.WriteAllText("/tmp/mock-fzf", "#!/bin/bash\necho 'mock-selection'");
+Run("chmod", "+x", "/tmp/mock-fzf");
+
+// Configure TimeWarp.Cli to use it
+CliConfiguration.SetCommandPath("fzf", "/tmp/mock-fzf");
+```
+
+### Testing Interactive Commands
+For commands like `fzf` that are normally interactive, you can either:
+1. Use mock executables as shown above
+2. Use non-interactive modes (e.g., `fzf --filter`)
+
+### API Reference
+- `CliConfiguration.SetCommandPath(command, path)` - Set custom executable path
+- `CliConfiguration.ClearCommandPath(command)` - Remove custom path for a command
+- `CliConfiguration.Reset()` - Clear all custom paths
+- `CliConfiguration.HasCustomPath(command)` - Check if command has custom path
+- `CliConfiguration.AllCommandPaths` - Get all configured paths
+
 ## Architecture
 
 TimeWarp.Cli is built on several key architectural principles:

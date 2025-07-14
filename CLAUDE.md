@@ -139,6 +139,30 @@ var count = await Run("git", "log", "--oneline", "-n", "10")
   - `ExecuteAsync()` completes without throwing
   - Pipeline commands maintain graceful degradation
 
+### Testing and Mocking (NEW in v0.6.0)
+The library provides `CliConfiguration` for mocking commands during testing:
+
+```csharp
+// Set up mock commands
+CliConfiguration.SetCommandPath("fzf", "/path/to/mock/fzf");
+CliConfiguration.SetCommandPath("git", "/path/to/mock/git");
+
+// Commands now use the mocks
+var result = await Fzf.Run()
+    .FromInput("option1", "option2")
+    .GetStringAsync(); // Uses mock fzf
+
+// Clean up
+CliConfiguration.Reset();
+```
+
+API Methods:
+- `CliConfiguration.SetCommandPath(command, path)` - Override command executable
+- `CliConfiguration.ClearCommandPath(command)` - Remove override for specific command
+- `CliConfiguration.Reset()` - Clear all overrides
+- `CliConfiguration.HasCustomPath(command)` - Check if override exists
+- `CliConfiguration.AllCommandPaths` - Get all current overrides
+
 ## Key Architecture Decisions
 
 1. **Minimal API Surface**: Only two classes exposed (CommandExtensions, CommandResult)
