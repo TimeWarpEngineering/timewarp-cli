@@ -10,8 +10,8 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder Add(string branch)
   {
-    _subCommand = "add";
-    _target = branch;
+    SubCommand = "add";
+    Target = branch;
     return this;
   }
 
@@ -23,9 +23,9 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder Add(string branch, string path)
   {
-    _subCommand = "add";
-    _target = branch;
-    _subCommandArguments.Add(path);
+    SubCommand = "add";
+    Target = branch;
+    SubCommandArguments.Add(path);
     return this;
   }
 
@@ -36,7 +36,7 @@ public partial class GwqBuilder
   public GwqBuilder AddInteractive()
   {
     _subCommand = "add";
-    _subCommandArguments.Add("-i");
+    SubCommandArguments.Add("-i");
     return this;
   }
 
@@ -46,7 +46,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithNewBranch()
   {
-    _subCommandArguments.Add("-b");
+    SubCommandArguments.Add("-b");
     return this;
   }
 
@@ -56,7 +56,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithForce()
   {
-    _subCommandArguments.Add("-f");
+    SubCommandArguments.Add("-f");
     return this;
   }
 
@@ -66,7 +66,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithInteractive()
   {
-    _subCommandArguments.Add("-i");
+    SubCommandArguments.Add("-i");
     return this;
   }
 }

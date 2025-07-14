@@ -9,7 +9,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder List()
   {
-    _subCommand = "list";
+    SubCommand = "list";
     return this;
   }
 
@@ -19,7 +19,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithGlobal()
   {
-    _subCommandArguments.Add("-g");
+    SubCommandArguments.Add("-g");
     return this;
   }
 
@@ -29,7 +29,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithVerbose()
   {
-    _subCommandArguments.Add("-v");
+    SubCommandArguments.Add("-v");
     return this;
   }
 
@@ -39,7 +39,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithJson()
   {
-    _subCommandArguments.Add("--json");
+    SubCommandArguments.Add("--json");
     return this;
   }
 }

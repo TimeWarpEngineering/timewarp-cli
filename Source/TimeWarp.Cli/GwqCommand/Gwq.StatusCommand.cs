@@ -9,7 +9,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder Status()
   {
-    _subCommand = "status";
+    SubCommand = "status";
     return this;
   }
 
@@ -19,7 +19,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithCsv()
   {
-    _subCommandArguments.Add("--csv");
+    SubCommandArguments.Add("--csv");
     return this;
   }
 
@@ -30,8 +30,8 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithFilter(string filter)
   {
-    _subCommandArguments.Add("-f");
-    _subCommandArguments.Add(filter);
+    SubCommandArguments.Add("-f");
+    SubCommandArguments.Add(filter);
     return this;
   }
 
@@ -42,8 +42,8 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithInterval(int seconds)
   {
-    _subCommandArguments.Add("-i");
-    _subCommandArguments.Add($"{seconds}s");
+    SubCommandArguments.Add("-i");
+    SubCommandArguments.Add($"{seconds}s");
     return this;
   }
 
@@ -53,7 +53,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithNoFetch()
   {
-    _subCommandArguments.Add("--no-fetch");
+    SubCommandArguments.Add("--no-fetch");
     return this;
   }
 
@@ -63,7 +63,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithShowProcesses()
   {
-    _subCommandArguments.Add("--show-processes");
+    SubCommandArguments.Add("--show-processes");
     return this;
   }
 
@@ -74,8 +74,8 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithSort(string field)
   {
-    _subCommandArguments.Add("-s");
-    _subCommandArguments.Add(field);
+    SubCommandArguments.Add("-s");
+    SubCommandArguments.Add(field);
     return this;
   }
 
@@ -86,8 +86,8 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithStaleDays(int days)
   {
-    _subCommandArguments.Add("--stale-days");
-    _subCommandArguments.Add(days.ToString(System.Globalization.CultureInfo.InvariantCulture));
+    SubCommandArguments.Add("--stale-days");
+    SubCommandArguments.Add(days.ToString(System.Globalization.CultureInfo.InvariantCulture));
     return this;
   }
 
@@ -97,7 +97,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithWatch()
   {
-    _subCommandArguments.Add("-w");
+    SubCommandArguments.Add("-w");
     return this;
   }
 }

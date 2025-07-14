@@ -10,8 +10,8 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder Get(string pattern)
   {
-    _subCommand = "get";
-    _target = pattern;
+    SubCommand = "get";
+    Target = pattern;
     return this;
   }
 
@@ -21,7 +21,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithNull()
   {
-    _subCommandArguments.Add("-0");
+    SubCommandArguments.Add("-0");
     return this;
   }
 }

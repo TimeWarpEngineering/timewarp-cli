@@ -10,8 +10,8 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder Exec(string pattern)
   {
-    _subCommand = "exec";
-    _target = pattern;
+    SubCommand = "exec";
+    Target = pattern;
     return this;
   }
 
@@ -22,7 +22,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithCommand(params string[] command)
   {
-    _execCommand.AddRange(command);
+    ExecCommand.AddRange(command);
     return this;
   }
 
@@ -32,7 +32,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithStay()
   {
-    _subCommandArguments.Add("-s");
+    SubCommandArguments.Add("-s");
     return this;
   }
 }

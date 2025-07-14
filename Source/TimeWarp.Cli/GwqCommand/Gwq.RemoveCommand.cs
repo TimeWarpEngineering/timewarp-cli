@@ -9,7 +9,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder Remove()
   {
-    _subCommand = "remove";
+    SubCommand = "remove";
     return this;
   }
 
@@ -20,8 +20,8 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder Remove(string pattern)
   {
-    _subCommand = "remove";
-    _target = pattern;
+    SubCommand = "remove";
+    Target = pattern;
     return this;
   }
 
@@ -50,7 +50,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithDeleteBranch()
   {
-    _subCommandArguments.Add("-b");
+    SubCommandArguments.Add("-b");
     return this;
   }
 
@@ -60,7 +60,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithDryRun()
   {
-    _subCommandArguments.Add("-d");
+    SubCommandArguments.Add("-d");
     return this;
   }
 
@@ -70,7 +70,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithForceDeleteBranch()
   {
-    _subCommandArguments.Add("--force-delete-branch");
+    SubCommandArguments.Add("--force-delete-branch");
     return this;
   }
 }

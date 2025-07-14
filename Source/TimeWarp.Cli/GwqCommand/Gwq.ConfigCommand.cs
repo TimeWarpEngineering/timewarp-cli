@@ -9,7 +9,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder Config()
   {
-    _subCommand = "config";
+    SubCommand = "config";
     return this;
   }
 
@@ -19,8 +19,8 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder ConfigList()
   {
-    _subCommand = "config";
-    _subCommandArguments.Add("list");
+    SubCommand = "config";
+    SubCommandArguments.Add("list");
     return this;
   }
 
@@ -31,9 +31,9 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder ConfigGet(string key)
   {
-    _subCommand = "config";
-    _subCommandArguments.Add("get");
-    _subCommandArguments.Add(key);
+    SubCommand = "config";
+    SubCommandArguments.Add("get");
+    SubCommandArguments.Add(key);
     return this;
   }
 
@@ -45,10 +45,10 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder ConfigSet(string key, string value)
   {
-    _subCommand = "config";
-    _subCommandArguments.Add("set");
-    _subCommandArguments.Add(key);
-    _subCommandArguments.Add(value);
+    SubCommand = "config";
+    SubCommandArguments.Add("set");
+    SubCommandArguments.Add(key);
+    SubCommandArguments.Add(value);
     return this;
   }
 }

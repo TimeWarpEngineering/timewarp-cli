@@ -9,7 +9,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder Prune()
   {
-    _subCommand = "prune";
+    SubCommand = "prune";
     return this;
   }
 
@@ -20,7 +20,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder Version()
   {
-    _subCommand = "version";
+    SubCommand = "version";
     return this;
   }
 }

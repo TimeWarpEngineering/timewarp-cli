@@ -1,8 +1,6 @@
 #!/usr/bin/dotnet run
 // EnableBranchProtection.cs - Enable branch protection on the default branch
-#pragma warning disable IDE0005 // Using directive is unnecessary
-using System.Text.Json;
-#pragma warning restore IDE0005
+
 
 // Get script directory using CallerFilePath
 static string GetScriptDirectory([CallerFilePath] string scriptPath = "")

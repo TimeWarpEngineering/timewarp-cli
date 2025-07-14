@@ -20,12 +20,12 @@ public static class Gwq
 /// </summary>
 public partial class GwqBuilder
 {
-  private CommandOptions _options = new();
-  private List<string> _arguments = new();
-  private string? _subCommand;
-  private string? _target;
-  private List<string> _subCommandArguments = new();
-  private List<string> _execCommand = new();
+  private CommandOptions Options = new();
+  private List<string> Arguments = new();
+  private string? SubCommand;
+  private string? Target;
+  private List<string> SubCommandArguments = new();
+  private List<string> ExecCommand = new();
 
   /// <summary>
   /// Specifies the working directory for the command.
@@ -34,7 +34,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -46,41 +46,41 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
   // Build methods
   public CommandResult Build()
   {
-    var arguments = new List<string> { "gwq" };
+    List<string> arguments = new() { "gwq" };
     
     // Add subcommand
-    if (!string.IsNullOrEmpty(_subCommand))
+    if (!string.IsNullOrEmpty(SubCommand))
     {
-      arguments.Add(_subCommand);
+      arguments.Add(SubCommand);
     }
     
     // Add subcommand arguments (flags before positional args)
-    arguments.AddRange(_subCommandArguments);
+    arguments.AddRange(SubCommandArguments);
     
     // Add target if specified
-    if (!string.IsNullOrEmpty(_target))
+    if (!string.IsNullOrEmpty(Target))
     {
-      arguments.Add(_target);
+      arguments.Add(Target);
     }
     
     // Add exec command if specified
-    if (_execCommand.Count > 0 && _subCommand == "exec")
+    if (ExecCommand.Count > 0 && SubCommand == "exec")
     {
       arguments.Add("--");
-      arguments.AddRange(_execCommand);
+      arguments.AddRange(ExecCommand);
     }
     
     // Add global arguments
-    arguments.AddRange(_arguments);
+    arguments.AddRange(Arguments);
 
-    return CommandExtensions.Run("gwq", arguments.Skip(1).ToArray(), _options);
+    return CommandExtensions.Run("gwq", arguments.Skip(1).ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
