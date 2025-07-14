@@ -14,6 +14,7 @@ public class ExecutionResult
   }
   
   public int ExitCode => Result.ExitCode;
+  public bool IsSuccess => Result.IsSuccess;
   public DateTimeOffset StartTime => Result.StartTime;
   public DateTimeOffset ExitTime => Result.ExitTime;
   public TimeSpan RunTime => Result.RunTime;
