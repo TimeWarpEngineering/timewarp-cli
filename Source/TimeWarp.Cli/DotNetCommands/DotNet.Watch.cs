@@ -20,24 +20,24 @@ public static partial class DotNet
 /// </summary>
 public class DotNetWatchBuilder
 {
-  private CommandOptions _options = new();
-  private string? _project;
-  private bool _quiet;
-  private bool _verbose;
-  private bool _list;
-  private bool _noRestore;
-  private bool _noLaunchProfile;
-  private bool _noHotReload;
-  private bool _noBuild;
-  private List<string> _include = new();
-  private List<string> _exclude = new();
-  private List<string> _properties = new();
-  private string? _targetFramework;
-  private string? _configuration;
-  private string? _runtime;
-  private string? _verbosity;
-  private string? _launchProfile;
-  private List<string> _additionalArguments = new();
+  private CommandOptions Options = new();
+  private string? Project;
+  private bool Quiet;
+  private bool Verbose;
+  private bool List;
+  private bool NoRestore;
+  private bool NoLaunchProfile;
+  private bool NoHotReload;
+  private bool NoBuild;
+  private List<string> Include = new();
+  private List<string> Exclude = new();
+  private List<string> Properties = new();
+  private string? TargetFramework;
+  private string? Configuration;
+  private string? Runtime;
+  private string? Verbosity;
+  private string? LaunchProfile;
+  private List<string> AdditionalArguments = new();
 
   /// <summary>
   /// Specifies the working directory for the command.
@@ -46,7 +46,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -58,7 +58,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -69,7 +69,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithProject(string project)
   {
-    _project = project;
+    Project = project;
     return this;
   }
 
@@ -79,7 +79,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithQuiet()
   {
-    _quiet = true;
+    Quiet = true;
     return this;
   }
 
@@ -89,7 +89,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithVerbose()
   {
-    _verbose = true;
+    Verbose = true;
     return this;
   }
 
@@ -99,7 +99,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithList()
   {
-    _list = true;
+    List = true;
     return this;
   }
 
@@ -109,7 +109,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithNoRestore()
   {
-    _noRestore = true;
+    NoRestore = true;
     return this;
   }
 
@@ -119,7 +119,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithNoLaunchProfile()
   {
-    _noLaunchProfile = true;
+    NoLaunchProfile = true;
     return this;
   }
 
@@ -129,7 +129,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithNoHotReload()
   {
-    _noHotReload = true;
+    NoHotReload = true;
     return this;
   }
 
@@ -139,7 +139,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithNoBuild()
   {
-    _noBuild = true;
+    NoBuild = true;
     return this;
   }
 
@@ -150,7 +150,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithInclude(string pattern)
   {
-    _include.Add(pattern);
+    Include.Add(pattern);
     return this;
   }
 
@@ -161,7 +161,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithExclude(string pattern)
   {
-    _exclude.Add(pattern);
+    Exclude.Add(pattern);
     return this;
   }
 
@@ -172,7 +172,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithProperty(string property)
   {
-    _properties.Add(property);
+    Properties.Add(property);
     return this;
   }
 
@@ -183,7 +183,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithTargetFramework(string framework)
   {
-    _targetFramework = framework;
+    TargetFramework = framework;
     return this;
   }
 
@@ -194,7 +194,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithConfiguration(string configuration)
   {
-    _configuration = configuration;
+    Configuration = configuration;
     return this;
   }
 
@@ -205,7 +205,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithRuntime(string runtime)
   {
-    _runtime = runtime;
+    Runtime = runtime;
     return this;
   }
 
@@ -216,7 +216,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
@@ -227,7 +227,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithLaunchProfile(string launchProfile)
   {
-    _launchProfile = launchProfile;
+    LaunchProfile = launchProfile;
     return this;
   }
 
@@ -238,7 +238,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithArguments(params string[] arguments)
   {
-    _additionalArguments.AddRange(arguments);
+    AdditionalArguments.AddRange(arguments);
     return this;
   }
 
@@ -249,7 +249,7 @@ public class DotNetWatchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWatchBuilder WithArgument(string argument)
   {
-    _additionalArguments.Add(argument);
+    AdditionalArguments.Add(argument);
     return this;
   }
 
@@ -282,102 +282,102 @@ public class DotNetWatchBuilder
 
   internal List<string> BuildBaseArguments()
   {
-    var arguments = new List<string> { "watch" };
+    List<string> arguments = new() { "watch" };
 
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
       arguments.Add("--project");
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
-    if (_quiet)
+    if (Quiet)
     {
       arguments.Add("--quiet");
     }
 
-    if (_verbose)
+    if (Verbose)
     {
       arguments.Add("--verbose");
     }
 
-    if (_list)
+    if (List)
     {
       arguments.Add("--list");
     }
 
-    if (_noRestore)
+    if (NoRestore)
     {
       arguments.Add("--no-restore");
     }
 
-    if (_noLaunchProfile)
+    if (NoLaunchProfile)
     {
       arguments.Add("--no-launch-profile");
     }
 
-    if (_noHotReload)
+    if (NoHotReload)
     {
       arguments.Add("--no-hot-reload");
     }
 
-    if (_noBuild)
+    if (NoBuild)
     {
       arguments.Add("--no-build");
     }
 
-    foreach (string pattern in _include)
+    foreach (string pattern in Include)
     {
       arguments.Add("--include");
       arguments.Add(pattern);
     }
 
-    foreach (string pattern in _exclude)
+    foreach (string pattern in Exclude)
     {
       arguments.Add("--exclude");
       arguments.Add(pattern);
     }
 
-    foreach (string property in _properties)
+    foreach (string property in Properties)
     {
       arguments.Add("--property");
       arguments.Add(property);
     }
 
-    if (!string.IsNullOrWhiteSpace(_targetFramework))
+    if (!string.IsNullOrWhiteSpace(TargetFramework))
     {
       arguments.Add("--framework");
-      arguments.Add(_targetFramework);
+      arguments.Add(TargetFramework);
     }
 
-    if (!string.IsNullOrWhiteSpace(_configuration))
+    if (!string.IsNullOrWhiteSpace(Configuration))
     {
       arguments.Add("--configuration");
-      arguments.Add(_configuration);
+      arguments.Add(Configuration);
     }
 
-    if (!string.IsNullOrWhiteSpace(_runtime))
+    if (!string.IsNullOrWhiteSpace(Runtime))
     {
       arguments.Add("--runtime");
-      arguments.Add(_runtime);
+      arguments.Add(Runtime);
     }
 
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
-    if (!string.IsNullOrWhiteSpace(_launchProfile))
+    if (!string.IsNullOrWhiteSpace(LaunchProfile))
     {
       arguments.Add("--launch-profile");
-      arguments.Add(_launchProfile);
+      arguments.Add(LaunchProfile);
     }
 
     return arguments;
   }
 
-  internal CommandOptions GetOptions() => _options;
-  internal List<string> GetAdditionalArguments() => _additionalArguments;
+  internal CommandOptions GetOptions() => Options;
+  internal List<string> GetAdditionalArguments() => AdditionalArguments;
 }
 
 /// <summary>
@@ -385,20 +385,20 @@ public class DotNetWatchBuilder
 /// </summary>
 public class DotNetWatchRunBuilder
 {
-  private readonly DotNetWatchBuilder _watchBuilder;
+  private readonly DotNetWatchBuilder WatchBuilder;
 
   public DotNetWatchRunBuilder(DotNetWatchBuilder watchBuilder)
   {
-    _watchBuilder = watchBuilder;
+    WatchBuilder = watchBuilder;
   }
 
   public CommandResult Build()
   {
-    List<string> arguments = _watchBuilder.BuildBaseArguments();
+    List<string> arguments = WatchBuilder.BuildBaseArguments();
     arguments.Add("run");
-    arguments.AddRange(_watchBuilder.GetAdditionalArguments());
+    arguments.AddRange(WatchBuilder.GetAdditionalArguments());
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _watchBuilder.GetOptions());
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), WatchBuilder.GetOptions());
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -422,20 +422,20 @@ public class DotNetWatchRunBuilder
 /// </summary>
 public class DotNetWatchTestBuilder
 {
-  private readonly DotNetWatchBuilder _watchBuilder;
+  private readonly DotNetWatchBuilder WatchBuilder;
 
   public DotNetWatchTestBuilder(DotNetWatchBuilder watchBuilder)
   {
-    _watchBuilder = watchBuilder;
+    WatchBuilder = watchBuilder;
   }
 
   public CommandResult Build()
   {
-    List<string> arguments = _watchBuilder.BuildBaseArguments();
+    List<string> arguments = WatchBuilder.BuildBaseArguments();
     arguments.Add("test");
-    arguments.AddRange(_watchBuilder.GetAdditionalArguments());
+    arguments.AddRange(WatchBuilder.GetAdditionalArguments());
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _watchBuilder.GetOptions());
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), WatchBuilder.GetOptions());
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -459,20 +459,20 @@ public class DotNetWatchTestBuilder
 /// </summary>
 public class DotNetWatchBuildBuilder
 {
-  private readonly DotNetWatchBuilder _watchBuilder;
+  private readonly DotNetWatchBuilder WatchBuilder;
 
   public DotNetWatchBuildBuilder(DotNetWatchBuilder watchBuilder)
   {
-    _watchBuilder = watchBuilder;
+    WatchBuilder = watchBuilder;
   }
 
   public CommandResult Build()
   {
-    List<string> arguments = _watchBuilder.BuildBaseArguments();
+    List<string> arguments = WatchBuilder.BuildBaseArguments();
     arguments.Add("build");
-    arguments.AddRange(_watchBuilder.GetAdditionalArguments());
+    arguments.AddRange(WatchBuilder.GetAdditionalArguments());
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _watchBuilder.GetOptions());
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), WatchBuilder.GetOptions());
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)

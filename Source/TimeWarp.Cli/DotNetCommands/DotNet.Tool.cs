@@ -20,7 +20,7 @@ public static partial class DotNet
 /// </summary>
 public class DotNetToolBuilder
 {
-  private CommandOptions _options = new();
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Specifies the working directory for the command.
@@ -29,7 +29,7 @@ public class DotNetToolBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -41,7 +41,7 @@ public class DotNetToolBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -52,7 +52,7 @@ public class DotNetToolBuilder
   /// <returns>A DotNetToolInstallBuilder for configuring the install command</returns>
   public DotNetToolInstallBuilder Install(string packageId)
   {
-    return new DotNetToolInstallBuilder(packageId, _options);
+    return new DotNetToolInstallBuilder(packageId, Options);
   }
 
   /// <summary>
@@ -62,7 +62,7 @@ public class DotNetToolBuilder
   /// <returns>A DotNetToolUninstallBuilder for configuring the uninstall command</returns>
   public DotNetToolUninstallBuilder Uninstall(string packageId)
   {
-    return new DotNetToolUninstallBuilder(packageId, _options);
+    return new DotNetToolUninstallBuilder(packageId, Options);
   }
 
   /// <summary>
@@ -72,7 +72,7 @@ public class DotNetToolBuilder
   /// <returns>A DotNetToolUpdateBuilder for configuring the update command</returns>
   public DotNetToolUpdateBuilder Update(string packageId)
   {
-    return new DotNetToolUpdateBuilder(packageId, _options);
+    return new DotNetToolUpdateBuilder(packageId, Options);
   }
 
   /// <summary>
@@ -81,7 +81,7 @@ public class DotNetToolBuilder
   /// <returns>A DotNetToolListBuilder for configuring the list command</returns>
   public DotNetToolListBuilder List()
   {
-    return new DotNetToolListBuilder(_options);
+    return new DotNetToolListBuilder(Options);
   }
 
   /// <summary>
@@ -91,7 +91,7 @@ public class DotNetToolBuilder
   /// <returns>A DotNetToolRunBuilder for configuring the run command</returns>
   public DotNetToolRunBuilder Run(string commandName)
   {
-    return new DotNetToolRunBuilder(commandName, _options);
+    return new DotNetToolRunBuilder(commandName, Options);
   }
 
   /// <summary>
@@ -101,7 +101,7 @@ public class DotNetToolBuilder
   /// <returns>A DotNetToolSearchBuilder for configuring the search command</returns>
   public DotNetToolSearchBuilder Search(string searchTerm)
   {
-    return new DotNetToolSearchBuilder(searchTerm, _options);
+    return new DotNetToolSearchBuilder(searchTerm, Options);
   }
 
   /// <summary>
@@ -110,7 +110,7 @@ public class DotNetToolBuilder
   /// <returns>A DotNetToolRestoreBuilder for configuring the restore command</returns>
   public DotNetToolRestoreBuilder Restore()
   {
-    return new DotNetToolRestoreBuilder(_options);
+    return new DotNetToolRestoreBuilder(Options);
   }
 }
 
@@ -119,25 +119,25 @@ public class DotNetToolBuilder
 /// </summary>
 public class DotNetToolInstallBuilder
 {
-  private readonly string _packageId;
-  private readonly CommandOptions _options;
-  private bool _global;
-  private bool _local;
-  private string? _toolPath;
-  private string? _version;
-  private string? _configFile;
-  private string? _toolManifest;
-  private bool _allowPrerelease;
-  private bool _ignoreFailedSources;
-  private bool _interactive;
-  private List<string> _sources = new();
-  private string? _framework;
-  private string? _arch;
+  private readonly string PackageId;
+  private readonly CommandOptions Options;
+  private bool Global;
+  private bool Local;
+  private string? ToolPath;
+  private string? Version;
+  private string? ConfigFile;
+  private string? ToolManifest;
+  private bool AllowPrerelease;
+  private bool IgnoreFailedSources;
+  private bool Interactive;
+  private List<string> Sources = new();
+  private string? Framework;
+  private string? Arch;
 
   public DotNetToolInstallBuilder(string packageId, CommandOptions options)
   {
-    _packageId = packageId ?? throw new ArgumentNullException(nameof(packageId));
-    _options = options;
+    PackageId = packageId ?? throw new ArgumentNullException(nameof(packageId));
+    Options = options;
   }
 
   /// <summary>
@@ -146,8 +146,8 @@ public class DotNetToolInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolInstallBuilder Global()
   {
-    _global = true;
-    _local = false;
+    Global = true;
+    Local = false;
     return this;
   }
 
@@ -157,8 +157,8 @@ public class DotNetToolInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolInstallBuilder Local()
   {
-    _local = true;
-    _global = false;
+    Local = true;
+    Global = false;
     return this;
   }
 
@@ -169,7 +169,7 @@ public class DotNetToolInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolInstallBuilder WithToolPath(string toolPath)
   {
-    _toolPath = toolPath;
+    ToolPath = toolPath;
     return this;
   }
 
@@ -180,7 +180,7 @@ public class DotNetToolInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolInstallBuilder WithVersion(string version)
   {
-    _version = version;
+    Version = version;
     return this;
   }
 
@@ -191,7 +191,7 @@ public class DotNetToolInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolInstallBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
@@ -202,7 +202,7 @@ public class DotNetToolInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolInstallBuilder WithToolManifest(string toolManifest)
   {
-    _toolManifest = toolManifest;
+    ToolManifest = toolManifest;
     return this;
   }
 
@@ -212,7 +212,7 @@ public class DotNetToolInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolInstallBuilder WithPrerelease()
   {
-    _allowPrerelease = true;
+    AllowPrerelease = true;
     return this;
   }
 
@@ -222,7 +222,7 @@ public class DotNetToolInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolInstallBuilder WithIgnoreFailedSources()
   {
-    _ignoreFailedSources = true;
+    IgnoreFailedSources = true;
     return this;
   }
 
@@ -232,7 +232,7 @@ public class DotNetToolInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolInstallBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -243,7 +243,7 @@ public class DotNetToolInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolInstallBuilder WithSource(string source)
   {
-    _sources.Add(source);
+    Sources.Add(source);
     return this;
   }
 
@@ -254,7 +254,7 @@ public class DotNetToolInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolInstallBuilder WithFramework(string framework)
   {
-    _framework = framework;
+    Framework = framework;
     return this;
   }
 
@@ -265,82 +265,82 @@ public class DotNetToolInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolInstallBuilder WithArchitecture(string arch)
   {
-    _arch = arch;
+    Arch = arch;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "tool", "install", _packageId };
+    List<string> arguments = new() { "tool", "install", PackageId };
 
-    if (_global)
+    if (Global)
     {
       arguments.Add("--global");
     }
 
-    if (_local)
+    if (Local)
     {
       arguments.Add("--local");
     }
 
-    if (!string.IsNullOrWhiteSpace(_toolPath))
+    if (!string.IsNullOrWhiteSpace(ToolPath))
     {
       arguments.Add("--tool-path");
-      arguments.Add(_toolPath);
+      arguments.Add(ToolPath);
     }
 
-    if (!string.IsNullOrWhiteSpace(_version))
+    if (!string.IsNullOrWhiteSpace(Version))
     {
       arguments.Add("--version");
-      arguments.Add(_version);
+      arguments.Add(Version);
     }
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    if (!string.IsNullOrWhiteSpace(_toolManifest))
+    if (!string.IsNullOrWhiteSpace(ToolManifest))
     {
       arguments.Add("--tool-manifest");
-      arguments.Add(_toolManifest);
+      arguments.Add(ToolManifest);
     }
 
-    if (!string.IsNullOrWhiteSpace(_framework))
+    if (!string.IsNullOrWhiteSpace(Framework))
     {
       arguments.Add("--framework");
-      arguments.Add(_framework);
+      arguments.Add(Framework);
     }
 
-    if (!string.IsNullOrWhiteSpace(_arch))
+    if (!string.IsNullOrWhiteSpace(Arch))
     {
       arguments.Add("--arch");
-      arguments.Add(_arch);
+      arguments.Add(Arch);
     }
 
-    foreach (string source in _sources)
+    foreach (string source in Sources)
     {
       arguments.Add("--add-source");
       arguments.Add(source);
     }
 
-    if (_allowPrerelease)
+    if (AllowPrerelease)
     {
       arguments.Add("--prerelease");
     }
 
-    if (_ignoreFailedSources)
+    if (IgnoreFailedSources)
     {
       arguments.Add("--ignore-failed-sources");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -364,17 +364,17 @@ public class DotNetToolInstallBuilder
 /// </summary>
 public class DotNetToolUninstallBuilder
 {
-  private readonly string _packageId;
-  private readonly CommandOptions _options;
-  private bool _global;
-  private bool _local;
-  private string? _toolPath;
-  private string? _toolManifest;
+  private readonly string PackageId;
+  private readonly CommandOptions Options;
+  private bool Global;
+  private bool Local;
+  private string? ToolPath;
+  private string? ToolManifest;
 
   public DotNetToolUninstallBuilder(string packageId, CommandOptions options)
   {
-    _packageId = packageId ?? throw new ArgumentNullException(nameof(packageId));
-    _options = options;
+    PackageId = packageId ?? throw new ArgumentNullException(nameof(packageId));
+    Options = options;
   }
 
   /// <summary>
@@ -383,8 +383,8 @@ public class DotNetToolUninstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolUninstallBuilder Global()
   {
-    _global = true;
-    _local = false;
+    Global = true;
+    Local = false;
     return this;
   }
 
@@ -394,8 +394,8 @@ public class DotNetToolUninstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolUninstallBuilder Local()
   {
-    _local = true;
-    _global = false;
+    Local = true;
+    Global = false;
     return this;
   }
 
@@ -406,7 +406,7 @@ public class DotNetToolUninstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolUninstallBuilder WithToolPath(string toolPath)
   {
-    _toolPath = toolPath;
+    ToolPath = toolPath;
     return this;
   }
 
@@ -417,37 +417,37 @@ public class DotNetToolUninstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolUninstallBuilder WithToolManifest(string toolManifest)
   {
-    _toolManifest = toolManifest;
+    ToolManifest = toolManifest;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "tool", "uninstall", _packageId };
+    List<string> arguments = new() { "tool", "uninstall", PackageId };
 
-    if (_global)
+    if (Global)
     {
       arguments.Add("--global");
     }
 
-    if (_local)
+    if (Local)
     {
       arguments.Add("--local");
     }
 
-    if (!string.IsNullOrWhiteSpace(_toolPath))
+    if (!string.IsNullOrWhiteSpace(ToolPath))
     {
       arguments.Add("--tool-path");
-      arguments.Add(_toolPath);
+      arguments.Add(ToolPath);
     }
 
-    if (!string.IsNullOrWhiteSpace(_toolManifest))
+    if (!string.IsNullOrWhiteSpace(ToolManifest))
     {
       arguments.Add("--tool-manifest");
-      arguments.Add(_toolManifest);
+      arguments.Add(ToolManifest);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -471,22 +471,22 @@ public class DotNetToolUninstallBuilder
 /// </summary>
 public class DotNetToolUpdateBuilder
 {
-  private readonly string _packageId;
-  private readonly CommandOptions _options;
-  private bool _global;
-  private bool _local;
-  private string? _toolPath;
-  private string? _configFile;
-  private string? _toolManifest;
-  private bool _allowPrerelease;
-  private bool _ignoreFailedSources;
-  private bool _interactive;
-  private List<string> _sources = new();
+  private readonly string PackageId;
+  private readonly CommandOptions Options;
+  private bool Global;
+  private bool Local;
+  private string? ToolPath;
+  private string? ConfigFile;
+  private string? ToolManifest;
+  private bool AllowPrerelease;
+  private bool IgnoreFailedSources;
+  private bool Interactive;
+  private List<string> Sources = new();
 
   public DotNetToolUpdateBuilder(string packageId, CommandOptions options)
   {
-    _packageId = packageId ?? throw new ArgumentNullException(nameof(packageId));
-    _options = options;
+    PackageId = packageId ?? throw new ArgumentNullException(nameof(packageId));
+    Options = options;
   }
 
   /// <summary>
@@ -495,8 +495,8 @@ public class DotNetToolUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolUpdateBuilder Global()
   {
-    _global = true;
-    _local = false;
+    Global = true;
+    Local = false;
     return this;
   }
 
@@ -506,8 +506,8 @@ public class DotNetToolUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolUpdateBuilder Local()
   {
-    _local = true;
-    _global = false;
+    Local = true;
+    Global = false;
     return this;
   }
 
@@ -518,7 +518,7 @@ public class DotNetToolUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolUpdateBuilder WithToolPath(string toolPath)
   {
-    _toolPath = toolPath;
+    ToolPath = toolPath;
     return this;
   }
 
@@ -529,7 +529,7 @@ public class DotNetToolUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolUpdateBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
@@ -540,7 +540,7 @@ public class DotNetToolUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolUpdateBuilder WithToolManifest(string toolManifest)
   {
-    _toolManifest = toolManifest;
+    ToolManifest = toolManifest;
     return this;
   }
 
@@ -550,7 +550,7 @@ public class DotNetToolUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolUpdateBuilder WithPrerelease()
   {
-    _allowPrerelease = true;
+    AllowPrerelease = true;
     return this;
   }
 
@@ -560,7 +560,7 @@ public class DotNetToolUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolUpdateBuilder WithIgnoreFailedSources()
   {
-    _ignoreFailedSources = true;
+    IgnoreFailedSources = true;
     return this;
   }
 
@@ -570,7 +570,7 @@ public class DotNetToolUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolUpdateBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -581,64 +581,64 @@ public class DotNetToolUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolUpdateBuilder WithSource(string source)
   {
-    _sources.Add(source);
+    Sources.Add(source);
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "tool", "update", _packageId };
+    List<string> arguments = new() { "tool", "update", PackageId };
 
-    if (_global)
+    if (Global)
     {
       arguments.Add("--global");
     }
 
-    if (_local)
+    if (Local)
     {
       arguments.Add("--local");
     }
 
-    if (!string.IsNullOrWhiteSpace(_toolPath))
+    if (!string.IsNullOrWhiteSpace(ToolPath))
     {
       arguments.Add("--tool-path");
-      arguments.Add(_toolPath);
+      arguments.Add(ToolPath);
     }
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    if (!string.IsNullOrWhiteSpace(_toolManifest))
+    if (!string.IsNullOrWhiteSpace(ToolManifest))
     {
       arguments.Add("--tool-manifest");
-      arguments.Add(_toolManifest);
+      arguments.Add(ToolManifest);
     }
 
-    foreach (string source in _sources)
+    foreach (string source in Sources)
     {
       arguments.Add("--add-source");
       arguments.Add(source);
     }
 
-    if (_allowPrerelease)
+    if (AllowPrerelease)
     {
       arguments.Add("--prerelease");
     }
 
-    if (_ignoreFailedSources)
+    if (IgnoreFailedSources)
     {
       arguments.Add("--ignore-failed-sources");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -662,14 +662,14 @@ public class DotNetToolUpdateBuilder
 /// </summary>
 public class DotNetToolListBuilder
 {
-  private readonly CommandOptions _options;
-  private bool _global;
-  private bool _local;
-  private string? _toolPath;
+  private readonly CommandOptions Options;
+  private bool Global;
+  private bool Local;
+  private string? ToolPath;
 
   public DotNetToolListBuilder(CommandOptions options)
   {
-    _options = options;
+    Options = options;
   }
 
   /// <summary>
@@ -678,8 +678,8 @@ public class DotNetToolListBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolListBuilder Global()
   {
-    _global = true;
-    _local = false;
+    Global = true;
+    Local = false;
     return this;
   }
 
@@ -689,8 +689,8 @@ public class DotNetToolListBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolListBuilder Local()
   {
-    _local = true;
-    _global = false;
+    Local = true;
+    Global = false;
     return this;
   }
 
@@ -701,31 +701,31 @@ public class DotNetToolListBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolListBuilder WithToolPath(string toolPath)
   {
-    _toolPath = toolPath;
+    ToolPath = toolPath;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "tool", "list" };
+    List<string> arguments = new() { "tool", "list" };
 
-    if (_global)
+    if (Global)
     {
       arguments.Add("--global");
     }
 
-    if (_local)
+    if (Local)
     {
       arguments.Add("--local");
     }
 
-    if (!string.IsNullOrWhiteSpace(_toolPath))
+    if (!string.IsNullOrWhiteSpace(ToolPath))
     {
       arguments.Add("--tool-path");
-      arguments.Add(_toolPath);
+      arguments.Add(ToolPath);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -749,14 +749,14 @@ public class DotNetToolListBuilder
 /// </summary>
 public class DotNetToolRunBuilder
 {
-  private readonly string _commandName;
-  private readonly CommandOptions _options;
-  private List<string> _toolArguments = new();
+  private readonly string CommandName;
+  private readonly CommandOptions Options;
+  private List<string> ToolArguments = new();
 
   public DotNetToolRunBuilder(string commandName, CommandOptions options)
   {
-    _commandName = commandName ?? throw new ArgumentNullException(nameof(commandName));
-    _options = options;
+    CommandName = commandName ?? throw new ArgumentNullException(nameof(commandName));
+    Options = options;
   }
 
   /// <summary>
@@ -766,7 +766,7 @@ public class DotNetToolRunBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolRunBuilder WithArguments(params string[] arguments)
   {
-    _toolArguments.AddRange(arguments);
+    ToolArguments.AddRange(arguments);
     return this;
   }
 
@@ -777,16 +777,16 @@ public class DotNetToolRunBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolRunBuilder WithArgument(string argument)
   {
-    _toolArguments.Add(argument);
+    ToolArguments.Add(argument);
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "tool", "run", _commandName };
-    arguments.AddRange(_toolArguments);
+    List<string> arguments = new() { "tool", "run", CommandName };
+    arguments.AddRange(ToolArguments);
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -810,17 +810,17 @@ public class DotNetToolRunBuilder
 /// </summary>
 public class DotNetToolSearchBuilder
 {
-  private readonly string _searchTerm;
-  private readonly CommandOptions _options;
-  private bool _detail;
-  private int? _skip;
-  private int? _take;
-  private bool _prerelease;
+  private readonly string SearchTerm;
+  private readonly CommandOptions Options;
+  private bool Detail;
+  private int? Skip;
+  private int? Take;
+  private bool Prerelease;
 
   public DotNetToolSearchBuilder(string searchTerm, CommandOptions options)
   {
-    _searchTerm = searchTerm ?? throw new ArgumentNullException(nameof(searchTerm));
-    _options = options;
+    SearchTerm = searchTerm ?? throw new ArgumentNullException(nameof(searchTerm));
+    Options = options;
   }
 
   /// <summary>
@@ -829,7 +829,7 @@ public class DotNetToolSearchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolSearchBuilder WithDetail()
   {
-    _detail = true;
+    Detail = true;
     return this;
   }
 
@@ -840,7 +840,7 @@ public class DotNetToolSearchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolSearchBuilder WithSkip(int skip)
   {
-    _skip = skip;
+    Skip = skip;
     return this;
   }
 
@@ -851,7 +851,7 @@ public class DotNetToolSearchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolSearchBuilder WithTake(int take)
   {
-    _take = take;
+    Take = take;
     return this;
   }
 
@@ -861,37 +861,37 @@ public class DotNetToolSearchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolSearchBuilder WithPrerelease()
   {
-    _prerelease = true;
+    Prerelease = true;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "tool", "search", _searchTerm };
+    List<string> arguments = new() { "tool", "search", SearchTerm };
 
-    if (_detail)
+    if (Detail)
     {
       arguments.Add("--detail");
     }
 
-    if (_skip.HasValue)
+    if (Skip.HasValue)
     {
       arguments.Add("--skip");
-      arguments.Add(_skip.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+      arguments.Add(Skip.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }
 
-    if (_take.HasValue)
+    if (Take.HasValue)
     {
       arguments.Add("--take");
-      arguments.Add(_take.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+      arguments.Add(Take.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }
 
-    if (_prerelease)
+    if (Prerelease)
     {
       arguments.Add("--prerelease");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -915,16 +915,16 @@ public class DotNetToolSearchBuilder
 /// </summary>
 public class DotNetToolRestoreBuilder
 {
-  private readonly CommandOptions _options;
-  private string? _configFile;
-  private string? _toolManifest;
-  private bool _ignoreFailedSources;
-  private bool _interactive;
-  private List<string> _sources = new();
+  private readonly CommandOptions Options;
+  private string? ConfigFile;
+  private string? ToolManifest;
+  private bool IgnoreFailedSources;
+  private bool Interactive;
+  private List<string> Sources = new();
 
   public DotNetToolRestoreBuilder(CommandOptions options)
   {
-    _options = options;
+    Options = options;
   }
 
   /// <summary>
@@ -934,7 +934,7 @@ public class DotNetToolRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolRestoreBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
@@ -945,7 +945,7 @@ public class DotNetToolRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolRestoreBuilder WithToolManifest(string toolManifest)
   {
-    _toolManifest = toolManifest;
+    ToolManifest = toolManifest;
     return this;
   }
 
@@ -955,7 +955,7 @@ public class DotNetToolRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolRestoreBuilder WithIgnoreFailedSources()
   {
-    _ignoreFailedSources = true;
+    IgnoreFailedSources = true;
     return this;
   }
 
@@ -965,7 +965,7 @@ public class DotNetToolRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolRestoreBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -976,43 +976,43 @@ public class DotNetToolRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetToolRestoreBuilder WithSource(string source)
   {
-    _sources.Add(source);
+    Sources.Add(source);
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "tool", "restore" };
+    List<string> arguments = new() { "tool", "restore" };
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    if (!string.IsNullOrWhiteSpace(_toolManifest))
+    if (!string.IsNullOrWhiteSpace(ToolManifest))
     {
       arguments.Add("--tool-manifest");
-      arguments.Add(_toolManifest);
+      arguments.Add(ToolManifest);
     }
 
-    foreach (string source in _sources)
+    foreach (string source in Sources)
     {
       arguments.Add("--add-source");
       arguments.Add(source);
     }
 
-    if (_ignoreFailedSources)
+    if (IgnoreFailedSources)
     {
       arguments.Add("--ignore-failed-sources");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)

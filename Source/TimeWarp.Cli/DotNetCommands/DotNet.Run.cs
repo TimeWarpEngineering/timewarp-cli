@@ -20,25 +20,25 @@ public static partial class DotNet
 /// </summary>
 public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
 {
-  private string? _project;
-  private string? _configuration;
-  private string? _framework;
-  private string? _runtime;
-  private string? _architecture;
-  private string? _operatingSystem;
-  private string? _launchProfile;
-  private bool _noRestore;
-  private bool _noBuild;
-  private bool _noDependencies;
-  private bool _noLaunchProfile;
-  private bool _force;
-  private bool _interactive;
-  private string? _verbosity;
-  private string? _terminalLogger;
-  private Dictionary<string, string> _properties = new();
-  private Dictionary<string, string> _environmentVariables = new();
-  private string[] _programArguments = Array.Empty<string>();
-  private CommandOptions _options = new();
+  private string? Project;
+  private string? Configuration;
+  private string? Framework;
+  private string? Runtime;
+  private string? Architecture;
+  private string? OperatingSystem;
+  private string? LaunchProfile;
+  private bool NoRestore;
+  private bool NoBuild;
+  private bool NoDependencies;
+  private bool NoLaunchProfile;
+  private bool Force;
+  private bool Interactive;
+  private string? Verbosity;
+  private string? TerminalLogger;
+  private Dictionary<string, string> Properties = new();
+  private Dictionary<string, string> EnvironmentVariables = new();
+  private string[] ProgramArguments = Array.Empty<string>();
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Specifies the project file to run. If not specified, searches the current directory for one.
@@ -47,7 +47,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithProject(string project)
   {
-    _project = project;
+    Project = project;
     return this;
   }
 
@@ -58,7 +58,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithConfiguration(string configuration)
   {
-    _configuration = configuration;
+    Configuration = configuration;
     return this;
   }
 
@@ -69,7 +69,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithFramework(string framework)
   {
-    _framework = framework;
+    Framework = framework;
     return this;
   }
 
@@ -80,7 +80,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithRuntime(string runtime)
   {
-    _runtime = runtime;
+    Runtime = runtime;
     return this;
   }
 
@@ -90,7 +90,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithNoRestore()
   {
-    _noRestore = true;
+    NoRestore = true;
     return this;
   }
 
@@ -100,7 +100,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithNoBuild()
   {
-    _noBuild = true;
+    NoBuild = true;
     return this;
   }
 
@@ -110,7 +110,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithNoDependencies()
   {
-    _noDependencies = true;
+    NoDependencies = true;
     return this;
   }
 
@@ -121,7 +121,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
@@ -132,7 +132,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithArguments(params string[] arguments)
   {
-    _programArguments = arguments;
+    ProgramArguments = arguments;
     return this;
   }
 
@@ -143,7 +143,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -155,7 +155,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -166,7 +166,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithArchitecture(string architecture)
   {
-    _architecture = architecture;
+    Architecture = architecture;
     return this;
   }
 
@@ -177,7 +177,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithOperatingSystem(string operatingSystem)
   {
-    _operatingSystem = operatingSystem;
+    OperatingSystem = operatingSystem;
     return this;
   }
 
@@ -188,7 +188,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithLaunchProfile(string profileName)
   {
-    _launchProfile = profileName;
+    LaunchProfile = profileName;
     return this;
   }
 
@@ -198,7 +198,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithNoLaunchProfile()
   {
-    _noLaunchProfile = true;
+    NoLaunchProfile = true;
     return this;
   }
 
@@ -208,7 +208,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithForce()
   {
-    _force = true;
+    Force = true;
     return this;
   }
 
@@ -218,7 +218,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -229,7 +229,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithTerminalLogger(string mode)
   {
-    _terminalLogger = mode;
+    TerminalLogger = mode;
     return this;
   }
 
@@ -241,7 +241,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithProperty(string name, string value)
   {
-    _properties[name] = value;
+    Properties[name] = value;
     return this;
   }
 
@@ -254,7 +254,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   {
     foreach (KeyValuePair<string, string> kvp in properties)
     {
-      _properties[kvp.Key] = kvp.Value;
+      Properties[kvp.Key] = kvp.Value;
     }
     
     return this;
@@ -266,7 +266,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithNoValidation()
   {
-    _options = _options.WithNoValidation();
+    Options = Options.WithNoValidation();
     return this;
   }
 
@@ -278,7 +278,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithProcessEnvironmentVariable(string key, string value)
   {
-    _environmentVariables[key] = value;
+    EnvironmentVariables[key] = value;
     return this;
   }
 
@@ -288,123 +288,123 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// <returns>A CommandResult for further processing</returns>
   public CommandResult Build()
   {
-    var arguments = new List<string> { "run" };
+    List<string> arguments = new() { "run" };
 
     // Add project if specified
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
       arguments.Add("--project");
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
     // Add configuration if specified
-    if (!string.IsNullOrWhiteSpace(_configuration))
+    if (!string.IsNullOrWhiteSpace(Configuration))
     {
       arguments.Add("--configuration");
-      arguments.Add(_configuration);
+      arguments.Add(Configuration);
     }
 
     // Add framework if specified
-    if (!string.IsNullOrWhiteSpace(_framework))
+    if (!string.IsNullOrWhiteSpace(Framework))
     {
       arguments.Add("--framework");
-      arguments.Add(_framework);
+      arguments.Add(Framework);
     }
 
     // Add runtime if specified
-    if (!string.IsNullOrWhiteSpace(_runtime))
+    if (!string.IsNullOrWhiteSpace(Runtime))
     {
       arguments.Add("--runtime");
-      arguments.Add(_runtime);
+      arguments.Add(Runtime);
     }
 
     // Add architecture if specified
-    if (!string.IsNullOrWhiteSpace(_architecture))
+    if (!string.IsNullOrWhiteSpace(Architecture))
     {
       arguments.Add("--arch");
-      arguments.Add(_architecture);
+      arguments.Add(Architecture);
     }
 
     // Add operating system if specified
-    if (!string.IsNullOrWhiteSpace(_operatingSystem))
+    if (!string.IsNullOrWhiteSpace(OperatingSystem))
     {
       arguments.Add("--os");
-      arguments.Add(_operatingSystem);
+      arguments.Add(OperatingSystem);
     }
 
     // Add launch profile if specified
-    if (!string.IsNullOrWhiteSpace(_launchProfile))
+    if (!string.IsNullOrWhiteSpace(LaunchProfile))
     {
       arguments.Add("--launch-profile");
-      arguments.Add(_launchProfile);
+      arguments.Add(LaunchProfile);
     }
 
     // Add verbosity if specified
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
     // Add terminal logger if specified
-    if (!string.IsNullOrWhiteSpace(_terminalLogger))
+    if (!string.IsNullOrWhiteSpace(TerminalLogger))
     {
       arguments.Add("--tl");
-      arguments.Add(_terminalLogger);
+      arguments.Add(TerminalLogger);
     }
 
     // Add boolean flags
-    if (_noRestore)
+    if (NoRestore)
     {
       arguments.Add("--no-restore");
     }
 
-    if (_noBuild)
+    if (NoBuild)
     {
       arguments.Add("--no-build");
     }
 
-    if (_noDependencies)
+    if (NoDependencies)
     {
       arguments.Add("--no-dependencies");
     }
 
-    if (_noLaunchProfile)
+    if (NoLaunchProfile)
     {
       arguments.Add("--no-launch-profile");
     }
 
-    if (_force)
+    if (Force)
     {
       arguments.Add("--force");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
     // Add MSBuild properties
-    foreach (KeyValuePair<string, string> property in _properties)
+    foreach (KeyValuePair<string, string> property in Properties)
     {
       arguments.Add($"--property:{property.Key}={property.Value}");
     }
 
     // Add process environment variables
-    foreach (KeyValuePair<string, string> envVar in _environmentVariables)
+    foreach (KeyValuePair<string, string> envVar in EnvironmentVariables)
     {
       arguments.Add("-e");
       arguments.Add($"{envVar.Key}={envVar.Value}");
     }
 
     // Add program arguments if specified
-    if (_programArguments.Length > 0)
+    if (ProgramArguments.Length > 0)
     {
       arguments.Add("--");
-      arguments.AddRange(_programArguments);
+      arguments.AddRange(ProgramArguments);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   /// <summary>

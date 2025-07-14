@@ -20,7 +20,7 @@ public static partial class DotNet
 /// </summary>
 public class DotNetNuGetBuilder
 {
-  private CommandOptions _options = new();
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Specifies the working directory for the command.
@@ -29,7 +29,7 @@ public class DotNetNuGetBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -41,7 +41,7 @@ public class DotNetNuGetBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -52,7 +52,7 @@ public class DotNetNuGetBuilder
   /// <returns>A DotNetNuGetPushBuilder for configuring the push command</returns>
   public DotNetNuGetPushBuilder Push(string packagePath)
   {
-    return new DotNetNuGetPushBuilder(packagePath, _options);
+    return new DotNetNuGetPushBuilder(packagePath, Options);
   }
 
   /// <summary>
@@ -63,7 +63,7 @@ public class DotNetNuGetBuilder
   /// <returns>A DotNetNuGetDeleteBuilder for configuring the delete command</returns>
   public DotNetNuGetDeleteBuilder Delete(string packageName, string version)
   {
-    return new DotNetNuGetDeleteBuilder(packageName, version, _options);
+    return new DotNetNuGetDeleteBuilder(packageName, version, Options);
   }
 
   /// <summary>
@@ -72,7 +72,7 @@ public class DotNetNuGetBuilder
   /// <returns>A DotNetNuGetListSourceBuilder for configuring the list source command</returns>
   public DotNetNuGetListSourceBuilder ListSources()
   {
-    return new DotNetNuGetListSourceBuilder(_options);
+    return new DotNetNuGetListSourceBuilder(Options);
   }
 
   /// <summary>
@@ -82,7 +82,7 @@ public class DotNetNuGetBuilder
   /// <returns>A DotNetNuGetAddSourceBuilder for configuring the add source command</returns>
   public DotNetNuGetAddSourceBuilder AddSource(string source)
   {
-    return new DotNetNuGetAddSourceBuilder(source, _options);
+    return new DotNetNuGetAddSourceBuilder(source, Options);
   }
 
   /// <summary>
@@ -92,7 +92,7 @@ public class DotNetNuGetBuilder
   /// <returns>A DotNetNuGetRemoveSourceBuilder for configuring the remove source command</returns>
   public DotNetNuGetRemoveSourceBuilder RemoveSource(string name)
   {
-    return new DotNetNuGetRemoveSourceBuilder(name, _options);
+    return new DotNetNuGetRemoveSourceBuilder(name, Options);
   }
 
   /// <summary>
@@ -102,7 +102,7 @@ public class DotNetNuGetBuilder
   /// <returns>A DotNetNuGetUpdateSourceBuilder for configuring the update source command</returns>
   public DotNetNuGetUpdateSourceBuilder UpdateSource(string name)
   {
-    return new DotNetNuGetUpdateSourceBuilder(name, _options);
+    return new DotNetNuGetUpdateSourceBuilder(name, Options);
   }
 
   /// <summary>
@@ -112,7 +112,7 @@ public class DotNetNuGetBuilder
   /// <returns>A DotNetNuGetEnableSourceBuilder for configuring the enable source command</returns>
   public DotNetNuGetEnableSourceBuilder EnableSource(string name)
   {
-    return new DotNetNuGetEnableSourceBuilder(name, _options);
+    return new DotNetNuGetEnableSourceBuilder(name, Options);
   }
 
   /// <summary>
@@ -122,7 +122,7 @@ public class DotNetNuGetBuilder
   /// <returns>A DotNetNuGetDisableSourceBuilder for configuring the disable source command</returns>
   public DotNetNuGetDisableSourceBuilder DisableSource(string name)
   {
-    return new DotNetNuGetDisableSourceBuilder(name, _options);
+    return new DotNetNuGetDisableSourceBuilder(name, Options);
   }
 
   /// <summary>
@@ -131,7 +131,7 @@ public class DotNetNuGetBuilder
   /// <returns>A DotNetNuGetLocalsBuilder for configuring the locals command</returns>
   public DotNetNuGetLocalsBuilder Locals()
   {
-    return new DotNetNuGetLocalsBuilder(_options);
+    return new DotNetNuGetLocalsBuilder(Options);
   }
 
   /// <summary>
@@ -141,7 +141,7 @@ public class DotNetNuGetBuilder
   /// <returns>A DotNetNuGetWhyBuilder for configuring the why command</returns>
   public DotNetNuGetWhyBuilder Why(string packageName)
   {
-    return new DotNetNuGetWhyBuilder(packageName, _options);
+    return new DotNetNuGetWhyBuilder(packageName, Options);
   }
 }
 
@@ -150,24 +150,24 @@ public class DotNetNuGetBuilder
 /// </summary>
 public class DotNetNuGetPushBuilder
 {
-  private readonly string _packagePath;
-  private readonly CommandOptions _options;
-  private string? _source;
-  private string? _symbolSource;
-  private int? _timeout;
-  private string? _apiKey;
-  private string? _symbolApiKey;
-  private bool _disableBuffering;
-  private bool _noSymbols;
-  private bool _noServiceEndpoint;
-  private bool _interactive;
-  private bool _skipDuplicate;
-  private string? _configFile;
+  private readonly string PackagePath;
+  private readonly CommandOptions Options;
+  private string? Source;
+  private string? SymbolSource;
+  private int? Timeout;
+  private string? ApiKey;
+  private string? SymbolApiKey;
+  private bool DisableBuffering;
+  private bool NoSymbols;
+  private bool NoServiceEndpoint;
+  private bool Interactive;
+  private bool SkipDuplicate;
+  private string? ConfigFile;
 
   public DotNetNuGetPushBuilder(string packagePath, CommandOptions options)
   {
-    _packagePath = packagePath ?? throw new ArgumentNullException(nameof(packagePath));
-    _options = options;
+    PackagePath = packagePath ?? throw new ArgumentNullException(nameof(packagePath));
+    Options = options;
   }
 
   /// <summary>
@@ -177,7 +177,7 @@ public class DotNetNuGetPushBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetPushBuilder WithSource(string source)
   {
-    _source = source;
+    Source = source;
     return this;
   }
 
@@ -188,7 +188,7 @@ public class DotNetNuGetPushBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetPushBuilder WithSymbolSource(string symbolSource)
   {
-    _symbolSource = symbolSource;
+    SymbolSource = symbolSource;
     return this;
   }
 
@@ -199,7 +199,7 @@ public class DotNetNuGetPushBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetPushBuilder WithTimeout(int timeout)
   {
-    _timeout = timeout;
+    Timeout = timeout;
     return this;
   }
 
@@ -210,7 +210,7 @@ public class DotNetNuGetPushBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetPushBuilder WithApiKey(string apiKey)
   {
-    _apiKey = apiKey;
+    ApiKey = apiKey;
     return this;
   }
 
@@ -221,7 +221,7 @@ public class DotNetNuGetPushBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetPushBuilder WithSymbolApiKey(string symbolApiKey)
   {
-    _symbolApiKey = symbolApiKey;
+    SymbolApiKey = symbolApiKey;
     return this;
   }
 
@@ -231,7 +231,7 @@ public class DotNetNuGetPushBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetPushBuilder WithDisableBuffering()
   {
-    _disableBuffering = true;
+    DisableBuffering = true;
     return this;
   }
 
@@ -241,7 +241,7 @@ public class DotNetNuGetPushBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetPushBuilder WithNoSymbols()
   {
-    _noSymbols = true;
+    NoSymbols = true;
     return this;
   }
 
@@ -251,7 +251,7 @@ public class DotNetNuGetPushBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetPushBuilder WithNoServiceEndpoint()
   {
-    _noServiceEndpoint = true;
+    NoServiceEndpoint = true;
     return this;
   }
 
@@ -261,7 +261,7 @@ public class DotNetNuGetPushBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetPushBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -271,7 +271,7 @@ public class DotNetNuGetPushBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetPushBuilder WithSkipDuplicate()
   {
-    _skipDuplicate = true;
+    SkipDuplicate = true;
     return this;
   }
 
@@ -282,76 +282,76 @@ public class DotNetNuGetPushBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetPushBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "nuget", "push", _packagePath };
+    List<string> arguments = new() { "nuget", "push", PackagePath };
 
-    if (!string.IsNullOrWhiteSpace(_source))
+    if (!string.IsNullOrWhiteSpace(Source))
     {
       arguments.Add("--source");
-      arguments.Add(_source);
+      arguments.Add(Source);
     }
 
-    if (!string.IsNullOrWhiteSpace(_symbolSource))
+    if (!string.IsNullOrWhiteSpace(SymbolSource))
     {
       arguments.Add("--symbol-source");
-      arguments.Add(_symbolSource);
+      arguments.Add(SymbolSource);
     }
 
-    if (_timeout.HasValue)
+    if (Timeout.HasValue)
     {
       arguments.Add("--timeout");
-      arguments.Add(_timeout.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+      arguments.Add(Timeout.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }
 
-    if (!string.IsNullOrWhiteSpace(_apiKey))
+    if (!string.IsNullOrWhiteSpace(ApiKey))
     {
       arguments.Add("--api-key");
-      arguments.Add(_apiKey);
+      arguments.Add(ApiKey);
     }
 
-    if (!string.IsNullOrWhiteSpace(_symbolApiKey))
+    if (!string.IsNullOrWhiteSpace(SymbolApiKey))
     {
       arguments.Add("--symbol-api-key");
-      arguments.Add(_symbolApiKey);
+      arguments.Add(SymbolApiKey);
     }
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    if (_disableBuffering)
+    if (DisableBuffering)
     {
       arguments.Add("--disable-buffering");
     }
 
-    if (_noSymbols)
+    if (NoSymbols)
     {
       arguments.Add("--no-symbols");
     }
 
-    if (_noServiceEndpoint)
+    if (NoServiceEndpoint)
     {
       arguments.Add("--no-service-endpoint");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
-    if (_skipDuplicate)
+    if (SkipDuplicate)
     {
       arguments.Add("--skip-duplicate");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -375,19 +375,19 @@ public class DotNetNuGetPushBuilder
 /// </summary>
 public class DotNetNuGetDeleteBuilder
 {
-  private readonly string _packageName;
-  private readonly string _version;
-  private readonly CommandOptions _options;
-  private string? _source;
-  private string? _apiKey;
-  private bool _interactive;
-  private string? _configFile;
+  private readonly string PackageName;
+  private readonly string Version;
+  private readonly CommandOptions Options;
+  private string? Source;
+  private string? ApiKey;
+  private bool Interactive;
+  private string? ConfigFile;
 
   public DotNetNuGetDeleteBuilder(string packageName, string version, CommandOptions options)
   {
-    _packageName = packageName ?? throw new ArgumentNullException(nameof(packageName));
-    _version = version ?? throw new ArgumentNullException(nameof(version));
-    _options = options;
+    PackageName = packageName ?? throw new ArgumentNullException(nameof(packageName));
+    Version = version ?? throw new ArgumentNullException(nameof(version));
+    Options = options;
   }
 
   /// <summary>
@@ -397,7 +397,7 @@ public class DotNetNuGetDeleteBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetDeleteBuilder WithSource(string source)
   {
-    _source = source;
+    Source = source;
     return this;
   }
 
@@ -408,7 +408,7 @@ public class DotNetNuGetDeleteBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetDeleteBuilder WithApiKey(string apiKey)
   {
-    _apiKey = apiKey;
+    ApiKey = apiKey;
     return this;
   }
 
@@ -418,7 +418,7 @@ public class DotNetNuGetDeleteBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetDeleteBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -429,38 +429,38 @@ public class DotNetNuGetDeleteBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetDeleteBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "nuget", "delete", _packageName, _version };
+    List<string> arguments = new() { "nuget", "delete", PackageName, Version };
 
-    if (!string.IsNullOrWhiteSpace(_source))
+    if (!string.IsNullOrWhiteSpace(Source))
     {
       arguments.Add("--source");
-      arguments.Add(_source);
+      arguments.Add(Source);
     }
 
-    if (!string.IsNullOrWhiteSpace(_apiKey))
+    if (!string.IsNullOrWhiteSpace(ApiKey))
     {
       arguments.Add("--api-key");
-      arguments.Add(_apiKey);
+      arguments.Add(ApiKey);
     }
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -484,13 +484,13 @@ public class DotNetNuGetDeleteBuilder
 /// </summary>
 public class DotNetNuGetListSourceBuilder
 {
-  private readonly CommandOptions _options;
-  private string? _format;
-  private string? _configFile;
+  private readonly CommandOptions Options;
+  private string? Format;
+  private string? ConfigFile;
 
   public DotNetNuGetListSourceBuilder(CommandOptions options)
   {
-    _options = options;
+    Options = options;
   }
 
   /// <summary>
@@ -500,7 +500,7 @@ public class DotNetNuGetListSourceBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetListSourceBuilder WithFormat(string format)
   {
-    _format = format;
+    Format = format;
     return this;
   }
 
@@ -511,27 +511,27 @@ public class DotNetNuGetListSourceBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetListSourceBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "nuget", "list", "source" };
+    List<string> arguments = new() { "nuget", "list", "source" };
 
-    if (!string.IsNullOrWhiteSpace(_format))
+    if (!string.IsNullOrWhiteSpace(Format))
     {
       arguments.Add("--format");
-      arguments.Add(_format);
+      arguments.Add(Format);
     }
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -555,17 +555,17 @@ public class DotNetNuGetListSourceBuilder
 /// </summary>
 public class DotNetNuGetAddSourceBuilder
 {
-  private readonly string _source;
-  private readonly CommandOptions _options;
-  private string? _name;
-  private string? _username;
-  private string? _password;
-  private string? _configFile;
+  private readonly string Source;
+  private readonly CommandOptions Options;
+  private string? Name;
+  private string? Username;
+  private string? Password;
+  private string? ConfigFile;
 
   public DotNetNuGetAddSourceBuilder(string source, CommandOptions options)
   {
-    _source = source ?? throw new ArgumentNullException(nameof(source));
-    _options = options;
+    Source = source ?? throw new ArgumentNullException(nameof(source));
+    Options = options;
   }
 
   /// <summary>
@@ -575,7 +575,7 @@ public class DotNetNuGetAddSourceBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetAddSourceBuilder WithName(string name)
   {
-    _name = name;
+    Name = name;
     return this;
   }
 
@@ -586,7 +586,7 @@ public class DotNetNuGetAddSourceBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetAddSourceBuilder WithUsername(string username)
   {
-    _username = username;
+    Username = username;
     return this;
   }
 
@@ -597,7 +597,7 @@ public class DotNetNuGetAddSourceBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetAddSourceBuilder WithPassword(string password)
   {
-    _password = password;
+    Password = password;
     return this;
   }
 
@@ -608,39 +608,39 @@ public class DotNetNuGetAddSourceBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetAddSourceBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "nuget", "add", "source", _source };
+    List<string> arguments = new() { "nuget", "add", "source", Source };
 
-    if (!string.IsNullOrWhiteSpace(_name))
+    if (!string.IsNullOrWhiteSpace(Name))
     {
       arguments.Add("--name");
-      arguments.Add(_name);
+      arguments.Add(Name);
     }
 
-    if (!string.IsNullOrWhiteSpace(_username))
+    if (!string.IsNullOrWhiteSpace(Username))
     {
       arguments.Add("--username");
-      arguments.Add(_username);
+      arguments.Add(Username);
     }
 
-    if (!string.IsNullOrWhiteSpace(_password))
+    if (!string.IsNullOrWhiteSpace(Password))
     {
       arguments.Add("--password");
-      arguments.Add(_password);
+      arguments.Add(Password);
     }
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -664,14 +664,14 @@ public class DotNetNuGetAddSourceBuilder
 /// </summary>
 public class DotNetNuGetRemoveSourceBuilder
 {
-  private readonly string _name;
-  private readonly CommandOptions _options;
-  private string? _configFile;
+  private readonly string Name;
+  private readonly CommandOptions Options;
+  private string? ConfigFile;
 
   public DotNetNuGetRemoveSourceBuilder(string name, CommandOptions options)
   {
-    _name = name ?? throw new ArgumentNullException(nameof(name));
-    _options = options;
+    Name = name ?? throw new ArgumentNullException(nameof(name));
+    Options = options;
   }
 
   /// <summary>
@@ -681,21 +681,21 @@ public class DotNetNuGetRemoveSourceBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetRemoveSourceBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "nuget", "remove", "source", _name };
+    List<string> arguments = new() { "nuget", "remove", "source", Name };
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -719,17 +719,17 @@ public class DotNetNuGetRemoveSourceBuilder
 /// </summary>
 public class DotNetNuGetUpdateSourceBuilder
 {
-  private readonly string _name;
-  private readonly CommandOptions _options;
-  private string? _source;
-  private string? _username;
-  private string? _password;
-  private string? _configFile;
+  private readonly string Name;
+  private readonly CommandOptions Options;
+  private string? Source;
+  private string? Username;
+  private string? Password;
+  private string? ConfigFile;
 
   public DotNetNuGetUpdateSourceBuilder(string name, CommandOptions options)
   {
-    _name = name ?? throw new ArgumentNullException(nameof(name));
-    _options = options;
+    Name = name ?? throw new ArgumentNullException(nameof(name));
+    Options = options;
   }
 
   /// <summary>
@@ -739,7 +739,7 @@ public class DotNetNuGetUpdateSourceBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetUpdateSourceBuilder WithSource(string source)
   {
-    _source = source;
+    Source = source;
     return this;
   }
 
@@ -750,7 +750,7 @@ public class DotNetNuGetUpdateSourceBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetUpdateSourceBuilder WithUsername(string username)
   {
-    _username = username;
+    Username = username;
     return this;
   }
 
@@ -761,7 +761,7 @@ public class DotNetNuGetUpdateSourceBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetUpdateSourceBuilder WithPassword(string password)
   {
-    _password = password;
+    Password = password;
     return this;
   }
 
@@ -772,39 +772,39 @@ public class DotNetNuGetUpdateSourceBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetUpdateSourceBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "nuget", "update", "source", _name };
+    List<string> arguments = new() { "nuget", "update", "source", Name };
 
-    if (!string.IsNullOrWhiteSpace(_source))
+    if (!string.IsNullOrWhiteSpace(Source))
     {
       arguments.Add("--source");
-      arguments.Add(_source);
+      arguments.Add(Source);
     }
 
-    if (!string.IsNullOrWhiteSpace(_username))
+    if (!string.IsNullOrWhiteSpace(Username))
     {
       arguments.Add("--username");
-      arguments.Add(_username);
+      arguments.Add(Username);
     }
 
-    if (!string.IsNullOrWhiteSpace(_password))
+    if (!string.IsNullOrWhiteSpace(Password))
     {
       arguments.Add("--password");
-      arguments.Add(_password);
+      arguments.Add(Password);
     }
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -828,14 +828,14 @@ public class DotNetNuGetUpdateSourceBuilder
 /// </summary>
 public class DotNetNuGetEnableSourceBuilder
 {
-  private readonly string _name;
-  private readonly CommandOptions _options;
-  private string? _configFile;
+  private readonly string Name;
+  private readonly CommandOptions Options;
+  private string? ConfigFile;
 
   public DotNetNuGetEnableSourceBuilder(string name, CommandOptions options)
   {
-    _name = name ?? throw new ArgumentNullException(nameof(name));
-    _options = options;
+    Name = name ?? throw new ArgumentNullException(nameof(name));
+    Options = options;
   }
 
   /// <summary>
@@ -845,21 +845,21 @@ public class DotNetNuGetEnableSourceBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetEnableSourceBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "nuget", "enable", "source", _name };
+    List<string> arguments = new() { "nuget", "enable", "source", Name };
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -883,14 +883,14 @@ public class DotNetNuGetEnableSourceBuilder
 /// </summary>
 public class DotNetNuGetDisableSourceBuilder
 {
-  private readonly string _name;
-  private readonly CommandOptions _options;
-  private string? _configFile;
+  private readonly string Name;
+  private readonly CommandOptions Options;
+  private string? ConfigFile;
 
   public DotNetNuGetDisableSourceBuilder(string name, CommandOptions options)
   {
-    _name = name ?? throw new ArgumentNullException(nameof(name));
-    _options = options;
+    Name = name ?? throw new ArgumentNullException(nameof(name));
+    Options = options;
   }
 
   /// <summary>
@@ -900,21 +900,21 @@ public class DotNetNuGetDisableSourceBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetDisableSourceBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "nuget", "disable", "source", _name };
+    List<string> arguments = new() { "nuget", "disable", "source", Name };
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -938,13 +938,13 @@ public class DotNetNuGetDisableSourceBuilder
 /// </summary>
 public class DotNetNuGetLocalsBuilder
 {
-  private readonly CommandOptions _options;
-  private string? _clear;
-  private string? _list;
+  private readonly CommandOptions Options;
+  private string? Clear;
+  private string? List;
 
   public DotNetNuGetLocalsBuilder(CommandOptions options)
   {
-    _options = options;
+    Options = options;
   }
 
   /// <summary>
@@ -954,7 +954,7 @@ public class DotNetNuGetLocalsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetLocalsBuilder Clear(string cache)
   {
-    _clear = cache;
+    Clear = cache;
     return this;
   }
 
@@ -965,26 +965,26 @@ public class DotNetNuGetLocalsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetLocalsBuilder List(string cache)
   {
-    _list = cache;
+    List = cache;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "nuget", "locals" };
+    List<string> arguments = new() { "nuget", "locals" };
 
-    if (!string.IsNullOrWhiteSpace(_clear))
+    if (!string.IsNullOrWhiteSpace(Clear))
     {
-      arguments.Add(_clear);
+      arguments.Add(Clear);
       arguments.Add("--clear");
     }
-    else if (!string.IsNullOrWhiteSpace(_list))
+    else if (!string.IsNullOrWhiteSpace(List))
     {
-      arguments.Add(_list);
+      arguments.Add(List);
       arguments.Add("--list");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -1008,15 +1008,15 @@ public class DotNetNuGetLocalsBuilder
 /// </summary>
 public class DotNetNuGetWhyBuilder
 {
-  private readonly string _packageName;
-  private readonly CommandOptions _options;
-  private string? _project;
-  private string? _framework;
+  private readonly string PackageName;
+  private readonly CommandOptions Options;
+  private string? Project;
+  private string? Framework;
 
   public DotNetNuGetWhyBuilder(string packageName, CommandOptions options)
   {
-    _packageName = packageName ?? throw new ArgumentNullException(nameof(packageName));
-    _options = options;
+    PackageName = packageName ?? throw new ArgumentNullException(nameof(packageName));
+    Options = options;
   }
 
   /// <summary>
@@ -1026,7 +1026,7 @@ public class DotNetNuGetWhyBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetWhyBuilder WithProject(string project)
   {
-    _project = project;
+    Project = project;
     return this;
   }
 
@@ -1037,29 +1037,29 @@ public class DotNetNuGetWhyBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNuGetWhyBuilder WithFramework(string framework)
   {
-    _framework = framework;
+    Framework = framework;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "nuget", "why" };
+    List<string> arguments = new() { "nuget", "why" };
 
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
       arguments.Add("--project");
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
-    if (!string.IsNullOrWhiteSpace(_framework))
+    if (!string.IsNullOrWhiteSpace(Framework))
     {
       arguments.Add("--framework");
-      arguments.Add(_framework);
+      arguments.Add(Framework);
     }
 
-    arguments.Add(_packageName);
+    arguments.Add(PackageName);
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)

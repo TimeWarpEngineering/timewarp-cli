@@ -20,9 +20,9 @@ public static partial class DotNet
 /// </summary>
 public class DotNetUserSecretsBuilder
 {
-  private CommandOptions _options = new();
-  private string? _project;
-  private string? _id;
+  private CommandOptions Options = new();
+  private string? Project;
+  private string? Id;
 
   /// <summary>
   /// Specifies the working directory for the command.
@@ -31,7 +31,7 @@ public class DotNetUserSecretsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetUserSecretsBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -43,7 +43,7 @@ public class DotNetUserSecretsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetUserSecretsBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -54,7 +54,7 @@ public class DotNetUserSecretsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetUserSecretsBuilder WithProject(string project)
   {
-    _project = project;
+    Project = project;
     return this;
   }
 
@@ -65,7 +65,7 @@ public class DotNetUserSecretsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetUserSecretsBuilder WithId(string id)
   {
-    _id = id;
+    Id = id;
     return this;
   }
 
@@ -75,7 +75,7 @@ public class DotNetUserSecretsBuilder
   /// <returns>A DotNetUserSecretsInitBuilder for configuring the init command</returns>
   public DotNetUserSecretsInitBuilder Init()
   {
-    return new DotNetUserSecretsInitBuilder(_project, _id, _options);
+    return new DotNetUserSecretsInitBuilder(Project, Id, Options);
   }
 
   /// <summary>
@@ -86,7 +86,7 @@ public class DotNetUserSecretsBuilder
   /// <returns>A DotNetUserSecretsSetBuilder for configuring the set command</returns>
   public DotNetUserSecretsSetBuilder Set(string key, string value)
   {
-    return new DotNetUserSecretsSetBuilder(key, value, _project, _id, _options);
+    return new DotNetUserSecretsSetBuilder(key, value, Project, Id, Options);
   }
 
   /// <summary>
@@ -96,7 +96,7 @@ public class DotNetUserSecretsBuilder
   /// <returns>A DotNetUserSecretsRemoveBuilder for configuring the remove command</returns>
   public DotNetUserSecretsRemoveBuilder Remove(string key)
   {
-    return new DotNetUserSecretsRemoveBuilder(key, _project, _id, _options);
+    return new DotNetUserSecretsRemoveBuilder(key, Project, Id, Options);
   }
 
   /// <summary>
@@ -105,7 +105,7 @@ public class DotNetUserSecretsBuilder
   /// <returns>A DotNetUserSecretsListBuilder for configuring the list command</returns>
   public DotNetUserSecretsListBuilder List()
   {
-    return new DotNetUserSecretsListBuilder(_project, _id, _options);
+    return new DotNetUserSecretsListBuilder(Project, Id, Options);
   }
 
   /// <summary>
@@ -114,7 +114,7 @@ public class DotNetUserSecretsBuilder
   /// <returns>A DotNetUserSecretsClearBuilder for configuring the clear command</returns>
   public DotNetUserSecretsClearBuilder Clear()
   {
-    return new DotNetUserSecretsClearBuilder(_project, _id, _options);
+    return new DotNetUserSecretsClearBuilder(Project, Id, Options);
   }
 }
 
@@ -123,34 +123,34 @@ public class DotNetUserSecretsBuilder
 /// </summary>
 public class DotNetUserSecretsInitBuilder
 {
-  private readonly string? _project;
-  private readonly string? _id;
-  private readonly CommandOptions _options;
+  private readonly string? Project;
+  private readonly string? Id;
+  private readonly CommandOptions Options;
 
   public DotNetUserSecretsInitBuilder(string? project, string? id, CommandOptions options)
   {
-    _project = project;
-    _id = id;
-    _options = options;
+    Project = project;
+    Id = id;
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "user-secrets", "init" };
+    List<string> arguments = new() { "user-secrets", "init" };
 
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
       arguments.Add("--project");
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
-    if (!string.IsNullOrWhiteSpace(_id))
+    if (!string.IsNullOrWhiteSpace(Id))
     {
       arguments.Add("--id");
-      arguments.Add(_id);
+      arguments.Add(Id);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -174,38 +174,38 @@ public class DotNetUserSecretsInitBuilder
 /// </summary>
 public class DotNetUserSecretsSetBuilder
 {
-  private readonly string _key;
-  private readonly string _value;
-  private readonly string? _project;
-  private readonly string? _id;
-  private readonly CommandOptions _options;
+  private readonly string Key;
+  private readonly string Value;
+  private readonly string? Project;
+  private readonly string? Id;
+  private readonly CommandOptions Options;
 
   public DotNetUserSecretsSetBuilder(string key, string value, string? project, string? id, CommandOptions options)
   {
-    _key = key ?? throw new ArgumentNullException(nameof(key));
-    _value = value ?? throw new ArgumentNullException(nameof(value));
-    _project = project;
-    _id = id;
-    _options = options;
+    Key = key ?? throw new ArgumentNullException(nameof(key));
+    Value = value ?? throw new ArgumentNullException(nameof(value));
+    Project = project;
+    Id = id;
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "user-secrets", "set", _key, _value };
+    List<string> arguments = new() { "user-secrets", "set", Key, Value };
 
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
       arguments.Add("--project");
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
-    if (!string.IsNullOrWhiteSpace(_id))
+    if (!string.IsNullOrWhiteSpace(Id))
     {
       arguments.Add("--id");
-      arguments.Add(_id);
+      arguments.Add(Id);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -229,36 +229,36 @@ public class DotNetUserSecretsSetBuilder
 /// </summary>
 public class DotNetUserSecretsRemoveBuilder
 {
-  private readonly string _key;
-  private readonly string? _project;
-  private readonly string? _id;
-  private readonly CommandOptions _options;
+  private readonly string Key;
+  private readonly string? Project;
+  private readonly string? Id;
+  private readonly CommandOptions Options;
 
   public DotNetUserSecretsRemoveBuilder(string key, string? project, string? id, CommandOptions options)
   {
-    _key = key ?? throw new ArgumentNullException(nameof(key));
-    _project = project;
-    _id = id;
-    _options = options;
+    Key = key ?? throw new ArgumentNullException(nameof(key));
+    Project = project;
+    Id = id;
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "user-secrets", "remove", _key };
+    List<string> arguments = new() { "user-secrets", "remove", Key };
 
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
       arguments.Add("--project");
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
-    if (!string.IsNullOrWhiteSpace(_id))
+    if (!string.IsNullOrWhiteSpace(Id))
     {
       arguments.Add("--id");
-      arguments.Add(_id);
+      arguments.Add(Id);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -282,34 +282,34 @@ public class DotNetUserSecretsRemoveBuilder
 /// </summary>
 public class DotNetUserSecretsListBuilder
 {
-  private readonly string? _project;
-  private readonly string? _id;
-  private readonly CommandOptions _options;
+  private readonly string? Project;
+  private readonly string? Id;
+  private readonly CommandOptions Options;
 
   public DotNetUserSecretsListBuilder(string? project, string? id, CommandOptions options)
   {
-    _project = project;
-    _id = id;
-    _options = options;
+    Project = project;
+    Id = id;
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "user-secrets", "list" };
+    List<string> arguments = new() { "user-secrets", "list" };
 
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
       arguments.Add("--project");
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
-    if (!string.IsNullOrWhiteSpace(_id))
+    if (!string.IsNullOrWhiteSpace(Id))
     {
       arguments.Add("--id");
-      arguments.Add(_id);
+      arguments.Add(Id);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -333,34 +333,34 @@ public class DotNetUserSecretsListBuilder
 /// </summary>
 public class DotNetUserSecretsClearBuilder
 {
-  private readonly string? _project;
-  private readonly string? _id;
-  private readonly CommandOptions _options;
+  private readonly string? Project;
+  private readonly string? Id;
+  private readonly CommandOptions Options;
 
   public DotNetUserSecretsClearBuilder(string? project, string? id, CommandOptions options)
   {
-    _project = project;
-    _id = id;
-    _options = options;
+    Project = project;
+    Id = id;
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "user-secrets", "clear" };
+    List<string> arguments = new() { "user-secrets", "clear" };
 
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
       arguments.Add("--project");
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
-    if (!string.IsNullOrWhiteSpace(_id))
+    if (!string.IsNullOrWhiteSpace(Id))
     {
       arguments.Add("--id");
-      arguments.Add(_id);
+      arguments.Add(Id);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)

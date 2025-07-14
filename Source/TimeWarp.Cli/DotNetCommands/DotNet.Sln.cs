@@ -30,8 +30,8 @@ public static partial class DotNet
 /// </summary>
 public class DotNetSlnBuilder
 {
-  private string? _slnFile;
-  private CommandOptions _options = new();
+  private string? SlnFile;
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Specifies the solution file to operate on.
@@ -40,7 +40,7 @@ public class DotNetSlnBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetSlnBuilder WithSolutionFile(string slnFile)
   {
-    _slnFile = slnFile;
+    SlnFile = slnFile;
     return this;
   }
 
@@ -51,7 +51,7 @@ public class DotNetSlnBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetSlnBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -63,7 +63,7 @@ public class DotNetSlnBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetSlnBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -74,7 +74,7 @@ public class DotNetSlnBuilder
   /// <returns>A DotNetSlnAddBuilder for configuring the add command</returns>
   public DotNetSlnAddBuilder Add(string projectPath)
   {
-    return new DotNetSlnAddBuilder(projectPath, _slnFile, _options);
+    return new DotNetSlnAddBuilder(projectPath, SlnFile, Options);
   }
 
   /// <summary>
@@ -84,7 +84,7 @@ public class DotNetSlnBuilder
   /// <returns>A DotNetSlnAddBuilder for configuring the add command</returns>
   public DotNetSlnAddBuilder Add(params string[] projectPaths)
   {
-    return new DotNetSlnAddBuilder(projectPaths, _slnFile, _options);
+    return new DotNetSlnAddBuilder(projectPaths, SlnFile, Options);
   }
 
   /// <summary>
@@ -93,7 +93,7 @@ public class DotNetSlnBuilder
   /// <returns>A DotNetSlnListBuilder for configuring the list command</returns>
   public DotNetSlnListBuilder List()
   {
-    return new DotNetSlnListBuilder(_slnFile, _options);
+    return new DotNetSlnListBuilder(SlnFile, Options);
   }
 
   /// <summary>
@@ -103,7 +103,7 @@ public class DotNetSlnBuilder
   /// <returns>A DotNetSlnRemoveBuilder for configuring the remove command</returns>
   public DotNetSlnRemoveBuilder Remove(string projectPath)
   {
-    return new DotNetSlnRemoveBuilder(projectPath, _slnFile, _options);
+    return new DotNetSlnRemoveBuilder(projectPath, SlnFile, Options);
   }
 
   /// <summary>
@@ -113,7 +113,7 @@ public class DotNetSlnBuilder
   /// <returns>A DotNetSlnRemoveBuilder for configuring the remove command</returns>
   public DotNetSlnRemoveBuilder Remove(params string[] projectPaths)
   {
-    return new DotNetSlnRemoveBuilder(projectPaths, _slnFile, _options);
+    return new DotNetSlnRemoveBuilder(projectPaths, SlnFile, Options);
   }
 
   /// <summary>
@@ -122,7 +122,7 @@ public class DotNetSlnBuilder
   /// <returns>A DotNetSlnMigrateBuilder for configuring the migrate command</returns>
   public DotNetSlnMigrateBuilder Migrate()
   {
-    return new DotNetSlnMigrateBuilder(_slnFile, _options);
+    return new DotNetSlnMigrateBuilder(SlnFile, Options);
   }
 }
 
@@ -131,38 +131,38 @@ public class DotNetSlnBuilder
 /// </summary>
 public class DotNetSlnAddBuilder
 {
-  private readonly string[] _projectPaths;
-  private readonly string? _slnFile;
-  private readonly CommandOptions _options;
+  private readonly string[] ProjectPaths;
+  private readonly string? SlnFile;
+  private readonly CommandOptions Options;
 
   public DotNetSlnAddBuilder(string projectPath, string? slnFile, CommandOptions options)
   {
-    _projectPaths = [projectPath ?? throw new ArgumentNullException(nameof(projectPath))];
-    _slnFile = slnFile;
-    _options = options;
+    ProjectPaths = [projectPath ?? throw new ArgumentNullException(nameof(projectPath))];
+    SlnFile = slnFile;
+    Options = options;
   }
 
   public DotNetSlnAddBuilder(string[] projectPaths, string? slnFile, CommandOptions options)
   {
-    _projectPaths = projectPaths ?? throw new ArgumentNullException(nameof(projectPaths));
-    _slnFile = slnFile;
-    _options = options;
+    ProjectPaths = projectPaths ?? throw new ArgumentNullException(nameof(projectPaths));
+    SlnFile = slnFile;
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "sln" };
+    List<string> arguments = new() { "sln" };
 
     // Add solution file if specified
-    if (!string.IsNullOrWhiteSpace(_slnFile))
+    if (!string.IsNullOrWhiteSpace(SlnFile))
     {
-      arguments.Add(_slnFile);
+      arguments.Add(SlnFile);
     }
 
     arguments.Add("add");
-    arguments.AddRange(_projectPaths);
+    arguments.AddRange(ProjectPaths);
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -186,28 +186,28 @@ public class DotNetSlnAddBuilder
 /// </summary>
 public class DotNetSlnListBuilder
 {
-  private readonly string? _slnFile;
-  private readonly CommandOptions _options;
+  private readonly string? SlnFile;
+  private readonly CommandOptions Options;
 
   public DotNetSlnListBuilder(string? slnFile, CommandOptions options)
   {
-    _slnFile = slnFile;
-    _options = options;
+    SlnFile = slnFile;
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "sln" };
+    List<string> arguments = new() { "sln" };
 
     // Add solution file if specified
-    if (!string.IsNullOrWhiteSpace(_slnFile))
+    if (!string.IsNullOrWhiteSpace(SlnFile))
     {
-      arguments.Add(_slnFile);
+      arguments.Add(SlnFile);
     }
 
     arguments.Add("list");
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -231,38 +231,38 @@ public class DotNetSlnListBuilder
 /// </summary>
 public class DotNetSlnRemoveBuilder
 {
-  private readonly string[] _projectPaths;
-  private readonly string? _slnFile;
-  private readonly CommandOptions _options;
+  private readonly string[] ProjectPaths;
+  private readonly string? SlnFile;
+  private readonly CommandOptions Options;
 
   public DotNetSlnRemoveBuilder(string projectPath, string? slnFile, CommandOptions options)
   {
-    _projectPaths = [projectPath ?? throw new ArgumentNullException(nameof(projectPath))];
-    _slnFile = slnFile;
-    _options = options;
+    ProjectPaths = [projectPath ?? throw new ArgumentNullException(nameof(projectPath))];
+    SlnFile = slnFile;
+    Options = options;
   }
 
   public DotNetSlnRemoveBuilder(string[] projectPaths, string? slnFile, CommandOptions options)
   {
-    _projectPaths = projectPaths ?? throw new ArgumentNullException(nameof(projectPaths));
-    _slnFile = slnFile;
-    _options = options;
+    ProjectPaths = projectPaths ?? throw new ArgumentNullException(nameof(projectPaths));
+    SlnFile = slnFile;
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "sln" };
+    List<string> arguments = new() { "sln" };
 
     // Add solution file if specified
-    if (!string.IsNullOrWhiteSpace(_slnFile))
+    if (!string.IsNullOrWhiteSpace(SlnFile))
     {
-      arguments.Add(_slnFile);
+      arguments.Add(SlnFile);
     }
 
     arguments.Add("remove");
-    arguments.AddRange(_projectPaths);
+    arguments.AddRange(ProjectPaths);
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -286,28 +286,28 @@ public class DotNetSlnRemoveBuilder
 /// </summary>
 public class DotNetSlnMigrateBuilder
 {
-  private readonly string? _slnFile;
-  private readonly CommandOptions _options;
+  private readonly string? SlnFile;
+  private readonly CommandOptions Options;
 
   public DotNetSlnMigrateBuilder(string? slnFile, CommandOptions options)
   {
-    _slnFile = slnFile;
-    _options = options;
+    SlnFile = slnFile;
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "sln" };
+    List<string> arguments = new() { "sln" };
 
     // Add solution file if specified
-    if (!string.IsNullOrWhiteSpace(_slnFile))
+    if (!string.IsNullOrWhiteSpace(SlnFile))
     {
-      arguments.Add(_slnFile);
+      arguments.Add(SlnFile);
     }
 
     arguments.Add("migrate");
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)

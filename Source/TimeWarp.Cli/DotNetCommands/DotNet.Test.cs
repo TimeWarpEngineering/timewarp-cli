@@ -20,27 +20,27 @@ public static partial class DotNet
 /// </summary>
 public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
 {
-  private string? _project;
-  private string? _configuration;
-  private string? _framework;
-  private string? _runtime;
-  private string? _architecture;
-  private string? _operatingSystem;
-  private string? _outputPath;
-  private string? _verbosity;
-  private string? _terminalLogger;
-  private string? _filter;
-  private string? _testAdapterPath;
-  private string? _resultsDirectory;
-  private string? _settingsFile;
-  private bool _noRestore;
-  private bool _noBuild;
-  private bool _noLogo;
-  private bool _blame;
-  private bool _collect;
-  private List<string> _loggers = new();
-  private Dictionary<string, string> _properties = new();
-  private CommandOptions _options = new();
+  private string? Project;
+  private string? Configuration;
+  private string? Framework;
+  private string? Runtime;
+  private string? Architecture;
+  private string? OperatingSystem;
+  private string? OutputPath;
+  private string? Verbosity;
+  private string? TerminalLogger;
+  private string? Filter;
+  private string? TestAdapterPath;
+  private string? ResultsDirectory;
+  private string? SettingsFile;
+  private bool NoRestore;
+  private bool NoBuild;
+  private bool NoLogo;
+  private bool Blame;
+  private bool Collect;
+  private List<string> Loggers = new();
+  private Dictionary<string, string> Properties = new();
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Specifies the project file to test. If not specified, searches the current directory for one.
@@ -49,7 +49,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithProject(string project)
   {
-    _project = project;
+    Project = project;
     return this;
   }
 
@@ -60,7 +60,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithConfiguration(string configuration)
   {
-    _configuration = configuration;
+    Configuration = configuration;
     return this;
   }
 
@@ -71,7 +71,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithFramework(string framework)
   {
-    _framework = framework;
+    Framework = framework;
     return this;
   }
 
@@ -82,7 +82,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithRuntime(string runtime)
   {
-    _runtime = runtime;
+    Runtime = runtime;
     return this;
   }
 
@@ -93,7 +93,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithArchitecture(string architecture)
   {
-    _architecture = architecture;
+    Architecture = architecture;
     return this;
   }
 
@@ -104,7 +104,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithOperatingSystem(string operatingSystem)
   {
-    _operatingSystem = operatingSystem;
+    OperatingSystem = operatingSystem;
     return this;
   }
 
@@ -115,7 +115,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithOutput(string outputPath)
   {
-    _outputPath = outputPath;
+    OutputPath = outputPath;
     return this;
   }
 
@@ -126,7 +126,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
@@ -137,7 +137,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithTerminalLogger(string mode)
   {
-    _terminalLogger = mode;
+    TerminalLogger = mode;
     return this;
   }
 
@@ -148,7 +148,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithFilter(string filter)
   {
-    _filter = filter;
+    Filter = filter;
     return this;
   }
 
@@ -159,7 +159,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithTestAdapterPath(string path)
   {
-    _testAdapterPath = path;
+    TestAdapterPath = path;
     return this;
   }
 
@@ -170,7 +170,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithResultsDirectory(string directory)
   {
-    _resultsDirectory = directory;
+    ResultsDirectory = directory;
     return this;
   }
 
@@ -181,7 +181,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithSettings(string settingsFile)
   {
-    _settingsFile = settingsFile;
+    SettingsFile = settingsFile;
     return this;
   }
 
@@ -192,7 +192,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithLogger(string logger)
   {
-    _loggers.Add(logger);
+    Loggers.Add(logger);
     return this;
   }
 
@@ -202,7 +202,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithNoRestore()
   {
-    _noRestore = true;
+    NoRestore = true;
     return this;
   }
 
@@ -212,7 +212,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithNoBuild()
   {
-    _noBuild = true;
+    NoBuild = true;
     return this;
   }
 
@@ -222,7 +222,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithNoLogo()
   {
-    _noLogo = true;
+    NoLogo = true;
     return this;
   }
 
@@ -232,7 +232,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithBlame()
   {
-    _blame = true;
+    Blame = true;
     return this;
   }
 
@@ -242,7 +242,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithCollect()
   {
-    _collect = true;
+    Collect = true;
     return this;
   }
 
@@ -254,7 +254,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithProperty(string name, string value)
   {
-    _properties[name] = value;
+    Properties[name] = value;
     return this;
   }
 
@@ -267,7 +267,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   {
     foreach (KeyValuePair<string, string> kvp in properties)
     {
-      _properties[kvp.Key] = kvp.Value;
+      Properties[kvp.Key] = kvp.Value;
     }
     
     return this;
@@ -280,7 +280,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -292,7 +292,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -302,7 +302,7 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetTestBuilder WithNoValidation()
   {
-    _options = _options.WithNoValidation();
+    Options = Options.WithNoValidation();
     return this;
   }
 
@@ -312,138 +312,138 @@ public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
   /// <returns>A CommandResult for further processing</returns>
   public CommandResult Build()
   {
-    var arguments = new List<string> { "test" };
+    List<string> arguments = new() { "test" };
 
     // Add project if specified
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
     // Add configuration if specified
-    if (!string.IsNullOrWhiteSpace(_configuration))
+    if (!string.IsNullOrWhiteSpace(Configuration))
     {
       arguments.Add("--configuration");
-      arguments.Add(_configuration);
+      arguments.Add(Configuration);
     }
 
     // Add framework if specified
-    if (!string.IsNullOrWhiteSpace(_framework))
+    if (!string.IsNullOrWhiteSpace(Framework))
     {
       arguments.Add("--framework");
-      arguments.Add(_framework);
+      arguments.Add(Framework);
     }
 
     // Add runtime if specified
-    if (!string.IsNullOrWhiteSpace(_runtime))
+    if (!string.IsNullOrWhiteSpace(Runtime))
     {
       arguments.Add("--runtime");
-      arguments.Add(_runtime);
+      arguments.Add(Runtime);
     }
 
     // Add architecture if specified
-    if (!string.IsNullOrWhiteSpace(_architecture))
+    if (!string.IsNullOrWhiteSpace(Architecture))
     {
       arguments.Add("--arch");
-      arguments.Add(_architecture);
+      arguments.Add(Architecture);
     }
 
     // Add operating system if specified
-    if (!string.IsNullOrWhiteSpace(_operatingSystem))
+    if (!string.IsNullOrWhiteSpace(OperatingSystem))
     {
       arguments.Add("--os");
-      arguments.Add(_operatingSystem);
+      arguments.Add(OperatingSystem);
     }
 
     // Add output path if specified
-    if (!string.IsNullOrWhiteSpace(_outputPath))
+    if (!string.IsNullOrWhiteSpace(OutputPath))
     {
       arguments.Add("--output");
-      arguments.Add(_outputPath);
+      arguments.Add(OutputPath);
     }
 
     // Add verbosity if specified
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
     // Add terminal logger if specified
-    if (!string.IsNullOrWhiteSpace(_terminalLogger))
+    if (!string.IsNullOrWhiteSpace(TerminalLogger))
     {
       arguments.Add("--tl");
-      arguments.Add(_terminalLogger);
+      arguments.Add(TerminalLogger);
     }
 
     // Add filter if specified
-    if (!string.IsNullOrWhiteSpace(_filter))
+    if (!string.IsNullOrWhiteSpace(Filter))
     {
       arguments.Add("--filter");
-      arguments.Add(_filter);
+      arguments.Add(Filter);
     }
 
     // Add test adapter path if specified
-    if (!string.IsNullOrWhiteSpace(_testAdapterPath))
+    if (!string.IsNullOrWhiteSpace(TestAdapterPath))
     {
       arguments.Add("--test-adapter-path");
-      arguments.Add(_testAdapterPath);
+      arguments.Add(TestAdapterPath);
     }
 
     // Add results directory if specified
-    if (!string.IsNullOrWhiteSpace(_resultsDirectory))
+    if (!string.IsNullOrWhiteSpace(ResultsDirectory))
     {
       arguments.Add("--results-directory");
-      arguments.Add(_resultsDirectory);
+      arguments.Add(ResultsDirectory);
     }
 
     // Add settings file if specified
-    if (!string.IsNullOrWhiteSpace(_settingsFile))
+    if (!string.IsNullOrWhiteSpace(SettingsFile))
     {
       arguments.Add("--settings");
-      arguments.Add(_settingsFile);
+      arguments.Add(SettingsFile);
     }
 
     // Add loggers
-    foreach (string logger in _loggers)
+    foreach (string logger in Loggers)
     {
       arguments.Add("--logger");
       arguments.Add(logger);
     }
 
     // Add boolean flags
-    if (_noRestore)
+    if (NoRestore)
     {
       arguments.Add("--no-restore");
     }
 
-    if (_noBuild)
+    if (NoBuild)
     {
       arguments.Add("--no-build");
     }
 
-    if (_noLogo)
+    if (NoLogo)
     {
       arguments.Add("--nologo");
     }
 
-    if (_blame)
+    if (Blame)
     {
       arguments.Add("--blame");
     }
 
-    if (_collect)
+    if (Collect)
     {
       arguments.Add("--collect");
     }
 
     // Add MSBuild properties
-    foreach (KeyValuePair<string, string> property in _properties)
+    foreach (KeyValuePair<string, string> property in Properties)
     {
       arguments.Add($"--property:{property.Key}={property.Value}");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   /// <summary>

@@ -30,30 +30,30 @@ public static partial class DotNet
 /// </summary>
 public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
 {
-  private string? _project;
-  private string? _configuration;
-  private string? _framework;
-  private string? _runtime;
-  private string? _architecture;
-  private string? _operatingSystem;
-  private string? _outputPath;
-  private string? _verbosity;
-  private string? _terminalLogger;
-  private string? _manifestFile;
-  private bool _noRestore;
-  private bool _noBuild;
-  private bool _noDependencies;
-  private bool _noLogo;
-  private bool _selfContained;
-  private bool _noSelfContained;
-  private bool _force;
-  private bool _interactive;
-  private bool _publishReadyToRun;
-  private bool _publishSingleFile;
-  private bool _publishTrimmed;
-  private List<string> _sources = new();
-  private Dictionary<string, string> _properties = new();
-  private CommandOptions _options = new();
+  private string? Project;
+  private string? Configuration;
+  private string? Framework;
+  private string? Runtime;
+  private string? Architecture;
+  private string? OperatingSystem;
+  private string? OutputPath;
+  private string? Verbosity;
+  private string? TerminalLogger;
+  private string? ManifestFile;
+  private bool NoRestore;
+  private bool NoBuild;
+  private bool NoDependencies;
+  private bool NoLogo;
+  private bool SelfContained;
+  private bool NoSelfContained;
+  private bool Force;
+  private bool Interactive;
+  private bool PublishReadyToRun;
+  private bool PublishSingleFile;
+  private bool PublishTrimmed;
+  private List<string> Sources = new();
+  private Dictionary<string, string> Properties = new();
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Specifies the project file to publish. If not specified, searches the current directory for one.
@@ -62,7 +62,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithProject(string project)
   {
-    _project = project;
+    Project = project;
     return this;
   }
 
@@ -73,7 +73,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithConfiguration(string configuration)
   {
-    _configuration = configuration;
+    Configuration = configuration;
     return this;
   }
 
@@ -84,7 +84,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithFramework(string framework)
   {
-    _framework = framework;
+    Framework = framework;
     return this;
   }
 
@@ -95,7 +95,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithRuntime(string runtime)
   {
-    _runtime = runtime;
+    Runtime = runtime;
     return this;
   }
 
@@ -106,7 +106,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithArchitecture(string architecture)
   {
-    _architecture = architecture;
+    Architecture = architecture;
     return this;
   }
 
@@ -117,7 +117,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithOperatingSystem(string operatingSystem)
   {
-    _operatingSystem = operatingSystem;
+    OperatingSystem = operatingSystem;
     return this;
   }
 
@@ -128,7 +128,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithOutput(string outputPath)
   {
-    _outputPath = outputPath;
+    OutputPath = outputPath;
     return this;
   }
 
@@ -139,7 +139,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
@@ -150,7 +150,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithTerminalLogger(string mode)
   {
-    _terminalLogger = mode;
+    TerminalLogger = mode;
     return this;
   }
 
@@ -161,7 +161,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithManifest(string manifestFile)
   {
-    _manifestFile = manifestFile;
+    ManifestFile = manifestFile;
     return this;
   }
 
@@ -171,7 +171,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithNoRestore()
   {
-    _noRestore = true;
+    NoRestore = true;
     return this;
   }
 
@@ -181,7 +181,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithNoBuild()
   {
-    _noBuild = true;
+    NoBuild = true;
     return this;
   }
 
@@ -191,7 +191,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithNoDependencies()
   {
-    _noDependencies = true;
+    NoDependencies = true;
     return this;
   }
 
@@ -201,7 +201,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithNoLogo()
   {
-    _noLogo = true;
+    NoLogo = true;
     return this;
   }
 
@@ -211,8 +211,8 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithSelfContained()
   {
-    _selfContained = true;
-    _noSelfContained = false;
+    SelfContained = true;
+    NoSelfContained = false;
     return this;
   }
 
@@ -222,8 +222,8 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithNoSelfContained()
   {
-    _noSelfContained = true;
-    _selfContained = false;
+    NoSelfContained = true;
+    SelfContained = false;
     return this;
   }
 
@@ -233,7 +233,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithForce()
   {
-    _force = true;
+    Force = true;
     return this;
   }
 
@@ -243,7 +243,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -253,7 +253,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithReadyToRun()
   {
-    _publishReadyToRun = true;
+    PublishReadyToRun = true;
     return this;
   }
 
@@ -263,7 +263,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithSingleFile()
   {
-    _publishSingleFile = true;
+    PublishSingleFile = true;
     return this;
   }
 
@@ -273,7 +273,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithTrimmed()
   {
-    _publishTrimmed = true;
+    PublishTrimmed = true;
     return this;
   }
 
@@ -284,7 +284,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithSource(string source)
   {
-    _sources.Add(source);
+    Sources.Add(source);
     return this;
   }
 
@@ -295,7 +295,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithSources(params string[] sources)
   {
-    _sources.AddRange(sources);
+    Sources.AddRange(sources);
     return this;
   }
 
@@ -307,7 +307,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithProperty(string name, string value)
   {
-    _properties[name] = value;
+    Properties[name] = value;
     return this;
   }
 
@@ -320,7 +320,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   {
     foreach (KeyValuePair<string, string> kvp in properties)
     {
-      _properties[kvp.Key] = kvp.Value;
+      Properties[kvp.Key] = kvp.Value;
     }
     
     return this;
@@ -333,7 +333,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -345,7 +345,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -355,7 +355,7 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPublishBuilder WithNoValidation()
   {
-    _options = _options.WithNoValidation();
+    Options = Options.WithNoValidation();
     return this;
   }
 
@@ -365,148 +365,148 @@ public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
   /// <returns>A CommandResult for further processing</returns>
   public CommandResult Build()
   {
-    var arguments = new List<string> { "publish" };
+    List<string> arguments = new() { "publish" };
 
     // Add project if specified
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
     // Add configuration if specified
-    if (!string.IsNullOrWhiteSpace(_configuration))
+    if (!string.IsNullOrWhiteSpace(Configuration))
     {
       arguments.Add("--configuration");
-      arguments.Add(_configuration);
+      arguments.Add(Configuration);
     }
 
     // Add framework if specified
-    if (!string.IsNullOrWhiteSpace(_framework))
+    if (!string.IsNullOrWhiteSpace(Framework))
     {
       arguments.Add("--framework");
-      arguments.Add(_framework);
+      arguments.Add(Framework);
     }
 
     // Add runtime if specified
-    if (!string.IsNullOrWhiteSpace(_runtime))
+    if (!string.IsNullOrWhiteSpace(Runtime))
     {
       arguments.Add("--runtime");
-      arguments.Add(_runtime);
+      arguments.Add(Runtime);
     }
 
     // Add architecture if specified
-    if (!string.IsNullOrWhiteSpace(_architecture))
+    if (!string.IsNullOrWhiteSpace(Architecture))
     {
       arguments.Add("--arch");
-      arguments.Add(_architecture);
+      arguments.Add(Architecture);
     }
 
     // Add operating system if specified
-    if (!string.IsNullOrWhiteSpace(_operatingSystem))
+    if (!string.IsNullOrWhiteSpace(OperatingSystem))
     {
       arguments.Add("--os");
-      arguments.Add(_operatingSystem);
+      arguments.Add(OperatingSystem);
     }
 
     // Add output path if specified
-    if (!string.IsNullOrWhiteSpace(_outputPath))
+    if (!string.IsNullOrWhiteSpace(OutputPath))
     {
       arguments.Add("--output");
-      arguments.Add(_outputPath);
+      arguments.Add(OutputPath);
     }
 
     // Add verbosity if specified
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
     // Add terminal logger if specified
-    if (!string.IsNullOrWhiteSpace(_terminalLogger))
+    if (!string.IsNullOrWhiteSpace(TerminalLogger))
     {
       arguments.Add("--tl");
-      arguments.Add(_terminalLogger);
+      arguments.Add(TerminalLogger);
     }
 
     // Add manifest file if specified
-    if (!string.IsNullOrWhiteSpace(_manifestFile))
+    if (!string.IsNullOrWhiteSpace(ManifestFile))
     {
       arguments.Add("--manifest");
-      arguments.Add(_manifestFile);
+      arguments.Add(ManifestFile);
     }
 
     // Add sources
-    foreach (string source in _sources)
+    foreach (string source in Sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
     }
 
     // Add boolean flags
-    if (_noRestore)
+    if (NoRestore)
     {
       arguments.Add("--no-restore");
     }
 
-    if (_noBuild)
+    if (NoBuild)
     {
       arguments.Add("--no-build");
     }
 
-    if (_noDependencies)
+    if (NoDependencies)
     {
       arguments.Add("--no-dependencies");
     }
 
-    if (_noLogo)
+    if (NoLogo)
     {
       arguments.Add("--nologo");
     }
 
-    if (_selfContained)
+    if (SelfContained)
     {
       arguments.Add("--self-contained");
     }
 
-    if (_noSelfContained)
+    if (NoSelfContained)
     {
       arguments.Add("--no-self-contained");
     }
 
-    if (_force)
+    if (Force)
     {
       arguments.Add("--force");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
     // Add MSBuild properties for advanced features
-    if (_publishReadyToRun)
+    if (PublishReadyToRun)
     {
-      _properties["PublishReadyToRun"] = "true";
+      Properties["PublishReadyToRun"] = "true";
     }
 
-    if (_publishSingleFile)
+    if (PublishSingleFile)
     {
-      _properties["PublishSingleFile"] = "true";
+      Properties["PublishSingleFile"] = "true";
     }
 
-    if (_publishTrimmed)
+    if (PublishTrimmed)
     {
-      _properties["PublishTrimmed"] = "true";
+      Properties["PublishTrimmed"] = "true";
     }
 
     // Add MSBuild properties
-    foreach (KeyValuePair<string, string> property in _properties)
+    foreach (KeyValuePair<string, string> property in Properties)
     {
       arguments.Add($"--property:{property.Key}={property.Value}");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   /// <summary>

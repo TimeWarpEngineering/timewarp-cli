@@ -30,26 +30,26 @@ public static partial class DotNet
 /// </summary>
 public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
 {
-  private string? _project;
-  private string? _configuration;
-  private string? _framework;
-  private string? _runtime;
-  private string? _outputPath;
-  private string? _verbosity;
-  private string? _terminalLogger;
-  private string? _versionSuffix;
-  private bool _noRestore;
-  private bool _noBuild;
-  private bool _noDependencies;
-  private bool _noLogo;
-  private bool _includeSymbols;
-  private bool _includeSource;
-  private bool _force;
-  private bool _interactive;
-  private bool _serviceable;
-  private List<string> _sources = new();
-  private Dictionary<string, string> _properties = new();
-  private CommandOptions _options = new();
+  private string? Project;
+  private string? Configuration;
+  private string? Framework;
+  private string? Runtime;
+  private string? OutputPath;
+  private string? Verbosity;
+  private string? TerminalLogger;
+  private string? VersionSuffix;
+  private bool NoRestore;
+  private bool NoBuild;
+  private bool NoDependencies;
+  private bool NoLogo;
+  private bool IncludeSymbols;
+  private bool IncludeSource;
+  private bool Force;
+  private bool Interactive;
+  private bool Serviceable;
+  private List<string> Sources = new();
+  private Dictionary<string, string> Properties = new();
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Specifies the project file to pack. If not specified, searches the current directory for one.
@@ -58,7 +58,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithProject(string project)
   {
-    _project = project;
+    Project = project;
     return this;
   }
 
@@ -69,7 +69,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithConfiguration(string configuration)
   {
-    _configuration = configuration;
+    Configuration = configuration;
     return this;
   }
 
@@ -80,7 +80,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithFramework(string framework)
   {
-    _framework = framework;
+    Framework = framework;
     return this;
   }
 
@@ -91,7 +91,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithRuntime(string runtime)
   {
-    _runtime = runtime;
+    Runtime = runtime;
     return this;
   }
 
@@ -102,7 +102,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithOutput(string outputPath)
   {
-    _outputPath = outputPath;
+    OutputPath = outputPath;
     return this;
   }
 
@@ -113,7 +113,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
@@ -124,7 +124,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithTerminalLogger(string mode)
   {
-    _terminalLogger = mode;
+    TerminalLogger = mode;
     return this;
   }
 
@@ -135,7 +135,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithVersionSuffix(string suffix)
   {
-    _versionSuffix = suffix;
+    VersionSuffix = suffix;
     return this;
   }
 
@@ -145,7 +145,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithNoRestore()
   {
-    _noRestore = true;
+    NoRestore = true;
     return this;
   }
 
@@ -155,7 +155,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithNoBuild()
   {
-    _noBuild = true;
+    NoBuild = true;
     return this;
   }
 
@@ -165,7 +165,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithNoDependencies()
   {
-    _noDependencies = true;
+    NoDependencies = true;
     return this;
   }
 
@@ -175,7 +175,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithNoLogo()
   {
-    _noLogo = true;
+    NoLogo = true;
     return this;
   }
 
@@ -185,7 +185,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder IncludeSymbols()
   {
-    _includeSymbols = true;
+    IncludeSymbols = true;
     return this;
   }
 
@@ -195,7 +195,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder IncludeSource()
   {
-    _includeSource = true;
+    IncludeSource = true;
     return this;
   }
 
@@ -205,7 +205,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithForce()
   {
-    _force = true;
+    Force = true;
     return this;
   }
 
@@ -215,7 +215,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -225,7 +225,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithServiceable()
   {
-    _serviceable = true;
+    Serviceable = true;
     return this;
   }
 
@@ -236,7 +236,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithSource(string source)
   {
-    _sources.Add(source);
+    Sources.Add(source);
     return this;
   }
 
@@ -248,7 +248,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithProperty(string name, string value)
   {
-    _properties[name] = value;
+    Properties[name] = value;
     return this;
   }
 
@@ -259,7 +259,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -271,7 +271,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -281,7 +281,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder WithNoValidation()
   {
-    _options = _options.WithNoValidation();
+    Options = Options.WithNoValidation();
     return this;
   }
 
@@ -291,123 +291,123 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>A CommandResult for further processing</returns>
   public CommandResult Build()
   {
-    var arguments = new List<string> { "pack" };
+    List<string> arguments = new() { "pack" };
 
     // Add project if specified
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
     // Add configuration if specified
-    if (!string.IsNullOrWhiteSpace(_configuration))
+    if (!string.IsNullOrWhiteSpace(Configuration))
     {
       arguments.Add("--configuration");
-      arguments.Add(_configuration);
+      arguments.Add(Configuration);
     }
 
     // Add framework if specified
-    if (!string.IsNullOrWhiteSpace(_framework))
+    if (!string.IsNullOrWhiteSpace(Framework))
     {
       arguments.Add("--framework");
-      arguments.Add(_framework);
+      arguments.Add(Framework);
     }
 
     // Add runtime if specified
-    if (!string.IsNullOrWhiteSpace(_runtime))
+    if (!string.IsNullOrWhiteSpace(Runtime))
     {
       arguments.Add("--runtime");
-      arguments.Add(_runtime);
+      arguments.Add(Runtime);
     }
 
     // Add output path if specified
-    if (!string.IsNullOrWhiteSpace(_outputPath))
+    if (!string.IsNullOrWhiteSpace(OutputPath))
     {
       arguments.Add("--output");
-      arguments.Add(_outputPath);
+      arguments.Add(OutputPath);
     }
 
     // Add verbosity if specified
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
     // Add terminal logger if specified
-    if (!string.IsNullOrWhiteSpace(_terminalLogger))
+    if (!string.IsNullOrWhiteSpace(TerminalLogger))
     {
       arguments.Add("--tl");
-      arguments.Add(_terminalLogger);
+      arguments.Add(TerminalLogger);
     }
 
     // Add version suffix if specified
-    if (!string.IsNullOrWhiteSpace(_versionSuffix))
+    if (!string.IsNullOrWhiteSpace(VersionSuffix))
     {
       arguments.Add("--version-suffix");
-      arguments.Add(_versionSuffix);
+      arguments.Add(VersionSuffix);
     }
 
     // Add sources
-    foreach (string source in _sources)
+    foreach (string source in Sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
     }
 
     // Add boolean flags
-    if (_noRestore)
+    if (NoRestore)
     {
       arguments.Add("--no-restore");
     }
 
-    if (_noBuild)
+    if (NoBuild)
     {
       arguments.Add("--no-build");
     }
 
-    if (_noDependencies)
+    if (NoDependencies)
     {
       arguments.Add("--no-dependencies");
     }
 
-    if (_noLogo)
+    if (NoLogo)
     {
       arguments.Add("--nologo");
     }
 
-    if (_includeSymbols)
+    if (IncludeSymbols)
     {
       arguments.Add("--include-symbols");
     }
 
-    if (_includeSource)
+    if (IncludeSource)
     {
       arguments.Add("--include-source");
     }
 
-    if (_force)
+    if (Force)
     {
       arguments.Add("--force");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
-    if (_serviceable)
+    if (Serviceable)
     {
       arguments.Add("--serviceable");
     }
 
     // Add MSBuild properties
-    foreach (KeyValuePair<string, string> property in _properties)
+    foreach (KeyValuePair<string, string> property in Properties)
     {
       arguments.Add($"--property:{property.Key}={property.Value}");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   /// <summary>

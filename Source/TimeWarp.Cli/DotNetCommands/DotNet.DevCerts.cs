@@ -20,7 +20,7 @@ public static partial class DotNet
 /// </summary>
 public class DotNetDevCertsBuilder
 {
-  private CommandOptions _options = new();
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Specifies the working directory for the command.
@@ -29,7 +29,7 @@ public class DotNetDevCertsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetDevCertsBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -41,7 +41,7 @@ public class DotNetDevCertsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetDevCertsBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -51,30 +51,30 @@ public class DotNetDevCertsBuilder
   /// <returns>A DotNetDevCertsHttpsBuilder for configuring the https command</returns>
   public DotNetDevCertsHttpsBuilder Https()
   {
-    return new DotNetDevCertsHttpsBuilder(_options);
+    return new DotNetDevCertsHttpsBuilder(Options);
   }
 }
 
 /// <summary>
 /// Fluent builder for 'dotnet dev-certs https' commands.
 /// </summary>
-public class DotNetDevCertsHttpsBuilder
+public class DotNetDevCertsHttpsBuilder : ICommandBuilder<DotNetDevCertsHttpsBuilder>
 {
-  private readonly CommandOptions _options;
-  private bool _check;
-  private bool _clean;
-  private bool _export;
-  private bool _trust;
-  private string? _exportPath;
-  private string? _password;
-  private string? _format;
-  private bool _noPassword;
-  private bool _verbose;
-  private bool _quiet;
+  private readonly CommandOptions Options;
+  private bool Check;
+  private bool Clean;
+  private bool Export;
+  private bool Trust;
+  private string? ExportPath;
+  private string? Password;
+  private string? Format;
+  private bool NoPassword;
+  private bool Verbose;
+  private bool Quiet;
 
   public DotNetDevCertsHttpsBuilder(CommandOptions options)
   {
-    _options = options;
+    Options = options;
   }
 
   /// <summary>
@@ -83,7 +83,7 @@ public class DotNetDevCertsHttpsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetDevCertsHttpsBuilder WithCheck()
   {
-    _check = true;
+    Check = true;
     return this;
   }
 
@@ -93,7 +93,7 @@ public class DotNetDevCertsHttpsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetDevCertsHttpsBuilder WithClean()
   {
-    _clean = true;
+    Clean = true;
     return this;
   }
 
@@ -103,7 +103,7 @@ public class DotNetDevCertsHttpsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetDevCertsHttpsBuilder WithExport()
   {
-    _export = true;
+    Export = true;
     return this;
   }
 
@@ -113,7 +113,7 @@ public class DotNetDevCertsHttpsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetDevCertsHttpsBuilder WithTrust()
   {
-    _trust = true;
+    Trust = true;
     return this;
   }
 
@@ -124,7 +124,7 @@ public class DotNetDevCertsHttpsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetDevCertsHttpsBuilder WithExportPath(string exportPath)
   {
-    _exportPath = exportPath;
+    ExportPath = exportPath;
     return this;
   }
 
@@ -135,7 +135,7 @@ public class DotNetDevCertsHttpsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetDevCertsHttpsBuilder WithPassword(string password)
   {
-    _password = password;
+    Password = password;
     return this;
   }
 
@@ -146,7 +146,7 @@ public class DotNetDevCertsHttpsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetDevCertsHttpsBuilder WithFormat(string format)
   {
-    _format = format;
+    Format = format;
     return this;
   }
 
@@ -156,7 +156,7 @@ public class DotNetDevCertsHttpsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetDevCertsHttpsBuilder WithNoPassword()
   {
-    _noPassword = true;
+    NoPassword = true;
     return this;
   }
 
@@ -166,7 +166,7 @@ public class DotNetDevCertsHttpsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetDevCertsHttpsBuilder WithVerbose()
   {
-    _verbose = true;
+    Verbose = true;
     return this;
   }
 
@@ -176,68 +176,78 @@ public class DotNetDevCertsHttpsBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetDevCertsHttpsBuilder WithQuiet()
   {
-    _quiet = true;
+    Quiet = true;
+    return this;
+  }
+
+  /// <summary>
+  /// Disables command validation, allowing the command to complete without throwing exceptions on non-zero exit codes.
+  /// </summary>
+  /// <returns>The builder instance for method chaining</returns>
+  public DotNetDevCertsHttpsBuilder WithNoValidation()
+  {
+    Options = Options.WithNoValidation();
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "dev-certs", "https" };
+    List<string> arguments = new() { "dev-certs", "https" };
 
-    if (_check)
+    if (Check)
     {
       arguments.Add("--check");
     }
 
-    if (_clean)
+    if (Clean)
     {
       arguments.Add("--clean");
     }
 
-    if (_export)
+    if (Export)
     {
       arguments.Add("--export");
     }
 
-    if (_trust)
+    if (Trust)
     {
       arguments.Add("--trust");
     }
 
-    if (!string.IsNullOrWhiteSpace(_exportPath))
+    if (!string.IsNullOrWhiteSpace(ExportPath))
     {
       arguments.Add("--export-path");
-      arguments.Add(_exportPath);
+      arguments.Add(ExportPath);
     }
 
-    if (!string.IsNullOrWhiteSpace(_password))
+    if (!string.IsNullOrWhiteSpace(Password))
     {
       arguments.Add("--password");
-      arguments.Add(_password);
+      arguments.Add(Password);
     }
 
-    if (!string.IsNullOrWhiteSpace(_format))
+    if (!string.IsNullOrWhiteSpace(Format))
     {
       arguments.Add("--format");
-      arguments.Add(_format);
+      arguments.Add(Format);
     }
 
-    if (_noPassword)
+    if (NoPassword)
     {
       arguments.Add("--no-password");
     }
 
-    if (_verbose)
+    if (Verbose)
     {
       arguments.Add("--verbose");
     }
 
-    if (_quiet)
+    if (Quiet)
     {
       arguments.Add("--quiet");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)

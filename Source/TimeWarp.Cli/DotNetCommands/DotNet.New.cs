@@ -31,17 +31,17 @@ public static partial class DotNet
 /// </summary>
 public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
 {
-  private readonly string? _templateName;
-  private string? _output;
-  private string? _name;
-  private string? _project;
-  private string? _verbosity;
-  private bool _dryRun;
-  private bool _force;
-  private bool _noUpdateCheck;
-  private bool _diagnostics;
-  private List<string> _templateArgs = new();
-  private CommandOptions _options = new();
+  private readonly string? TemplateName;
+  private string? Output;
+  private string? Name;
+  private string? Project;
+  private string? Verbosity;
+  private bool DryRun;
+  private bool Force;
+  private bool NoUpdateCheck;
+  private bool Diagnostics;
+  private List<string> TemplateArgs = new();
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Initializes a new instance of the DotNetNewBuilder class.
@@ -49,7 +49,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <param name="templateName">The template name (optional)</param>
   public DotNetNewBuilder(string? templateName = null)
   {
-    _templateName = templateName;
+    TemplateName = templateName;
   }
 
   /// <summary>
@@ -59,7 +59,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNewBuilder WithOutput(string output)
   {
-    _output = output;
+    Output = output;
     return this;
   }
 
@@ -70,7 +70,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNewBuilder WithName(string name)
   {
-    _name = name;
+    Name = name;
     return this;
   }
 
@@ -81,7 +81,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNewBuilder WithProject(string project)
   {
-    _project = project;
+    Project = project;
     return this;
   }
 
@@ -92,7 +92,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNewBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
@@ -102,7 +102,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNewBuilder WithDryRun()
   {
-    _dryRun = true;
+    DryRun = true;
     return this;
   }
 
@@ -112,7 +112,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNewBuilder WithForce()
   {
-    _force = true;
+    Force = true;
     return this;
   }
 
@@ -122,7 +122,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNewBuilder WithNoUpdateCheck()
   {
-    _noUpdateCheck = true;
+    NoUpdateCheck = true;
     return this;
   }
 
@@ -132,7 +132,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNewBuilder WithDiagnostics()
   {
-    _diagnostics = true;
+    Diagnostics = true;
     return this;
   }
 
@@ -143,7 +143,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNewBuilder WithTemplateArg(string templateArg)
   {
-    _templateArgs.Add(templateArg);
+    TemplateArgs.Add(templateArg);
     return this;
   }
 
@@ -154,7 +154,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNewBuilder WithTemplateArgs(params string[] templateArgs)
   {
-    _templateArgs.AddRange(templateArgs);
+    TemplateArgs.AddRange(templateArgs);
     return this;
   }
 
@@ -165,7 +165,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNewBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -177,7 +177,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNewBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -187,7 +187,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetNewBuilder WithNoValidation()
   {
-    _options = _options.WithNoValidation();
+    Options = Options.WithNoValidation();
     return this;
   }
 
@@ -198,7 +198,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>A DotNetNewListBuilder for configuring the list command</returns>
   public DotNetNewListBuilder List(string? templateName = null)
   {
-    return new DotNetNewListBuilder(templateName, _options);
+    return new DotNetNewListBuilder(templateName, Options);
   }
 
   /// <summary>
@@ -208,7 +208,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>A DotNetNewSearchBuilder for configuring the search command</returns>
   public DotNetNewSearchBuilder Search(string templateName)
   {
-    return new DotNetNewSearchBuilder(templateName, _options);
+    return new DotNetNewSearchBuilder(templateName, Options);
   }
 
   /// <summary>
@@ -218,7 +218,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>A DotNetNewInstallBuilder for configuring the install command</returns>
   public DotNetNewInstallBuilder Install(string packageName)
   {
-    return new DotNetNewInstallBuilder(packageName, _options);
+    return new DotNetNewInstallBuilder(packageName, Options);
   }
 
   /// <summary>
@@ -228,7 +228,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>A DotNetNewUninstallBuilder for configuring the uninstall command</returns>
   public DotNetNewUninstallBuilder Uninstall(string packageName)
   {
-    return new DotNetNewUninstallBuilder(packageName, _options);
+    return new DotNetNewUninstallBuilder(packageName, Options);
   }
 
   /// <summary>
@@ -237,7 +237,7 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>A DotNetNewUpdateBuilder for configuring the update command</returns>
   public DotNetNewUpdateBuilder Update()
   {
-    return new DotNetNewUpdateBuilder(_options);
+    return new DotNetNewUpdateBuilder(Options);
   }
 
   /// <summary>
@@ -246,64 +246,64 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
   /// <returns>A CommandResult for further processing</returns>
   public CommandResult Build()
   {
-    var arguments = new List<string> { "new" };
+    List<string> arguments = new() { "new" };
 
     // Add template name if specified
-    if (!string.IsNullOrWhiteSpace(_templateName))
+    if (!string.IsNullOrWhiteSpace(TemplateName))
     {
-      arguments.Add(_templateName);
+      arguments.Add(TemplateName);
     }
 
     // Add template args
-    arguments.AddRange(_templateArgs);
+    arguments.AddRange(TemplateArgs);
 
     // Add options
-    if (!string.IsNullOrWhiteSpace(_output))
+    if (!string.IsNullOrWhiteSpace(Output))
     {
       arguments.Add("--output");
-      arguments.Add(_output);
+      arguments.Add(Output);
     }
 
-    if (!string.IsNullOrWhiteSpace(_name))
+    if (!string.IsNullOrWhiteSpace(Name))
     {
       arguments.Add("--name");
-      arguments.Add(_name);
+      arguments.Add(Name);
     }
 
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
       arguments.Add("--project");
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
     // Add boolean flags
-    if (_dryRun)
+    if (DryRun)
     {
       arguments.Add("--dry-run");
     }
 
-    if (_force)
+    if (Force)
     {
       arguments.Add("--force");
     }
 
-    if (_noUpdateCheck)
+    if (NoUpdateCheck)
     {
       arguments.Add("--no-update-check");
     }
 
-    if (_diagnostics)
+    if (Diagnostics)
     {
       arguments.Add("--diagnostics");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   /// <summary>
@@ -342,25 +342,25 @@ public class DotNetNewBuilder : ICommandBuilder<DotNetNewBuilder>
 /// </summary>
 public class DotNetNewListBuilder
 {
-  private readonly string? _templateName;
-  private readonly CommandOptions _options;
+  private readonly string? TemplateName;
+  private readonly CommandOptions Options;
 
   public DotNetNewListBuilder(string? templateName, CommandOptions options)
   {
-    _templateName = templateName;
-    _options = options;
+    TemplateName = templateName;
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "new", "list" };
+    List<string> arguments = new() { "new", "list" };
 
-    if (!string.IsNullOrWhiteSpace(_templateName))
+    if (!string.IsNullOrWhiteSpace(TemplateName))
     {
-      arguments.Add(_templateName);
+      arguments.Add(TemplateName);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -384,19 +384,19 @@ public class DotNetNewListBuilder
 /// </summary>
 public class DotNetNewSearchBuilder
 {
-  private readonly string _templateName;
-  private readonly CommandOptions _options;
+  private readonly string TemplateName;
+  private readonly CommandOptions Options;
 
   public DotNetNewSearchBuilder(string templateName, CommandOptions options)
   {
-    _templateName = templateName ?? throw new ArgumentNullException(nameof(templateName));
-    _options = options;
+    TemplateName = templateName ?? throw new ArgumentNullException(nameof(templateName));
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "new", "search", _templateName };
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    List<string> arguments = new() { "new", "search", TemplateName };
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -420,19 +420,19 @@ public class DotNetNewSearchBuilder
 /// </summary>
 public class DotNetNewInstallBuilder
 {
-  private readonly string _packageName;
-  private readonly CommandOptions _options;
+  private readonly string PackageName;
+  private readonly CommandOptions Options;
 
   public DotNetNewInstallBuilder(string packageName, CommandOptions options)
   {
-    _packageName = packageName ?? throw new ArgumentNullException(nameof(packageName));
-    _options = options;
+    PackageName = packageName ?? throw new ArgumentNullException(nameof(packageName));
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "new", "install", _packageName };
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    List<string> arguments = new() { "new", "install", PackageName };
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -456,19 +456,19 @@ public class DotNetNewInstallBuilder
 /// </summary>
 public class DotNetNewUninstallBuilder
 {
-  private readonly string _packageName;
-  private readonly CommandOptions _options;
+  private readonly string PackageName;
+  private readonly CommandOptions Options;
 
   public DotNetNewUninstallBuilder(string packageName, CommandOptions options)
   {
-    _packageName = packageName ?? throw new ArgumentNullException(nameof(packageName));
-    _options = options;
+    PackageName = packageName ?? throw new ArgumentNullException(nameof(packageName));
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "new", "uninstall", _packageName };
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    List<string> arguments = new() { "new", "uninstall", PackageName };
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -492,17 +492,17 @@ public class DotNetNewUninstallBuilder
 /// </summary>
 public class DotNetNewUpdateBuilder
 {
-  private readonly CommandOptions _options;
+  private readonly CommandOptions Options;
 
   public DotNetNewUpdateBuilder(CommandOptions options)
   {
-    _options = options;
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "new", "update" };
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    List<string> arguments = new() { "new", "update" };
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)

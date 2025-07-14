@@ -30,17 +30,17 @@ public static partial class DotNet
 /// </summary>
 public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBuilder>
 {
-  private readonly string? _searchTerm;
-  private List<string> _sources = new();
-  private int? _take;
-  private int? _skip;
-  private bool _exactMatch;
-  private bool _interactive;
-  private bool _prerelease;
-  private string? _configFile;
-  private string? _format;
-  private string? _verbosity;
-  private CommandOptions _options = new();
+  private readonly string? SearchTerm;
+  private List<string> Sources = new();
+  private int? Take;
+  private int? Skip;
+  private bool ExactMatch;
+  private bool Interactive;
+  private bool Prerelease;
+  private string? ConfigFile;
+  private string? Format;
+  private string? Verbosity;
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Initializes a new instance of the DotNetPackageSearchBuilder class.
@@ -48,7 +48,7 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <param name="searchTerm">The search term (optional)</param>
   public DotNetPackageSearchBuilder(string? searchTerm = null)
   {
-    _searchTerm = searchTerm;
+    SearchTerm = searchTerm;
   }
 
   /// <summary>
@@ -58,7 +58,7 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackageSearchBuilder WithSource(string source)
   {
-    _sources.Add(source);
+    Sources.Add(source);
     return this;
   }
 
@@ -69,7 +69,7 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackageSearchBuilder WithSources(params string[] sources)
   {
-    _sources.AddRange(sources);
+    Sources.AddRange(sources);
     return this;
   }
 
@@ -80,7 +80,7 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackageSearchBuilder WithTake(int take)
   {
-    _take = take;
+    Take = take;
     return this;
   }
 
@@ -91,7 +91,7 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackageSearchBuilder WithSkip(int skip)
   {
-    _skip = skip;
+    Skip = skip;
     return this;
   }
 
@@ -102,7 +102,7 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackageSearchBuilder WithExactMatch()
   {
-    _exactMatch = true;
+    ExactMatch = true;
     return this;
   }
 
@@ -112,7 +112,7 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackageSearchBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -122,7 +122,7 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackageSearchBuilder WithPrerelease()
   {
-    _prerelease = true;
+    Prerelease = true;
     return this;
   }
 
@@ -133,7 +133,7 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackageSearchBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
@@ -144,7 +144,7 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackageSearchBuilder WithFormat(string format)
   {
-    _format = format;
+    Format = format;
     return this;
   }
 
@@ -155,7 +155,7 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackageSearchBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
@@ -166,7 +166,7 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackageSearchBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -178,7 +178,7 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackageSearchBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -188,7 +188,7 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackageSearchBuilder WithNoValidation()
   {
-    _options = _options.WithNoValidation();
+    Options = Options.WithNoValidation();
     return this;
   }
 
@@ -198,73 +198,73 @@ public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBui
   /// <returns>A CommandResult for further processing</returns>
   public CommandResult Build()
   {
-    var arguments = new List<string> { "package", "search" };
+    List<string> arguments = new() { "package", "search" };
 
     // Add search term if specified
-    if (!string.IsNullOrWhiteSpace(_searchTerm))
+    if (!string.IsNullOrWhiteSpace(SearchTerm))
     {
-      arguments.Add(_searchTerm);
+      arguments.Add(SearchTerm);
     }
 
     // Add sources
-    foreach (string source in _sources)
+    foreach (string source in Sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
     }
 
     // Add take if specified
-    if (_take.HasValue)
+    if (Take.HasValue)
     {
       arguments.Add("--take");
-      arguments.Add(_take.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+      arguments.Add(Take.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }
 
     // Add skip if specified
-    if (_skip.HasValue)
+    if (Skip.HasValue)
     {
       arguments.Add("--skip");
-      arguments.Add(_skip.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+      arguments.Add(Skip.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }
 
     // Add config file if specified
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
     // Add format if specified
-    if (!string.IsNullOrWhiteSpace(_format))
+    if (!string.IsNullOrWhiteSpace(Format))
     {
       arguments.Add("--format");
-      arguments.Add(_format);
+      arguments.Add(Format);
     }
 
     // Add verbosity if specified
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
     // Add boolean flags
-    if (_exactMatch)
+    if (ExactMatch)
     {
       arguments.Add("--exact-match");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
-    if (_prerelease)
+    if (Prerelease)
     {
       arguments.Add("--prerelease");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   /// <summary>

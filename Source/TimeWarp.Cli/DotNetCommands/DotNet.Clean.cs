@@ -30,15 +30,15 @@ public static partial class DotNet
 /// </summary>
 public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
 {
-  private string? _project;
-  private string? _configuration;
-  private string? _framework;
-  private string? _runtime;
-  private string? _outputPath;
-  private string? _verbosity;
-  private bool _noLogo;
-  private Dictionary<string, string> _properties = new();
-  private CommandOptions _options = new();
+  private string? Project;
+  private string? Configuration;
+  private string? Framework;
+  private string? Runtime;
+  private string? OutputPath;
+  private string? Verbosity;
+  private bool NoLogo;
+  private Dictionary<string, string> Properties = new();
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Specifies the project file to clean. If not specified, searches the current directory for one.
@@ -47,7 +47,7 @@ public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetCleanBuilder WithProject(string project)
   {
-    _project = project;
+    Project = project;
     return this;
   }
 
@@ -58,7 +58,7 @@ public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetCleanBuilder WithConfiguration(string configuration)
   {
-    _configuration = configuration;
+    Configuration = configuration;
     return this;
   }
 
@@ -69,7 +69,7 @@ public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetCleanBuilder WithFramework(string framework)
   {
-    _framework = framework;
+    Framework = framework;
     return this;
   }
 
@@ -80,7 +80,7 @@ public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetCleanBuilder WithRuntime(string runtime)
   {
-    _runtime = runtime;
+    Runtime = runtime;
     return this;
   }
 
@@ -91,7 +91,7 @@ public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetCleanBuilder WithOutput(string outputPath)
   {
-    _outputPath = outputPath;
+    OutputPath = outputPath;
     return this;
   }
 
@@ -102,7 +102,7 @@ public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetCleanBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
@@ -112,7 +112,7 @@ public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetCleanBuilder WithNoLogo()
   {
-    _noLogo = true;
+    NoLogo = true;
     return this;
   }
 
@@ -124,7 +124,7 @@ public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetCleanBuilder WithProperty(string name, string value)
   {
-    _properties[name] = value;
+    Properties[name] = value;
     return this;
   }
 
@@ -137,7 +137,7 @@ public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
   {
     foreach (KeyValuePair<string, string> kvp in properties)
     {
-      _properties[kvp.Key] = kvp.Value;
+      Properties[kvp.Key] = kvp.Value;
     }
     
     return this;
@@ -150,7 +150,7 @@ public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetCleanBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -162,7 +162,7 @@ public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetCleanBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -172,7 +172,7 @@ public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetCleanBuilder WithNoValidation()
   {
-    _options = _options.WithNoValidation();
+    Options = Options.WithNoValidation();
     return this;
   }
 
@@ -182,62 +182,62 @@ public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
   /// <returns>A CommandResult for further processing</returns>
   public CommandResult Build()
   {
-    var arguments = new List<string> { "clean" };
+    List<string> arguments = new() { "clean" };
 
     // Add project if specified
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
     // Add configuration if specified
-    if (!string.IsNullOrWhiteSpace(_configuration))
+    if (!string.IsNullOrWhiteSpace(Configuration))
     {
       arguments.Add("--configuration");
-      arguments.Add(_configuration);
+      arguments.Add(Configuration);
     }
 
     // Add framework if specified
-    if (!string.IsNullOrWhiteSpace(_framework))
+    if (!string.IsNullOrWhiteSpace(Framework))
     {
       arguments.Add("--framework");
-      arguments.Add(_framework);
+      arguments.Add(Framework);
     }
 
     // Add runtime if specified
-    if (!string.IsNullOrWhiteSpace(_runtime))
+    if (!string.IsNullOrWhiteSpace(Runtime))
     {
       arguments.Add("--runtime");
-      arguments.Add(_runtime);
+      arguments.Add(Runtime);
     }
 
     // Add output path if specified
-    if (!string.IsNullOrWhiteSpace(_outputPath))
+    if (!string.IsNullOrWhiteSpace(OutputPath))
     {
       arguments.Add("--output");
-      arguments.Add(_outputPath);
+      arguments.Add(OutputPath);
     }
 
     // Add verbosity if specified
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
     // Add boolean flags
-    if (_noLogo)
+    if (NoLogo)
     {
       arguments.Add("--nologo");
     }
 
     // Add MSBuild properties
-    foreach (KeyValuePair<string, string> property in _properties)
+    foreach (KeyValuePair<string, string> property in Properties)
     {
       arguments.Add($"--property:{property.Key}={property.Value}");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   /// <summary>

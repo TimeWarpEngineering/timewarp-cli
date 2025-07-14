@@ -21,9 +21,9 @@ public static partial class DotNet
 /// </summary>
 public class DotNetRemovePackageBuilder : ICommandBuilder<DotNetRemovePackageBuilder>
 {
-  private readonly string _packageName;
-  private string? _project;
-  private CommandOptions _options = new();
+  private readonly string PackageName;
+  private string? Project;
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Initializes a new instance of the DotNetRemovePackageBuilder class.
@@ -31,7 +31,7 @@ public class DotNetRemovePackageBuilder : ICommandBuilder<DotNetRemovePackageBui
   /// <param name="packageName">The name of the package to remove</param>
   public DotNetRemovePackageBuilder(string packageName)
   {
-    _packageName = packageName ?? throw new ArgumentNullException(nameof(packageName));
+    PackageName = packageName ?? throw new ArgumentNullException(nameof(packageName));
   }
 
   /// <summary>
@@ -41,7 +41,7 @@ public class DotNetRemovePackageBuilder : ICommandBuilder<DotNetRemovePackageBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRemovePackageBuilder WithProject(string project)
   {
-    _project = project;
+    Project = project;
     return this;
   }
 
@@ -52,7 +52,7 @@ public class DotNetRemovePackageBuilder : ICommandBuilder<DotNetRemovePackageBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRemovePackageBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -64,7 +64,7 @@ public class DotNetRemovePackageBuilder : ICommandBuilder<DotNetRemovePackageBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRemovePackageBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -74,7 +74,7 @@ public class DotNetRemovePackageBuilder : ICommandBuilder<DotNetRemovePackageBui
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRemovePackageBuilder WithNoValidation()
   {
-    _options = _options.WithNoValidation();
+    Options = Options.WithNoValidation();
     return this;
   }
 
@@ -84,15 +84,15 @@ public class DotNetRemovePackageBuilder : ICommandBuilder<DotNetRemovePackageBui
   /// <returns>A CommandResult for further processing</returns>
   public CommandResult Build()
   {
-    var arguments = new List<string> { "remove", "package", _packageName };
+    List<string> arguments = new() { "remove", "package", PackageName };
 
     // Add project if specified
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
-      arguments.Insert(1, _project);
+      arguments.Insert(1, Project);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   /// <summary>

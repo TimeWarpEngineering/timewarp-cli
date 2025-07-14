@@ -30,20 +30,20 @@ public static partial class DotNet
 /// </summary>
 public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
 {
-  private string? _project;
-  private string? _runtime;
-  private string? _verbosity;
-  private string? _packagesDirectory;
-  private string? _lockFilePath;
-  private string? _terminalLogger;
-  private bool _noCache;
-  private bool _noDependencies;
-  private bool _interactive;
-  private bool _lockedMode;
-  private bool _force;
-  private List<string> _sources = new();
-  private Dictionary<string, string> _properties = new();
-  private CommandOptions _options = new();
+  private string? Project;
+  private string? Runtime;
+  private string? Verbosity;
+  private string? PackagesDirectory;
+  private string? LockFilePath;
+  private string? TerminalLogger;
+  private bool NoCache;
+  private bool NoDependencies;
+  private bool Interactive;
+  private bool LockedMode;
+  private bool Force;
+  private List<string> Sources = new();
+  private Dictionary<string, string> Properties = new();
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Specifies the project file to restore. If not specified, searches the current directory for one.
@@ -52,7 +52,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithProject(string project)
   {
-    _project = project;
+    Project = project;
     return this;
   }
 
@@ -63,7 +63,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithRuntime(string runtime)
   {
-    _runtime = runtime;
+    Runtime = runtime;
     return this;
   }
 
@@ -74,7 +74,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
@@ -85,7 +85,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithPackagesDirectory(string directory)
   {
-    _packagesDirectory = directory;
+    PackagesDirectory = directory;
     return this;
   }
 
@@ -96,7 +96,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithLockFilePath(string lockFilePath)
   {
-    _lockFilePath = lockFilePath;
+    LockFilePath = lockFilePath;
     return this;
   }
 
@@ -107,7 +107,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithTerminalLogger(string mode)
   {
-    _terminalLogger = mode;
+    TerminalLogger = mode;
     return this;
   }
 
@@ -117,7 +117,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithNoCache()
   {
-    _noCache = true;
+    NoCache = true;
     return this;
   }
 
@@ -127,7 +127,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithNoDependencies()
   {
-    _noDependencies = true;
+    NoDependencies = true;
     return this;
   }
 
@@ -137,7 +137,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -147,7 +147,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithLockedMode()
   {
-    _lockedMode = true;
+    LockedMode = true;
     return this;
   }
 
@@ -157,7 +157,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithForce()
   {
-    _force = true;
+    Force = true;
     return this;
   }
 
@@ -168,7 +168,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithSource(string source)
   {
-    _sources.Add(source);
+    Sources.Add(source);
     return this;
   }
 
@@ -179,7 +179,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithSources(params string[] sources)
   {
-    _sources.AddRange(sources);
+    Sources.AddRange(sources);
     return this;
   }
 
@@ -191,7 +191,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithProperty(string name, string value)
   {
-    _properties[name] = value;
+    Properties[name] = value;
     return this;
   }
 
@@ -204,7 +204,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   {
     foreach (KeyValuePair<string, string> kvp in properties)
     {
-      _properties[kvp.Key] = kvp.Value;
+      Properties[kvp.Key] = kvp.Value;
     }
     
     return this;
@@ -217,7 +217,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -229,7 +229,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -239,7 +239,7 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRestoreBuilder WithNoValidation()
   {
-    _options = _options.WithNoValidation();
+    Options = Options.WithNoValidation();
     return this;
   }
 
@@ -249,89 +249,89 @@ public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
   /// <returns>A CommandResult for further processing</returns>
   public CommandResult Build()
   {
-    var arguments = new List<string> { "restore" };
+    List<string> arguments = new() { "restore" };
 
     // Add project if specified
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
     // Add runtime if specified
-    if (!string.IsNullOrWhiteSpace(_runtime))
+    if (!string.IsNullOrWhiteSpace(Runtime))
     {
       arguments.Add("--runtime");
-      arguments.Add(_runtime);
+      arguments.Add(Runtime);
     }
 
     // Add verbosity if specified
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
     // Add packages directory if specified
-    if (!string.IsNullOrWhiteSpace(_packagesDirectory))
+    if (!string.IsNullOrWhiteSpace(PackagesDirectory))
     {
       arguments.Add("--packages");
-      arguments.Add(_packagesDirectory);
+      arguments.Add(PackagesDirectory);
     }
 
     // Add lock file path if specified
-    if (!string.IsNullOrWhiteSpace(_lockFilePath))
+    if (!string.IsNullOrWhiteSpace(LockFilePath))
     {
       arguments.Add("--lock-file-path");
-      arguments.Add(_lockFilePath);
+      arguments.Add(LockFilePath);
     }
 
     // Add terminal logger if specified
-    if (!string.IsNullOrWhiteSpace(_terminalLogger))
+    if (!string.IsNullOrWhiteSpace(TerminalLogger))
     {
       arguments.Add("--tl");
-      arguments.Add(_terminalLogger);
+      arguments.Add(TerminalLogger);
     }
 
     // Add sources
-    foreach (string source in _sources)
+    foreach (string source in Sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
     }
 
     // Add boolean flags
-    if (_noCache)
+    if (NoCache)
     {
       arguments.Add("--no-cache");
     }
 
-    if (_noDependencies)
+    if (NoDependencies)
     {
       arguments.Add("--no-dependencies");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
-    if (_lockedMode)
+    if (LockedMode)
     {
       arguments.Add("--locked-mode");
     }
 
-    if (_force)
+    if (Force)
     {
       arguments.Add("--force");
     }
 
     // Add MSBuild properties
-    foreach (KeyValuePair<string, string> property in _properties)
+    foreach (KeyValuePair<string, string> property in Properties)
     {
       arguments.Add($"--property:{property.Key}={property.Value}");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   /// <summary>

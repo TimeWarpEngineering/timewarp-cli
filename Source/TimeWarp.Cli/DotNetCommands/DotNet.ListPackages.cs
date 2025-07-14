@@ -30,22 +30,22 @@ public static partial class DotNet
 /// </summary>
 public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuilder>
 {
-  private string? _project;
-  private string? _framework;
-  private string? _verbosity;
-  private string? _format;
-  private string? _outputVersion;
-  private string? _config;
-  private bool _outdated;
-  private bool _includeTransitive;
-  private bool _vulnerable;
-  private bool _deprecated;
-  private bool _interactive;
-  private bool _includePrerelease;
-  private bool _highestMinor;
-  private bool _highestPatch;
-  private List<string> _sources = new();
-  private CommandOptions _options = new();
+  private string? Project;
+  private string? Framework;
+  private string? Verbosity;
+  private string? Format;
+  private string? OutputVersion;
+  private string? Config;
+  private bool Outdated;
+  private bool IncludeTransitive;
+  private bool Vulnerable;
+  private bool Deprecated;
+  private bool Interactive;
+  private bool IncludePrerelease;
+  private bool HighestMinor;
+  private bool HighestPatch;
+  private List<string> Sources = new();
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Specifies the project file to list packages for. If not specified, searches the current directory for one.
@@ -54,7 +54,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder WithProject(string project)
   {
-    _project = project;
+    Project = project;
     return this;
   }
 
@@ -65,7 +65,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder WithFramework(string framework)
   {
-    _framework = framework;
+    Framework = framework;
     return this;
   }
 
@@ -76,7 +76,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
@@ -87,7 +87,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder WithFormat(string format)
   {
-    _format = format;
+    Format = format;
     return this;
   }
 
@@ -98,7 +98,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder WithOutputVersion(string version)
   {
-    _outputVersion = version;
+    OutputVersion = version;
     return this;
   }
 
@@ -109,7 +109,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder WithConfig(string config)
   {
-    _config = config;
+    Config = config;
     return this;
   }
 
@@ -119,7 +119,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder Outdated()
   {
-    _outdated = true;
+    Outdated = true;
     return this;
   }
 
@@ -129,7 +129,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder IncludeTransitive()
   {
-    _includeTransitive = true;
+    IncludeTransitive = true;
     return this;
   }
 
@@ -139,7 +139,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder Vulnerable()
   {
-    _vulnerable = true;
+    Vulnerable = true;
     return this;
   }
 
@@ -149,7 +149,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder Deprecated()
   {
-    _deprecated = true;
+    Deprecated = true;
     return this;
   }
 
@@ -159,7 +159,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -169,7 +169,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder IncludePrerelease()
   {
-    _includePrerelease = true;
+    IncludePrerelease = true;
     return this;
   }
 
@@ -179,7 +179,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder HighestMinor()
   {
-    _highestMinor = true;
+    HighestMinor = true;
     return this;
   }
 
@@ -189,7 +189,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder HighestPatch()
   {
-    _highestPatch = true;
+    HighestPatch = true;
     return this;
   }
 
@@ -200,7 +200,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder WithSource(string source)
   {
-    _sources.Add(source);
+    Sources.Add(source);
     return this;
   }
 
@@ -211,7 +211,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder WithSources(params string[] sources)
   {
-    _sources.AddRange(sources);
+    Sources.AddRange(sources);
     return this;
   }
 
@@ -222,7 +222,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -234,7 +234,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -244,7 +244,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder WithNoValidation()
   {
-    _options = _options.WithNoValidation();
+    Options = Options.WithNoValidation();
     return this;
   }
 
@@ -254,98 +254,98 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>A CommandResult for further processing</returns>
   public CommandResult Build()
   {
-    var arguments = new List<string> { "list", "package" };
+    List<string> arguments = new() { "list", "package" };
 
     // Add project if specified
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
     // Add framework if specified
-    if (!string.IsNullOrWhiteSpace(_framework))
+    if (!string.IsNullOrWhiteSpace(Framework))
     {
       arguments.Add("--framework");
-      arguments.Add(_framework);
+      arguments.Add(Framework);
     }
 
     // Add verbosity if specified
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
     // Add format if specified
-    if (!string.IsNullOrWhiteSpace(_format))
+    if (!string.IsNullOrWhiteSpace(Format))
     {
       arguments.Add("--format");
-      arguments.Add(_format);
+      arguments.Add(Format);
     }
 
     // Add output version if specified
-    if (!string.IsNullOrWhiteSpace(_outputVersion))
+    if (!string.IsNullOrWhiteSpace(OutputVersion))
     {
       arguments.Add("--output-version");
-      arguments.Add(_outputVersion);
+      arguments.Add(OutputVersion);
     }
 
     // Add config if specified
-    if (!string.IsNullOrWhiteSpace(_config))
+    if (!string.IsNullOrWhiteSpace(Config))
     {
       arguments.Add("--config");
-      arguments.Add(_config);
+      arguments.Add(Config);
     }
 
     // Add sources
-    foreach (string source in _sources)
+    foreach (string source in Sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
     }
 
     // Add boolean flags
-    if (_outdated)
+    if (Outdated)
     {
       arguments.Add("--outdated");
     }
 
-    if (_includeTransitive)
+    if (IncludeTransitive)
     {
       arguments.Add("--include-transitive");
     }
 
-    if (_vulnerable)
+    if (Vulnerable)
     {
       arguments.Add("--vulnerable");
     }
 
-    if (_deprecated)
+    if (Deprecated)
     {
       arguments.Add("--deprecated");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
-    if (_includePrerelease)
+    if (IncludePrerelease)
     {
       arguments.Add("--include-prerelease");
     }
 
-    if (_highestMinor)
+    if (HighestMinor)
     {
       arguments.Add("--highest-minor");
     }
 
-    if (_highestPatch)
+    if (HighestPatch)
     {
       arguments.Add("--highest-patch");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   /// <summary>

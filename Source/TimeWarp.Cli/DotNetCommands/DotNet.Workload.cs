@@ -20,7 +20,7 @@ public static partial class DotNet
 /// </summary>
 public class DotNetWorkloadBuilder
 {
-  private CommandOptions _options = new();
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Specifies the working directory for the command.
@@ -29,7 +29,7 @@ public class DotNetWorkloadBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -41,7 +41,7 @@ public class DotNetWorkloadBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -51,7 +51,7 @@ public class DotNetWorkloadBuilder
   /// <returns>A DotNetWorkloadInfoBuilder for configuring the info command</returns>
   public DotNetWorkloadInfoBuilder Info()
   {
-    return new DotNetWorkloadInfoBuilder(_options);
+    return new DotNetWorkloadInfoBuilder(Options);
   }
 
   /// <summary>
@@ -60,7 +60,7 @@ public class DotNetWorkloadBuilder
   /// <returns>A DotNetWorkloadVersionBuilder for configuring the version command</returns>
   public DotNetWorkloadVersionBuilder Version()
   {
-    return new DotNetWorkloadVersionBuilder(_options);
+    return new DotNetWorkloadVersionBuilder(Options);
   }
 
   /// <summary>
@@ -70,7 +70,7 @@ public class DotNetWorkloadBuilder
   /// <returns>A DotNetWorkloadInstallBuilder for configuring the install command</returns>
   public DotNetWorkloadInstallBuilder Install(params string[] workloadIds)
   {
-    return new DotNetWorkloadInstallBuilder(workloadIds, _options);
+    return new DotNetWorkloadInstallBuilder(workloadIds, Options);
   }
 
   /// <summary>
@@ -79,7 +79,7 @@ public class DotNetWorkloadBuilder
   /// <returns>A DotNetWorkloadListBuilder for configuring the list command</returns>
   public DotNetWorkloadListBuilder List()
   {
-    return new DotNetWorkloadListBuilder(_options);
+    return new DotNetWorkloadListBuilder(Options);
   }
 
   /// <summary>
@@ -88,7 +88,7 @@ public class DotNetWorkloadBuilder
   /// <returns>A DotNetWorkloadSearchBuilder for configuring the search command</returns>
   public DotNetWorkloadSearchBuilder Search()
   {
-    return new DotNetWorkloadSearchBuilder(null, _options);
+    return new DotNetWorkloadSearchBuilder(null, Options);
   }
 
   /// <summary>
@@ -98,7 +98,7 @@ public class DotNetWorkloadBuilder
   /// <returns>A DotNetWorkloadSearchBuilder for configuring the search command</returns>
   public DotNetWorkloadSearchBuilder Search(string searchString)
   {
-    return new DotNetWorkloadSearchBuilder(searchString, _options);
+    return new DotNetWorkloadSearchBuilder(searchString, Options);
   }
 
   /// <summary>
@@ -108,7 +108,7 @@ public class DotNetWorkloadBuilder
   /// <returns>A DotNetWorkloadUninstallBuilder for configuring the uninstall command</returns>
   public DotNetWorkloadUninstallBuilder Uninstall(params string[] workloadIds)
   {
-    return new DotNetWorkloadUninstallBuilder(workloadIds, _options);
+    return new DotNetWorkloadUninstallBuilder(workloadIds, Options);
   }
 
   /// <summary>
@@ -117,7 +117,7 @@ public class DotNetWorkloadBuilder
   /// <returns>A DotNetWorkloadUpdateBuilder for configuring the update command</returns>
   public DotNetWorkloadUpdateBuilder Update()
   {
-    return new DotNetWorkloadUpdateBuilder(_options);
+    return new DotNetWorkloadUpdateBuilder(Options);
   }
 
   /// <summary>
@@ -126,7 +126,7 @@ public class DotNetWorkloadBuilder
   /// <returns>A DotNetWorkloadRepairBuilder for configuring the repair command</returns>
   public DotNetWorkloadRepairBuilder Repair()
   {
-    return new DotNetWorkloadRepairBuilder(_options);
+    return new DotNetWorkloadRepairBuilder(Options);
   }
 
   /// <summary>
@@ -135,7 +135,7 @@ public class DotNetWorkloadBuilder
   /// <returns>A DotNetWorkloadCleanBuilder for configuring the clean command</returns>
   public DotNetWorkloadCleanBuilder Clean()
   {
-    return new DotNetWorkloadCleanBuilder(_options);
+    return new DotNetWorkloadCleanBuilder(Options);
   }
 
   /// <summary>
@@ -144,7 +144,7 @@ public class DotNetWorkloadBuilder
   /// <returns>A DotNetWorkloadRestoreBuilder for configuring the restore command</returns>
   public DotNetWorkloadRestoreBuilder Restore()
   {
-    return new DotNetWorkloadRestoreBuilder(null, _options);
+    return new DotNetWorkloadRestoreBuilder(null, Options);
   }
 
   /// <summary>
@@ -154,7 +154,7 @@ public class DotNetWorkloadBuilder
   /// <returns>A DotNetWorkloadRestoreBuilder for configuring the restore command</returns>
   public DotNetWorkloadRestoreBuilder Restore(string projectOrSolution)
   {
-    return new DotNetWorkloadRestoreBuilder(projectOrSolution, _options);
+    return new DotNetWorkloadRestoreBuilder(projectOrSolution, Options);
   }
 
   /// <summary>
@@ -163,7 +163,7 @@ public class DotNetWorkloadBuilder
   /// <returns>A DotNetWorkloadConfigBuilder for configuring the config command</returns>
   public DotNetWorkloadConfigBuilder Config()
   {
-    return new DotNetWorkloadConfigBuilder(_options);
+    return new DotNetWorkloadConfigBuilder(Options);
   }
 }
 
@@ -172,17 +172,17 @@ public class DotNetWorkloadBuilder
 /// </summary>
 public class DotNetWorkloadInfoBuilder
 {
-  private readonly CommandOptions _options;
+  private readonly CommandOptions Options;
 
   public DotNetWorkloadInfoBuilder(CommandOptions options)
   {
-    _options = options;
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "workload", "--info" };
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    List<string> arguments = new() { "workload", "--info" };
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -206,17 +206,17 @@ public class DotNetWorkloadInfoBuilder
 /// </summary>
 public class DotNetWorkloadVersionBuilder
 {
-  private readonly CommandOptions _options;
+  private readonly CommandOptions Options;
 
   public DotNetWorkloadVersionBuilder(CommandOptions options)
   {
-    _options = options;
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "workload", "--version" };
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    List<string> arguments = new() { "workload", "--version" };
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -240,18 +240,18 @@ public class DotNetWorkloadVersionBuilder
 /// </summary>
 public class DotNetWorkloadInstallBuilder
 {
-  private readonly string[] _workloadIds;
-  private readonly CommandOptions _options;
-  private string? _configFile;
-  private bool _includePreview;
-  private bool _skipManifestUpdate;
-  private List<string> _sources = new();
-  private string? _version;
+  private readonly string[] WorkloadIds;
+  private readonly CommandOptions Options;
+  private string? ConfigFile;
+  private bool IncludePreview;
+  private bool SkipManifestUpdate;
+  private List<string> Sources = new();
+  private string? Version;
 
   public DotNetWorkloadInstallBuilder(string[] workloadIds, CommandOptions options)
   {
-    _workloadIds = workloadIds ?? throw new ArgumentNullException(nameof(workloadIds));
-    _options = options;
+    WorkloadIds = workloadIds ?? throw new ArgumentNullException(nameof(workloadIds));
+    Options = options;
   }
 
   /// <summary>
@@ -261,7 +261,7 @@ public class DotNetWorkloadInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadInstallBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
@@ -271,7 +271,7 @@ public class DotNetWorkloadInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadInstallBuilder WithIncludePreview()
   {
-    _includePreview = true;
+    IncludePreview = true;
     return this;
   }
 
@@ -281,7 +281,7 @@ public class DotNetWorkloadInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadInstallBuilder WithSkipManifestUpdate()
   {
-    _skipManifestUpdate = true;
+    SkipManifestUpdate = true;
     return this;
   }
 
@@ -292,7 +292,7 @@ public class DotNetWorkloadInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadInstallBuilder WithSource(string source)
   {
-    _sources.Add(source);
+    Sources.Add(source);
     return this;
   }
 
@@ -303,44 +303,44 @@ public class DotNetWorkloadInstallBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadInstallBuilder WithVersion(string version)
   {
-    _version = version;
+    Version = version;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "workload", "install" };
-    arguments.AddRange(_workloadIds);
+    List<string> arguments = new() { "workload", "install" };
+    arguments.AddRange(WorkloadIds);
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    if (_includePreview)
+    if (IncludePreview)
     {
       arguments.Add("--include-previews");
     }
 
-    if (_skipManifestUpdate)
+    if (SkipManifestUpdate)
     {
       arguments.Add("--skip-manifest-update");
     }
 
-    foreach (string source in _sources)
+    foreach (string source in Sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
     }
 
-    if (!string.IsNullOrWhiteSpace(_version))
+    if (!string.IsNullOrWhiteSpace(Version))
     {
       arguments.Add("--version");
-      arguments.Add(_version);
+      arguments.Add(Version);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -364,12 +364,12 @@ public class DotNetWorkloadInstallBuilder
 /// </summary>
 public class DotNetWorkloadListBuilder
 {
-  private readonly CommandOptions _options;
-  private string? _verbosity;
+  private readonly CommandOptions Options;
+  private string? Verbosity;
 
   public DotNetWorkloadListBuilder(CommandOptions options)
   {
-    _options = options;
+    Options = options;
   }
 
   /// <summary>
@@ -379,21 +379,21 @@ public class DotNetWorkloadListBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadListBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "workload", "list" };
+    List<string> arguments = new() { "workload", "list" };
 
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -417,14 +417,14 @@ public class DotNetWorkloadListBuilder
 /// </summary>
 public class DotNetWorkloadSearchBuilder
 {
-  private readonly string? _searchString;
-  private readonly CommandOptions _options;
-  private string? _verbosity;
+  private readonly string? SearchString;
+  private readonly CommandOptions Options;
+  private string? Verbosity;
 
   public DotNetWorkloadSearchBuilder(string? searchString, CommandOptions options)
   {
-    _searchString = searchString;
-    _options = options;
+    SearchString = searchString;
+    Options = options;
   }
 
   /// <summary>
@@ -434,26 +434,26 @@ public class DotNetWorkloadSearchBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadSearchBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "workload", "search" };
+    List<string> arguments = new() { "workload", "search" };
 
-    if (!string.IsNullOrWhiteSpace(_searchString))
+    if (!string.IsNullOrWhiteSpace(SearchString))
     {
-      arguments.Add(_searchString);
+      arguments.Add(SearchString);
     }
 
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -477,21 +477,21 @@ public class DotNetWorkloadSearchBuilder
 /// </summary>
 public class DotNetWorkloadUninstallBuilder
 {
-  private readonly string[] _workloadIds;
-  private readonly CommandOptions _options;
+  private readonly string[] WorkloadIds;
+  private readonly CommandOptions Options;
 
   public DotNetWorkloadUninstallBuilder(string[] workloadIds, CommandOptions options)
   {
-    _workloadIds = workloadIds ?? throw new ArgumentNullException(nameof(workloadIds));
-    _options = options;
+    WorkloadIds = workloadIds ?? throw new ArgumentNullException(nameof(workloadIds));
+    Options = options;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "workload", "uninstall" };
-    arguments.AddRange(_workloadIds);
+    List<string> arguments = new() { "workload", "uninstall" };
+    arguments.AddRange(WorkloadIds);
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -515,21 +515,21 @@ public class DotNetWorkloadUninstallBuilder
 /// </summary>
 public class DotNetWorkloadUpdateBuilder
 {
-  private readonly CommandOptions _options;
-  private bool _advertisingManifestsOnly;
-  private string? _configFile;
-  private bool _disableParallel;
-  private bool _fromPreviousSdk;
-  private bool _includePreview;
-  private bool _interactive;
-  private bool _noCache;
-  private List<string> _sources = new();
-  private string? _tempDir;
-  private string? _verbosity;
+  private readonly CommandOptions Options;
+  private bool AdvertisingManifestsOnly;
+  private string? ConfigFile;
+  private bool DisableParallel;
+  private bool FromPreviousSdk;
+  private bool IncludePreview;
+  private bool Interactive;
+  private bool NoCache;
+  private List<string> Sources = new();
+  private string? TempDir;
+  private string? Verbosity;
 
   public DotNetWorkloadUpdateBuilder(CommandOptions options)
   {
-    _options = options;
+    Options = options;
   }
 
   /// <summary>
@@ -538,7 +538,7 @@ public class DotNetWorkloadUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadUpdateBuilder WithAdvertisingManifestsOnly()
   {
-    _advertisingManifestsOnly = true;
+    AdvertisingManifestsOnly = true;
     return this;
   }
 
@@ -549,7 +549,7 @@ public class DotNetWorkloadUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadUpdateBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
@@ -559,7 +559,7 @@ public class DotNetWorkloadUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadUpdateBuilder WithDisableParallel()
   {
-    _disableParallel = true;
+    DisableParallel = true;
     return this;
   }
 
@@ -569,7 +569,7 @@ public class DotNetWorkloadUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadUpdateBuilder WithFromPreviousSdk()
   {
-    _fromPreviousSdk = true;
+    FromPreviousSdk = true;
     return this;
   }
 
@@ -579,7 +579,7 @@ public class DotNetWorkloadUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadUpdateBuilder WithIncludePreview()
   {
-    _includePreview = true;
+    IncludePreview = true;
     return this;
   }
 
@@ -589,7 +589,7 @@ public class DotNetWorkloadUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadUpdateBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -599,7 +599,7 @@ public class DotNetWorkloadUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadUpdateBuilder WithNoCache()
   {
-    _noCache = true;
+    NoCache = true;
     return this;
   }
 
@@ -610,7 +610,7 @@ public class DotNetWorkloadUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadUpdateBuilder WithSource(string source)
   {
-    _sources.Add(source);
+    Sources.Add(source);
     return this;
   }
 
@@ -621,7 +621,7 @@ public class DotNetWorkloadUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadUpdateBuilder WithTempDir(string tempDir)
   {
-    _tempDir = tempDir;
+    TempDir = tempDir;
     return this;
   }
 
@@ -632,69 +632,69 @@ public class DotNetWorkloadUpdateBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadUpdateBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "workload", "update" };
+    List<string> arguments = new() { "workload", "update" };
 
-    if (_advertisingManifestsOnly)
+    if (AdvertisingManifestsOnly)
     {
       arguments.Add("--advertising-manifests-only");
     }
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    if (_disableParallel)
+    if (DisableParallel)
     {
       arguments.Add("--disable-parallel");
     }
 
-    if (_fromPreviousSdk)
+    if (FromPreviousSdk)
     {
       arguments.Add("--from-previous-sdk");
     }
 
-    if (_includePreview)
+    if (IncludePreview)
     {
       arguments.Add("--include-previews");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
-    if (_noCache)
+    if (NoCache)
     {
       arguments.Add("--no-cache");
     }
 
-    foreach (string source in _sources)
+    foreach (string source in Sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
     }
 
-    if (!string.IsNullOrWhiteSpace(_tempDir))
+    if (!string.IsNullOrWhiteSpace(TempDir))
     {
       arguments.Add("--temp-dir");
-      arguments.Add(_tempDir);
+      arguments.Add(TempDir);
     }
 
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -718,19 +718,19 @@ public class DotNetWorkloadUpdateBuilder
 /// </summary>
 public class DotNetWorkloadRepairBuilder
 {
-  private readonly CommandOptions _options;
-  private string? _configFile;
-  private bool _disableParallel;
-  private bool _ignoreFailedSources;
-  private bool _interactive;
-  private bool _noCache;
-  private List<string> _sources = new();
-  private string? _tempDir;
-  private string? _verbosity;
+  private readonly CommandOptions Options;
+  private string? ConfigFile;
+  private bool DisableParallel;
+  private bool IgnoreFailedSources;
+  private bool Interactive;
+  private bool NoCache;
+  private List<string> Sources = new();
+  private string? TempDir;
+  private string? Verbosity;
 
   public DotNetWorkloadRepairBuilder(CommandOptions options)
   {
-    _options = options;
+    Options = options;
   }
 
   /// <summary>
@@ -740,7 +740,7 @@ public class DotNetWorkloadRepairBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRepairBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
@@ -750,7 +750,7 @@ public class DotNetWorkloadRepairBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRepairBuilder WithDisableParallel()
   {
-    _disableParallel = true;
+    DisableParallel = true;
     return this;
   }
 
@@ -760,7 +760,7 @@ public class DotNetWorkloadRepairBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRepairBuilder WithIgnoreFailedSources()
   {
-    _ignoreFailedSources = true;
+    IgnoreFailedSources = true;
     return this;
   }
 
@@ -770,7 +770,7 @@ public class DotNetWorkloadRepairBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRepairBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -780,7 +780,7 @@ public class DotNetWorkloadRepairBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRepairBuilder WithNoCache()
   {
-    _noCache = true;
+    NoCache = true;
     return this;
   }
 
@@ -791,7 +791,7 @@ public class DotNetWorkloadRepairBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRepairBuilder WithSource(string source)
   {
-    _sources.Add(source);
+    Sources.Add(source);
     return this;
   }
 
@@ -802,7 +802,7 @@ public class DotNetWorkloadRepairBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRepairBuilder WithTempDir(string tempDir)
   {
-    _tempDir = tempDir;
+    TempDir = tempDir;
     return this;
   }
 
@@ -813,59 +813,59 @@ public class DotNetWorkloadRepairBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRepairBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "workload", "repair" };
+    List<string> arguments = new() { "workload", "repair" };
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    if (_disableParallel)
+    if (DisableParallel)
     {
       arguments.Add("--disable-parallel");
     }
 
-    if (_ignoreFailedSources)
+    if (IgnoreFailedSources)
     {
       arguments.Add("--ignore-failed-sources");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
-    if (_noCache)
+    if (NoCache)
     {
       arguments.Add("--no-cache");
     }
 
-    foreach (string source in _sources)
+    foreach (string source in Sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
     }
 
-    if (!string.IsNullOrWhiteSpace(_tempDir))
+    if (!string.IsNullOrWhiteSpace(TempDir))
     {
       arguments.Add("--temp-dir");
-      arguments.Add(_tempDir);
+      arguments.Add(TempDir);
     }
 
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -889,12 +889,12 @@ public class DotNetWorkloadRepairBuilder
 /// </summary>
 public class DotNetWorkloadCleanBuilder
 {
-  private readonly CommandOptions _options;
-  private bool _all;
+  private readonly CommandOptions Options;
+  private bool All;
 
   public DotNetWorkloadCleanBuilder(CommandOptions options)
   {
-    _options = options;
+    Options = options;
   }
 
   /// <summary>
@@ -903,20 +903,20 @@ public class DotNetWorkloadCleanBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadCleanBuilder WithAll()
   {
-    _all = true;
+    All = true;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "workload", "clean" };
+    List<string> arguments = new() { "workload", "clean" };
 
-    if (_all)
+    if (All)
     {
       arguments.Add("--all");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -940,22 +940,22 @@ public class DotNetWorkloadCleanBuilder
 /// </summary>
 public class DotNetWorkloadRestoreBuilder
 {
-  private readonly string? _projectOrSolution;
-  private readonly CommandOptions _options;
-  private string? _configFile;
-  private bool _disableParallel;
-  private bool _includePreview;
-  private bool _interactive;
-  private bool _noCache;
-  private List<string> _sources = new();
-  private string? _tempDir;
-  private string? _verbosity;
-  private string? _version;
+  private readonly string? ProjectOrSolution;
+  private readonly CommandOptions Options;
+  private string? ConfigFile;
+  private bool DisableParallel;
+  private bool IncludePreview;
+  private bool Interactive;
+  private bool NoCache;
+  private List<string> Sources = new();
+  private string? TempDir;
+  private string? Verbosity;
+  private string? Version;
 
   public DotNetWorkloadRestoreBuilder(string? projectOrSolution, CommandOptions options)
   {
-    _projectOrSolution = projectOrSolution;
-    _options = options;
+    ProjectOrSolution = projectOrSolution;
+    Options = options;
   }
 
   /// <summary>
@@ -965,7 +965,7 @@ public class DotNetWorkloadRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRestoreBuilder WithConfigFile(string configFile)
   {
-    _configFile = configFile;
+    ConfigFile = configFile;
     return this;
   }
 
@@ -975,7 +975,7 @@ public class DotNetWorkloadRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRestoreBuilder WithDisableParallel()
   {
-    _disableParallel = true;
+    DisableParallel = true;
     return this;
   }
 
@@ -985,7 +985,7 @@ public class DotNetWorkloadRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRestoreBuilder WithIncludePreview()
   {
-    _includePreview = true;
+    IncludePreview = true;
     return this;
   }
 
@@ -995,7 +995,7 @@ public class DotNetWorkloadRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRestoreBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -1005,7 +1005,7 @@ public class DotNetWorkloadRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRestoreBuilder WithNoCache()
   {
-    _noCache = true;
+    NoCache = true;
     return this;
   }
 
@@ -1016,7 +1016,7 @@ public class DotNetWorkloadRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRestoreBuilder WithSource(string source)
   {
-    _sources.Add(source);
+    Sources.Add(source);
     return this;
   }
 
@@ -1027,7 +1027,7 @@ public class DotNetWorkloadRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRestoreBuilder WithTempDir(string tempDir)
   {
-    _tempDir = tempDir;
+    TempDir = tempDir;
     return this;
   }
 
@@ -1038,7 +1038,7 @@ public class DotNetWorkloadRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRestoreBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
@@ -1049,70 +1049,70 @@ public class DotNetWorkloadRestoreBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadRestoreBuilder WithVersion(string version)
   {
-    _version = version;
+    Version = version;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "workload", "restore" };
+    List<string> arguments = new() { "workload", "restore" };
 
-    if (!string.IsNullOrWhiteSpace(_projectOrSolution))
+    if (!string.IsNullOrWhiteSpace(ProjectOrSolution))
     {
-      arguments.Add(_projectOrSolution);
+      arguments.Add(ProjectOrSolution);
     }
 
-    if (!string.IsNullOrWhiteSpace(_configFile))
+    if (!string.IsNullOrWhiteSpace(ConfigFile))
     {
       arguments.Add("--configfile");
-      arguments.Add(_configFile);
+      arguments.Add(ConfigFile);
     }
 
-    if (_disableParallel)
+    if (DisableParallel)
     {
       arguments.Add("--disable-parallel");
     }
 
-    if (_includePreview)
+    if (IncludePreview)
     {
       arguments.Add("--include-previews");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
-    if (_noCache)
+    if (NoCache)
     {
       arguments.Add("--no-cache");
     }
 
-    foreach (string source in _sources)
+    foreach (string source in Sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
     }
 
-    if (!string.IsNullOrWhiteSpace(_tempDir))
+    if (!string.IsNullOrWhiteSpace(TempDir))
     {
       arguments.Add("--temp-dir");
-      arguments.Add(_tempDir);
+      arguments.Add(TempDir);
     }
 
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
-    if (!string.IsNullOrWhiteSpace(_version))
+    if (!string.IsNullOrWhiteSpace(Version))
     {
       arguments.Add("--version");
-      arguments.Add(_version);
+      arguments.Add(Version);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)
@@ -1136,12 +1136,12 @@ public class DotNetWorkloadRestoreBuilder
 /// </summary>
 public class DotNetWorkloadConfigBuilder
 {
-  private readonly CommandOptions _options;
-  private string? _updateMode;
+  private readonly CommandOptions Options;
+  private string? UpdateMode;
 
   public DotNetWorkloadConfigBuilder(CommandOptions options)
   {
-    _options = options;
+    Options = options;
   }
 
   /// <summary>
@@ -1150,7 +1150,7 @@ public class DotNetWorkloadConfigBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadConfigBuilder WithUpdateModeWorkloadSet()
   {
-    _updateMode = "workload-set";
+    UpdateMode = "workload-set";
     return this;
   }
 
@@ -1160,7 +1160,7 @@ public class DotNetWorkloadConfigBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadConfigBuilder WithUpdateModeManifests()
   {
-    _updateMode = "manifests";
+    UpdateMode = "manifests";
     return this;
   }
 
@@ -1171,21 +1171,21 @@ public class DotNetWorkloadConfigBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetWorkloadConfigBuilder WithUpdateMode(string updateMode)
   {
-    _updateMode = updateMode;
+    UpdateMode = updateMode;
     return this;
   }
 
   public CommandResult Build()
   {
-    var arguments = new List<string> { "workload", "config" };
+    List<string> arguments = new() { "workload", "config" };
 
-    if (!string.IsNullOrWhiteSpace(_updateMode))
+    if (!string.IsNullOrWhiteSpace(UpdateMode))
     {
       arguments.Add("--update-mode");
-      arguments.Add(_updateMode);
+      arguments.Add(UpdateMode);
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)

@@ -30,23 +30,23 @@ public static partial class DotNet
 /// </summary>
 public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
 {
-  private string? _project;
-  private string? _configuration;
-  private string? _framework;
-  private string? _runtime;
-  private string? _architecture;
-  private string? _operatingSystem;
-  private string? _outputPath;
-  private string? _verbosity;
-  private string? _terminalLogger;
-  private bool _noRestore;
-  private bool _noDependencies;
-  private bool _noIncremental;
-  private bool _noLogo;
-  private bool _force;
-  private bool _interactive;
-  private Dictionary<string, string> _properties = new();
-  private CommandOptions _options = new();
+  private string? Project;
+  private string? Configuration;
+  private string? Framework;
+  private string? Runtime;
+  private string? Architecture;
+  private string? OperatingSystem;
+  private string? OutputPath;
+  private string? Verbosity;
+  private string? TerminalLogger;
+  private bool NoRestore;
+  private bool NoDependencies;
+  private bool NoIncremental;
+  private bool NoLogo;
+  private bool Force;
+  private bool Interactive;
+  private Dictionary<string, string> Properties = new();
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Specifies the project file to build. If not specified, searches the current directory for one.
@@ -55,7 +55,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithProject(string project)
   {
-    _project = project;
+    Project = project;
     return this;
   }
 
@@ -66,7 +66,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithConfiguration(string configuration)
   {
-    _configuration = configuration;
+    Configuration = configuration;
     return this;
   }
 
@@ -77,7 +77,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithFramework(string framework)
   {
-    _framework = framework;
+    Framework = framework;
     return this;
   }
 
@@ -88,7 +88,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithRuntime(string runtime)
   {
-    _runtime = runtime;
+    Runtime = runtime;
     return this;
   }
 
@@ -99,7 +99,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithArchitecture(string architecture)
   {
-    _architecture = architecture;
+    Architecture = architecture;
     return this;
   }
 
@@ -110,7 +110,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithOperatingSystem(string operatingSystem)
   {
-    _operatingSystem = operatingSystem;
+    OperatingSystem = operatingSystem;
     return this;
   }
 
@@ -121,7 +121,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithOutput(string outputPath)
   {
-    _outputPath = outputPath;
+    OutputPath = outputPath;
     return this;
   }
 
@@ -132,7 +132,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithVerbosity(string verbosity)
   {
-    _verbosity = verbosity;
+    Verbosity = verbosity;
     return this;
   }
 
@@ -143,7 +143,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithTerminalLogger(string mode)
   {
-    _terminalLogger = mode;
+    TerminalLogger = mode;
     return this;
   }
 
@@ -153,7 +153,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithNoRestore()
   {
-    _noRestore = true;
+    NoRestore = true;
     return this;
   }
 
@@ -163,7 +163,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithNoDependencies()
   {
-    _noDependencies = true;
+    NoDependencies = true;
     return this;
   }
 
@@ -173,7 +173,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithNoIncremental()
   {
-    _noIncremental = true;
+    NoIncremental = true;
     return this;
   }
 
@@ -183,7 +183,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithNoLogo()
   {
-    _noLogo = true;
+    NoLogo = true;
     return this;
   }
 
@@ -193,7 +193,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithForce()
   {
-    _force = true;
+    Force = true;
     return this;
   }
 
@@ -203,7 +203,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -215,7 +215,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithProperty(string name, string value)
   {
-    _properties[name] = value;
+    Properties[name] = value;
     return this;
   }
 
@@ -228,7 +228,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   {
     foreach (KeyValuePair<string, string> kvp in properties)
     {
-      _properties[kvp.Key] = kvp.Value;
+      Properties[kvp.Key] = kvp.Value;
     }
     
     return this;
@@ -241,7 +241,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -253,7 +253,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -263,7 +263,7 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetBuildBuilder WithNoValidation()
   {
-    _options = _options.WithNoValidation();
+    Options = Options.WithNoValidation();
     return this;
   }
 
@@ -273,108 +273,108 @@ public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
   /// <returns>A CommandResult for further processing</returns>
   public CommandResult Build()
   {
-    var arguments = new List<string> { "build" };
+    List<string> arguments = new() { "build" };
 
     // Add project if specified
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
-      arguments.Add(_project);
+      arguments.Add(Project);
     }
 
     // Add configuration if specified
-    if (!string.IsNullOrWhiteSpace(_configuration))
+    if (!string.IsNullOrWhiteSpace(Configuration))
     {
       arguments.Add("--configuration");
-      arguments.Add(_configuration);
+      arguments.Add(Configuration);
     }
 
     // Add framework if specified
-    if (!string.IsNullOrWhiteSpace(_framework))
+    if (!string.IsNullOrWhiteSpace(Framework))
     {
       arguments.Add("--framework");
-      arguments.Add(_framework);
+      arguments.Add(Framework);
     }
 
     // Add runtime if specified
-    if (!string.IsNullOrWhiteSpace(_runtime))
+    if (!string.IsNullOrWhiteSpace(Runtime))
     {
       arguments.Add("--runtime");
-      arguments.Add(_runtime);
+      arguments.Add(Runtime);
     }
 
     // Add architecture if specified
-    if (!string.IsNullOrWhiteSpace(_architecture))
+    if (!string.IsNullOrWhiteSpace(Architecture))
     {
       arguments.Add("--arch");
-      arguments.Add(_architecture);
+      arguments.Add(Architecture);
     }
 
     // Add operating system if specified
-    if (!string.IsNullOrWhiteSpace(_operatingSystem))
+    if (!string.IsNullOrWhiteSpace(OperatingSystem))
     {
       arguments.Add("--os");
-      arguments.Add(_operatingSystem);
+      arguments.Add(OperatingSystem);
     }
 
     // Add output path if specified
-    if (!string.IsNullOrWhiteSpace(_outputPath))
+    if (!string.IsNullOrWhiteSpace(OutputPath))
     {
       arguments.Add("--output");
-      arguments.Add(_outputPath);
+      arguments.Add(OutputPath);
     }
 
     // Add verbosity if specified
-    if (!string.IsNullOrWhiteSpace(_verbosity))
+    if (!string.IsNullOrWhiteSpace(Verbosity))
     {
       arguments.Add("--verbosity");
-      arguments.Add(_verbosity);
+      arguments.Add(Verbosity);
     }
 
     // Add terminal logger if specified
-    if (!string.IsNullOrWhiteSpace(_terminalLogger))
+    if (!string.IsNullOrWhiteSpace(TerminalLogger))
     {
       arguments.Add("--tl");
-      arguments.Add(_terminalLogger);
+      arguments.Add(TerminalLogger);
     }
 
     // Add boolean flags
-    if (_noRestore)
+    if (NoRestore)
     {
       arguments.Add("--no-restore");
     }
 
-    if (_noDependencies)
+    if (NoDependencies)
     {
       arguments.Add("--no-dependencies");
     }
 
-    if (_noIncremental)
+    if (NoIncremental)
     {
       arguments.Add("--no-incremental");
     }
 
-    if (_noLogo)
+    if (NoLogo)
     {
       arguments.Add("--nologo");
     }
 
-    if (_force)
+    if (Force)
     {
       arguments.Add("--force");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
     // Add MSBuild properties
-    foreach (KeyValuePair<string, string> property in _properties)
+    foreach (KeyValuePair<string, string> property in Properties)
     {
       arguments.Add($"--property:{property.Key}={property.Value}");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   /// <summary>
