@@ -63,15 +63,15 @@ jobs:
         if: github.event_name == 'release'
         run: |
           VERSION=$(grep '<Version>' Source/TimeWarp.Cli/TimeWarp.Cli.csproj | sed 's/.*<Version>\(.*\)<\/Version>.*/\1/')
-          echo "Checking if TimeWarp.Cli $VERSION is already published..."
+          echo "Checking if TimeWarp.Cli $VERSION is already published on NuGet.org..."
           
-          # Check TimeWarp.Cli using package search
-          if dotnet package search TimeWarp.Cli --exact-match --prerelease | grep -q "$VERSION"; then
+          # Check TimeWarp.Cli using package search - only check NuGet.org source
+          if dotnet package search TimeWarp.Cli --exact-match --prerelease --source https://api.nuget.org/v3/index.json | grep -q "$VERSION"; then
             echo "⚠️ WARNING: TimeWarp.Cli $VERSION is already published to NuGet.org"
             echo "❌ This version cannot be republished. Please increment the version in TimeWarp.Cli.csproj"
             exit 1
           else
-            echo "✅ TimeWarp.Cli $VERSION is not yet published"
+            echo "✅ TimeWarp.Cli $VERSION is not yet published on NuGet.org"
           fi
 
       - name: Publish to NuGet.org (Releases only)
