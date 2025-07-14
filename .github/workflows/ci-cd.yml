@@ -77,7 +77,7 @@ jobs:
       - name: Publish to NuGet.org (Releases only)
         if: github.event_name == 'release'
         run: |
-          dotnet nuget push Source/TimeWarp.Cli/bin/Release/*.nupkg \
+          dotnet nuget push LocalNuGetFeed/*.nupkg \
             --api-key ${{ secrets.NUGET_API_KEY }} \
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
@@ -88,4 +88,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Packages-${{ github.run_number }}
-          path: Source/TimeWarp.Cli/bin/Release/*.nupkg
+          path: LocalNuGetFeed/*.nupkg
