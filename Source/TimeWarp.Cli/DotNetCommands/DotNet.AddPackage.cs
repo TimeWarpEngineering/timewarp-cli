@@ -32,16 +32,16 @@ public static partial class DotNet
 /// </summary>
 public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
 {
-  private readonly string _packageName;
-  private string? _project;
-  private string? _framework;
-  private string? _version;
-  private string? _packageDirectory;
-  private bool _noRestore;
-  private bool _prerelease;
-  private bool _interactive;
-  private List<string> _sources = new();
-  private CommandOptions _options = new();
+  private readonly string PackageName;
+  private string? Project;
+  private string? Framework;
+  private string? Version;
+  private string? PackageDirectory;
+  private bool NoRestore;
+  private bool Prerelease;
+  private bool Interactive;
+  private List<string> Sources = new();
+  private CommandOptions Options = new();
 
   /// <summary>
   /// Initializes a new instance of the DotNetAddPackageBuilder class.
@@ -49,7 +49,7 @@ public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
   /// <param name="packageName">The name of the package to add</param>
   public DotNetAddPackageBuilder(string packageName)
   {
-    _packageName = packageName ?? throw new ArgumentNullException(nameof(packageName));
+    PackageName = packageName ?? throw new ArgumentNullException(nameof(packageName));
   }
 
   /// <summary>
@@ -59,7 +59,7 @@ public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetAddPackageBuilder WithProject(string project)
   {
-    _project = project;
+    Project = project;
     return this;
   }
 
@@ -70,7 +70,7 @@ public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetAddPackageBuilder WithFramework(string framework)
   {
-    _framework = framework;
+    Framework = framework;
     return this;
   }
 
@@ -81,7 +81,7 @@ public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetAddPackageBuilder WithVersion(string version)
   {
-    _version = version;
+    Version = version;
     return this;
   }
 
@@ -92,7 +92,7 @@ public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetAddPackageBuilder WithPackageDirectory(string directory)
   {
-    _packageDirectory = directory;
+    PackageDirectory = directory;
     return this;
   }
 
@@ -102,7 +102,7 @@ public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetAddPackageBuilder WithNoRestore()
   {
-    _noRestore = true;
+    NoRestore = true;
     return this;
   }
 
@@ -112,7 +112,7 @@ public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetAddPackageBuilder WithPrerelease()
   {
-    _prerelease = true;
+    Prerelease = true;
     return this;
   }
 
@@ -122,7 +122,7 @@ public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetAddPackageBuilder WithInteractive()
   {
-    _interactive = true;
+    Interactive = true;
     return this;
   }
 
@@ -133,7 +133,7 @@ public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetAddPackageBuilder WithSource(string source)
   {
-    _sources.Add(source);
+    Sources.Add(source);
     return this;
   }
 
@@ -144,7 +144,7 @@ public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetAddPackageBuilder WithSources(params string[] sources)
   {
-    _sources.AddRange(sources);
+    Sources.AddRange(sources);
     return this;
   }
 
@@ -155,7 +155,7 @@ public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetAddPackageBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -167,7 +167,7 @@ public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetAddPackageBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
@@ -177,7 +177,7 @@ public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetAddPackageBuilder WithNoValidation()
   {
-    _options = _options.WithNoValidation();
+    Options = Options.WithNoValidation();
     return this;
   }
 
@@ -187,59 +187,59 @@ public class DotNetAddPackageBuilder : ICommandBuilder<DotNetAddPackageBuilder>
   /// <returns>A CommandResult for further processing</returns>
   public CommandResult Build()
   {
-    var arguments = new List<string> { "add", "package", _packageName };
+    List<string> arguments = new() { "add", "package", PackageName };
 
     // Add project if specified
-    if (!string.IsNullOrWhiteSpace(_project))
+    if (!string.IsNullOrWhiteSpace(Project))
     {
-      arguments.Insert(1, _project);
+      arguments.Insert(1, Project);
     }
 
     // Add framework if specified
-    if (!string.IsNullOrWhiteSpace(_framework))
+    if (!string.IsNullOrWhiteSpace(Framework))
     {
       arguments.Add("--framework");
-      arguments.Add(_framework);
+      arguments.Add(Framework);
     }
 
     // Add version if specified
-    if (!string.IsNullOrWhiteSpace(_version))
+    if (!string.IsNullOrWhiteSpace(Version))
     {
       arguments.Add("--version");
-      arguments.Add(_version);
+      arguments.Add(Version);
     }
 
     // Add package directory if specified
-    if (!string.IsNullOrWhiteSpace(_packageDirectory))
+    if (!string.IsNullOrWhiteSpace(PackageDirectory))
     {
       arguments.Add("--package-directory");
-      arguments.Add(_packageDirectory);
+      arguments.Add(PackageDirectory);
     }
 
     // Add sources
-    foreach (string source in _sources)
+    foreach (string source in Sources)
     {
       arguments.Add("--source");
       arguments.Add(source);
     }
 
     // Add boolean flags
-    if (_noRestore)
+    if (NoRestore)
     {
       arguments.Add("--no-restore");
     }
 
-    if (_prerelease)
+    if (Prerelease)
     {
       arguments.Add("--prerelease");
     }
 
-    if (_interactive)
+    if (Interactive)
     {
       arguments.Add("--interactive");
     }
 
-    return CommandExtensions.Run("dotnet", arguments.ToArray(), _options);
+    return CommandExtensions.Run("dotnet", arguments.ToArray(), Options);
   }
 
   /// <summary>

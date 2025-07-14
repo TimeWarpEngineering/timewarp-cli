@@ -60,6 +60,20 @@ Tests are executable C# scripts that return exit codes. The test runner uses Tim
 4. Test in scripts using `#:package TimeWarp.Cli`
 5. Run `./Tests/RunTests.cs` to verify functionality
 
+### Creating GitHub Releases
+
+**⚠️ IMPORTANT: NEVER create tags manually when doing releases - the GitHub release process creates the tag automatically. Creating a tag first will cause the release to FAIL.**
+
+To create a release:
+```bash
+gh release create v1.0.0 --title "Release Title" --notes "Release notes" --prerelease
+```
+
+The GitHub Actions workflow will automatically:
+1. Create the tag from the release
+2. Build the NuGet package
+3. Publish to NuGet.org
+
 ### Task Management Workflow
 
 The project uses a Kanban board system located in the `Kanban/` directory:
