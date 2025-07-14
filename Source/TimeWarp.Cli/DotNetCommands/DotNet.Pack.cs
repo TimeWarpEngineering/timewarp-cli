@@ -421,12 +421,12 @@ public class DotNetPackBuilder
   }
 
   /// <summary>
-  /// Executes the dotnet pack command without capturing output.
+  /// Executes the dotnet pack command and returns the execution result.
   /// </summary>
   /// <param name="cancellationToken">Cancellation token for the operation</param>
-  /// <returns>A task representing the command execution</returns>
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  /// <returns>ExecutionResult containing command output and execution details</returns>
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }

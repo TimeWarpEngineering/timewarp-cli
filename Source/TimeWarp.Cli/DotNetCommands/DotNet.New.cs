@@ -321,9 +321,9 @@ public class DotNetNewBuilder
   /// </summary>
   /// <param name="cancellationToken">Cancellation token for the operation</param>
   /// <returns>A task representing the command execution</returns>
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -363,9 +363,9 @@ public class DotNetNewListBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -399,9 +399,9 @@ public class DotNetNewSearchBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -435,9 +435,9 @@ public class DotNetNewInstallBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -471,9 +471,9 @@ public class DotNetNewUninstallBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -505,8 +505,8 @@ public class DotNetNewUpdateBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }

@@ -364,9 +364,9 @@ public class DotNetNuGetPushBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -473,9 +473,9 @@ public class DotNetNuGetDeleteBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -544,9 +544,9 @@ public class DotNetNuGetListSourceBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -653,9 +653,9 @@ public class DotNetNuGetAddSourceBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -708,9 +708,9 @@ public class DotNetNuGetRemoveSourceBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -817,9 +817,9 @@ public class DotNetNuGetUpdateSourceBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -872,9 +872,9 @@ public class DotNetNuGetEnableSourceBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -927,9 +927,9 @@ public class DotNetNuGetDisableSourceBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -997,9 +997,9 @@ public class DotNetNuGetLocalsBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -1072,8 +1072,8 @@ public class DotNetNuGetWhyBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }

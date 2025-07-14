@@ -167,9 +167,9 @@ public class DotNetReferenceAddBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -213,9 +213,9 @@ public class DotNetReferenceListBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -269,8 +269,8 @@ public class DotNetReferenceRemoveBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }

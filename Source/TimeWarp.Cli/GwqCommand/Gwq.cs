@@ -93,8 +93,8 @@ public partial class GwqBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }

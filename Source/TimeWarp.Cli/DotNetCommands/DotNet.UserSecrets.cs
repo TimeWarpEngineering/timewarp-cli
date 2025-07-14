@@ -163,9 +163,9 @@ public class DotNetUserSecretsInitBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -218,9 +218,9 @@ public class DotNetUserSecretsSetBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -271,9 +271,9 @@ public class DotNetUserSecretsRemoveBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -322,9 +322,9 @@ public class DotNetUserSecretsListBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
 
@@ -373,8 +373,8 @@ public class DotNetUserSecretsClearBuilder
     return await Build().GetLinesAsync(cancellationToken);
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+  public async Task<ExecutionResult> ExecuteAsync(CancellationToken cancellationToken = default)
   {
-    await Build().ExecuteAsync(cancellationToken);
+    return await Build().ExecuteAsync(cancellationToken);
   }
 }
