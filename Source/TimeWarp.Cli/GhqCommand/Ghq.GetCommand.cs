@@ -10,8 +10,8 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder Get(string repository)
   {
-    _subCommand = "get";
-    _repository = repository;
+    SubCommand = "get";
+    Repository = repository;
     return this;
   }
 
@@ -31,7 +31,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithLook()
   {
-    _subCommandArguments.Add("--look");
+    SubCommandArguments.Add("--look");
     return this;
   }
 
@@ -41,7 +41,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithUpdate()
   {
-    _subCommandArguments.Add("--update");
+    SubCommandArguments.Add("--update");
     return this;
   }
 
@@ -51,7 +51,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithShallow()
   {
-    _subCommandArguments.Add("--shallow");
+    SubCommandArguments.Add("--shallow");
     return this;
   }
 
@@ -62,8 +62,8 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithBranch(string branch)
   {
-    _subCommandArguments.Add("--branch");
-    _subCommandArguments.Add(branch);
+    SubCommandArguments.Add("--branch");
+    SubCommandArguments.Add(branch);
     return this;
   }
 
@@ -73,7 +73,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithBare()
   {
-    _subCommandArguments.Add("--bare");
+    SubCommandArguments.Add("--bare");
     return this;
   }
 
@@ -83,7 +83,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithNoRecursive()
   {
-    _subCommandArguments.Add("--no-recursive");
+    SubCommandArguments.Add("--no-recursive");
     return this;
   }
 
@@ -93,7 +93,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithSilent()
   {
-    _subCommandArguments.Add("--silent");
+    SubCommandArguments.Add("--silent");
     return this;
   }
 
@@ -103,7 +103,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithParallel()
   {
-    _subCommandArguments.Add("--parallel");
+    SubCommandArguments.Add("--parallel");
     return this;
   }
 
@@ -114,8 +114,8 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithVcs(string vcs)
   {
-    _subCommandArguments.Add("--vcs");
-    _subCommandArguments.Add(vcs);
+    SubCommandArguments.Add("--vcs");
+    SubCommandArguments.Add(vcs);
     return this;
   }
 }

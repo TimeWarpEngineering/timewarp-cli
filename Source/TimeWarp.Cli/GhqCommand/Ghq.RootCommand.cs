@@ -9,7 +9,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder Root()
   {
-    _subCommand = "root";
+    SubCommand = "root";
     return this;
   }
 
@@ -19,7 +19,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithAll()
   {
-    _subCommandArguments.Add("--all");
+    SubCommandArguments.Add("--all");
     return this;
   }
 }

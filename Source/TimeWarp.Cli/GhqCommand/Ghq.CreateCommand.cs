@@ -10,8 +10,8 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder Create(string repository)
   {
-    _subCommand = "create";
-    _repository = repository;
+    SubCommand = "create";
+    Repository = repository;
     return this;
   }
 }

@@ -20,11 +20,11 @@ public static class Ghq
 /// </summary>
 public partial class GhqBuilder
 {
-  private CommandOptions _options = new();
-  private List<string> _arguments = new();
-  private string? _subCommand;
-  private string? _repository;
-  private List<string> _subCommandArguments = new();
+  private CommandOptions Options = new();
+  private List<string> Arguments = new();
+  private string? SubCommand;
+  private string? Repository;
+  private List<string> SubCommandArguments = new();
 
   /// <summary>
   /// Specifies the working directory for the command.
@@ -33,7 +33,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithWorkingDirectory(string directory)
   {
-    _options = _options.WithWorkingDirectory(directory);
+    Options = Options.WithWorkingDirectory(directory);
     return this;
   }
 
@@ -45,34 +45,34 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithEnvironmentVariable(string key, string? value)
   {
-    _options = _options.WithEnvironmentVariable(key, value);
+    Options = Options.WithEnvironmentVariable(key, value);
     return this;
   }
 
   // Build methods
   public CommandResult Build()
   {
-    var arguments = new List<string> { "ghq" };
+    List<string> arguments = new() { "ghq" };
     
     // Add subcommand
-    if (!string.IsNullOrEmpty(_subCommand))
+    if (!string.IsNullOrEmpty(SubCommand))
     {
-      arguments.Add(_subCommand);
+      arguments.Add(SubCommand);
     }
     
     // Add subcommand arguments
-    arguments.AddRange(_subCommandArguments);
+    arguments.AddRange(SubCommandArguments);
     
     // Add repository if specified
-    if (!string.IsNullOrEmpty(_repository))
+    if (!string.IsNullOrEmpty(Repository))
     {
-      arguments.Add(_repository);
+      arguments.Add(Repository);
     }
     
     // Add global arguments
-    arguments.AddRange(_arguments);
+    arguments.AddRange(Arguments);
 
-    return CommandExtensions.Run("ghq", arguments.Skip(1).ToArray(), _options);
+    return CommandExtensions.Run("ghq", arguments.Skip(1).ToArray(), Options);
   }
 
   public async Task<string> GetStringAsync(CancellationToken cancellationToken = default)

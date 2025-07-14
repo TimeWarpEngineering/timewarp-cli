@@ -10,8 +10,8 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder Remove(string repository)
   {
-    _subCommand = "rm";
-    _repository = repository;
+    SubCommand = "rm";
+    Repository = repository;
     return this;
   }
 
@@ -31,7 +31,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithDryRun()
   {
-    _subCommandArguments.Add("--dry-run");
+    SubCommandArguments.Add("--dry-run");
     return this;
   }
 }

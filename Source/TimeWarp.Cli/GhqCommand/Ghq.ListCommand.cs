@@ -9,7 +9,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder List()
   {
-    _subCommand = "list";
+    SubCommand = "list";
     return this;
   }
 
@@ -19,7 +19,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithExact()
   {
-    _subCommandArguments.Add("--exact");
+    SubCommandArguments.Add("--exact");
     return this;
   }
 
@@ -30,8 +30,8 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder FilterByVcs(string vcs)
   {
-    _subCommandArguments.Add("--vcs");
-    _subCommandArguments.Add(vcs);
+    SubCommandArguments.Add("--vcs");
+    SubCommandArguments.Add(vcs);
     return this;
   }
 
@@ -41,7 +41,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithFullPath()
   {
-    _subCommandArguments.Add("--full-path");
+    SubCommandArguments.Add("--full-path");
     return this;
   }
 
@@ -51,7 +51,7 @@ public partial class GhqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GhqBuilder WithUnique()
   {
-    _subCommandArguments.Add("--unique");
+    SubCommandArguments.Add("--unique");
     return this;
   }
 }
