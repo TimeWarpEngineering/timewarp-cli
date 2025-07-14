@@ -18,7 +18,7 @@ public static partial class DotNet
 /// <summary>
 /// Fluent builder for configuring 'dotnet run' commands.
 /// </summary>
-public class DotNetRunBuilder
+public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
 {
   private string? _project;
   private string? _configuration;
@@ -266,7 +266,7 @@ public class DotNetRunBuilder
   /// <returns>The builder instance for method chaining</returns>
   public DotNetRunBuilder WithNoValidation()
   {
-    _options = _options.WithValidation(CommandResultValidation.None);
+    _options = _options.WithNoValidation();
     return this;
   }
 

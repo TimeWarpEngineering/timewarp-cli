@@ -28,7 +28,7 @@ public static partial class DotNet
 /// <summary>
 /// Fluent builder for configuring 'dotnet publish' commands.
 /// </summary>
-public class DotNetPublishBuilder
+public class DotNetPublishBuilder : ICommandBuilder<DotNetPublishBuilder>
 {
   private string? _project;
   private string? _configuration;
@@ -346,6 +346,16 @@ public class DotNetPublishBuilder
   public DotNetPublishBuilder WithEnvironmentVariable(string key, string? value)
   {
     _options = _options.WithEnvironmentVariable(key, value);
+    return this;
+  }
+
+  /// <summary>
+  /// Disables command validation, allowing the command to complete without throwing exceptions on non-zero exit codes.
+  /// </summary>
+  /// <returns>The builder instance for method chaining</returns>
+  public DotNetPublishBuilder WithNoValidation()
+  {
+    _options = _options.WithNoValidation();
     return this;
   }
 

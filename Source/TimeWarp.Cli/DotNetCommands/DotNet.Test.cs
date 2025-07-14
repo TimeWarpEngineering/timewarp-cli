@@ -18,7 +18,7 @@ public static partial class DotNet
 /// <summary>
 /// Fluent builder for configuring 'dotnet test' commands.
 /// </summary>
-public class DotNetTestBuilder
+public class DotNetTestBuilder : ICommandBuilder<DotNetTestBuilder>
 {
   private string? _project;
   private string? _configuration;
@@ -293,6 +293,16 @@ public class DotNetTestBuilder
   public DotNetTestBuilder WithEnvironmentVariable(string key, string? value)
   {
     _options = _options.WithEnvironmentVariable(key, value);
+    return this;
+  }
+
+  /// <summary>
+  /// Disables command validation, allowing the command to complete without throwing exceptions on non-zero exit codes.
+  /// </summary>
+  /// <returns>The builder instance for method chaining</returns>
+  public DotNetTestBuilder WithNoValidation()
+  {
+    _options = _options.WithNoValidation();
     return this;
   }
 

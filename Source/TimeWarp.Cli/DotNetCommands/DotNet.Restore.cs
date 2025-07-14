@@ -28,7 +28,7 @@ public static partial class DotNet
 /// <summary>
 /// Fluent builder for configuring 'dotnet restore' commands.
 /// </summary>
-public class DotNetRestoreBuilder
+public class DotNetRestoreBuilder : ICommandBuilder<DotNetRestoreBuilder>
 {
   private string? _project;
   private string? _runtime;
@@ -230,6 +230,16 @@ public class DotNetRestoreBuilder
   public DotNetRestoreBuilder WithEnvironmentVariable(string key, string? value)
   {
     _options = _options.WithEnvironmentVariable(key, value);
+    return this;
+  }
+
+  /// <summary>
+  /// Disables command validation, allowing the command to complete without throwing exceptions on non-zero exit codes.
+  /// </summary>
+  /// <returns>The builder instance for method chaining</returns>
+  public DotNetRestoreBuilder WithNoValidation()
+  {
+    _options = _options.WithNoValidation();
     return this;
   }
 

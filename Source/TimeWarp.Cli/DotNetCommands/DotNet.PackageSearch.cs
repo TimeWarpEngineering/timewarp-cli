@@ -28,7 +28,7 @@ public static partial class DotNet
 /// <summary>
 /// Fluent builder for configuring 'dotnet package search' commands.
 /// </summary>
-public class DotNetPackageSearchBuilder
+public class DotNetPackageSearchBuilder : ICommandBuilder<DotNetPackageSearchBuilder>
 {
   private readonly string? _searchTerm;
   private List<string> _sources = new();
@@ -179,6 +179,16 @@ public class DotNetPackageSearchBuilder
   public DotNetPackageSearchBuilder WithEnvironmentVariable(string key, string? value)
   {
     _options = _options.WithEnvironmentVariable(key, value);
+    return this;
+  }
+
+  /// <summary>
+  /// Disables command validation, allowing the command to complete without throwing exceptions on non-zero exit codes.
+  /// </summary>
+  /// <returns>The builder instance for method chaining</returns>
+  public DotNetPackageSearchBuilder WithNoValidation()
+  {
+    _options = _options.WithNoValidation();
     return this;
   }
 

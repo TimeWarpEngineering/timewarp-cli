@@ -28,7 +28,7 @@ public static partial class DotNet
 /// <summary>
 /// Fluent builder for configuring 'dotnet build' commands.
 /// </summary>
-public class DotNetBuildBuilder
+public class DotNetBuildBuilder : ICommandBuilder<DotNetBuildBuilder>
 {
   private string? _project;
   private string? _configuration;

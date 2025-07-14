@@ -28,7 +28,7 @@ public static partial class DotNet
 /// <summary>
 /// Fluent builder for configuring 'dotnet pack' commands.
 /// </summary>
-public class DotNetPackBuilder
+public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
 {
   private string? _project;
   private string? _configuration;
@@ -272,6 +272,16 @@ public class DotNetPackBuilder
   public DotNetPackBuilder WithEnvironmentVariable(string key, string? value)
   {
     _options = _options.WithEnvironmentVariable(key, value);
+    return this;
+  }
+
+  /// <summary>
+  /// Disables command validation, allowing the command to complete without throwing exceptions on non-zero exit codes.
+  /// </summary>
+  /// <returns>The builder instance for method chaining</returns>
+  public DotNetPackBuilder WithNoValidation()
+  {
+    _options = _options.WithNoValidation();
     return this;
   }
 

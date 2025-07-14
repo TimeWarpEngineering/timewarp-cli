@@ -19,7 +19,7 @@ public static partial class DotNet
 /// <summary>
 /// Fluent builder for configuring 'dotnet remove package' commands.
 /// </summary>
-public class DotNetRemovePackageBuilder
+public class DotNetRemovePackageBuilder : ICommandBuilder<DotNetRemovePackageBuilder>
 {
   private readonly string _packageName;
   private string? _project;
@@ -65,6 +65,16 @@ public class DotNetRemovePackageBuilder
   public DotNetRemovePackageBuilder WithEnvironmentVariable(string key, string? value)
   {
     _options = _options.WithEnvironmentVariable(key, value);
+    return this;
+  }
+
+  /// <summary>
+  /// Disables command validation, allowing the command to complete without throwing exceptions on non-zero exit codes.
+  /// </summary>
+  /// <returns>The builder instance for method chaining</returns>
+  public DotNetRemovePackageBuilder WithNoValidation()
+  {
+    _options = _options.WithNoValidation();
     return this;
   }
 

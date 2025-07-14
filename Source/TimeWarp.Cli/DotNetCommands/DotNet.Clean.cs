@@ -28,7 +28,7 @@ public static partial class DotNet
 /// <summary>
 /// Fluent builder for configuring 'dotnet clean' commands.
 /// </summary>
-public class DotNetCleanBuilder
+public class DotNetCleanBuilder : ICommandBuilder<DotNetCleanBuilder>
 {
   private string? _project;
   private string? _configuration;
@@ -163,6 +163,16 @@ public class DotNetCleanBuilder
   public DotNetCleanBuilder WithEnvironmentVariable(string key, string? value)
   {
     _options = _options.WithEnvironmentVariable(key, value);
+    return this;
+  }
+
+  /// <summary>
+  /// Disables command validation, allowing the command to complete without throwing exceptions on non-zero exit codes.
+  /// </summary>
+  /// <returns>The builder instance for method chaining</returns>
+  public DotNetCleanBuilder WithNoValidation()
+  {
+    _options = _options.WithNoValidation();
     return this;
   }
 
