@@ -419,3 +419,6 @@ FodyWeavers.xsd
 
 # Local NuGet package cache
 LocalNuGetCache/
+
+# Scratch workspace for experimental scripts
+/Scratch/

@@ -19,6 +19,8 @@ TimeWarp.Cli is a fluent API wrapper around CliWrap for elegant C# scripting. Th
 - `Tests/` - Integration tests with custom test runner
 - `Spikes/CsScripts/` - Example scripts demonstrating API usage
 - `LocalNuGetFeed/` - Local NuGet packages for development
+- `Scratch/` - Experimental workspace with relaxed code analysis rules
+  - `Directory.Build.props` - Disables strict analysis for quick exploration scripts
 - `Kanban/` - Task management system with the following structure:
   - `Backlog/` - Future features and ideas
   - `ToDo/` - Ready to implement tasks
