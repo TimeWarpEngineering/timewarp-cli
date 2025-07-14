@@ -21,6 +21,13 @@ public static class TestRunner
       await RunTest(method);
     }
     
+    // Call cleanup method if it exists
+    MethodInfo? cleanupMethod = typeof(T).GetMethod("CleanUp", BindingFlags.Public | BindingFlags.Static);
+    if (cleanupMethod != null)
+    {
+      cleanupMethod.Invoke(null, null);
+    }
+    
     // Summary
     Console.WriteLine($"\n📊 {testClassName} Results: {PassCount}/{TotalTests} tests passed");
     Environment.Exit(PassCount == TotalTests ? 0 : 1);
@@ -28,7 +35,7 @@ public static class TestRunner
 
   private static async Task RunTest(MethodInfo method)
   {
-    if (!method.IsPublic || !method.IsStatic || method.ReturnType != typeof(Task))
+    if (!method.IsPublic || !method.IsStatic || method.ReturnType != typeof(Task) || method.Name == "CleanUp")
     {
       // Skip non-test methods
       return;

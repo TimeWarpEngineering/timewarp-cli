@@ -2,6 +2,11 @@
   <!-- Import parent Directory.Build.props -->
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
+  <PropertyGroup>
+    <!-- Disable specific analyzer warnings for test projects -->
+    <NoWarn>$(NoWarn);CA1812;CS1998</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <!-- Add TimeWarp.Cli package reference for all test projects -->
     <PackageReference Include="TimeWarp.Cli" />

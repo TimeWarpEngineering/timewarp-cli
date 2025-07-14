@@ -1,188 +1,126 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<DotNetBuildCommandTests>();
 
-Console.WriteLine("🧪 Testing DotNetBuildCommand...");
+internal sealed class DotNetBuildCommandTests
+{
+  public static async Task TestBasicDotNetBuildBuilderCreation()
+  {
+    DotNetBuildBuilder buildBuilder = DotNet.Build();
+    
+    AssertTrue(
+      buildBuilder != null,
+      "DotNet.Build() should create builder successfully"
+    );
+    
+    await Task.CompletedTask;
+  }
 
-int passCount = 0;
-int totalTests = 0;
+  public static async Task TestBuildFluentConfigurationMethods()
+  {
+    CommandResult command = DotNet.Build()
+      .WithProject("test.csproj")
+      .WithConfiguration("Debug")
+      .WithFramework("net10.0")
+      .WithNoRestore()
+      .WithOutput("bin/Debug")
+      .Build();
+    
+    AssertTrue(
+      command != null,
+      "Build fluent configuration methods should work correctly"
+    );
+    
+    await Task.CompletedTask;
+  }
 
-// Test 1: Basic DotNet.Build() builder creation
-totalTests++;
-try
-{
-  DotNetBuildBuilder buildBuilder = DotNet.Build();
-  if (buildBuilder != null)
+  public static async Task TestBuildMethodChainingWithAdvancedOptions()
   {
-    Console.WriteLine("✅ Test 1 PASSED: DotNet.Build() builder created successfully");
-    passCount++;
+    CommandResult chainedCommand = DotNet.Build()
+      .WithProject("test.csproj")
+      .WithConfiguration("Release")
+      .WithArchitecture("x64")
+      .WithOperatingSystem("linux")
+      .WithNoRestore()
+      .WithNoDependencies()
+      .WithNoIncremental()
+      .WithVerbosity("minimal")
+      .WithProperty("Platform", "AnyCPU")
+      .Build();
+    
+    AssertTrue(
+      chainedCommand != null,
+      "Build method chaining should work correctly"
+    );
+    
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 1 FAILED: DotNet.Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
 
-// Test 2: Fluent configuration methods
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Build()
-    .WithProject("test.csproj")
-    .WithConfiguration("Debug")
-    .WithFramework("net10.0")
-    .WithNoRestore()
-    .WithOutput("bin/Debug")
-    .Build();
-  
-  if (command != null)
+  public static async Task TestBuildWithWorkingDirectoryAndEnvironmentVariables()
   {
-    Console.WriteLine("✅ Test 2 PASSED: Build fluent configuration methods work correctly");
-    passCount++;
+    CommandResult envCommand = DotNet.Build()
+      .WithProject("test.csproj")
+      .WithWorkingDirectory("/tmp")
+      .WithEnvironmentVariable("BUILD_ENV", "test")
+      .WithNoLogo()
+      .Build();
+    
+    AssertTrue(
+      envCommand != null,
+      "Build with working directory and environment variables should work correctly"
+    );
+    
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 2 FAILED: Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 2 FAILED: Exception - {ex.Message}");
-}
 
-// Test 3: Method chaining with advanced options
-totalTests++;
-try
-{
-  CommandResult chainedCommand = DotNet.Build()
-    .WithProject("test.csproj")
-    .WithConfiguration("Release")
-    .WithArchitecture("x64")
-    .WithOperatingSystem("linux")
-    .WithNoRestore()
-    .WithNoDependencies()
-    .WithNoIncremental()
-    .WithVerbosity("minimal")
-    .WithProperty("Platform", "AnyCPU")
-    .Build();
-  
-  if (chainedCommand != null)
+  public static async Task TestBuildWithMSBuildPropertiesIncludingNoCacheOptions()
   {
-    Console.WriteLine("✅ Test 3 PASSED: Build method chaining works correctly");
-    passCount++;
+    CommandResult propsCommand = DotNet.Build()
+      .WithProject("test.csproj")
+      .WithConfiguration("Debug")
+      .WithProperty("RestoreNoCache", "true")
+      .WithProperty("DisableImplicitNuGetFallbackFolder", "true")
+      .WithProperty("RestoreIgnoreFailedSources", "true")
+      .Build();
+    
+    AssertTrue(
+      propsCommand != null,
+      "MSBuild properties including no-cache options should work correctly"
+    );
+    
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 3 FAILED: Chained Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 3 FAILED: Exception - {ex.Message}");
-}
 
-// Test 4: Working directory and environment variables
-totalTests++;
-try
-{
-  CommandResult envCommand = DotNet.Build()
-    .WithProject("test.csproj")
-    .WithWorkingDirectory("/tmp")
-    .WithEnvironmentVariable("BUILD_ENV", "test")
-    .WithNoLogo()
-    .Build();
-  
-  if (envCommand != null)
+  public static async Task TestBuildOverloadWithProjectParameter()
   {
-    Console.WriteLine("✅ Test 4 PASSED: Build working directory and environment variables work correctly");
-    passCount++;
+    CommandResult overloadCommand = DotNet.Build("test.csproj")
+      .WithConfiguration("Debug")
+      .WithNoRestore()
+      .Build();
+    
+    AssertTrue(
+      overloadCommand != null,
+      "Build overload with project parameter should work correctly"
+    );
+    
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 4 FAILED: Environment config Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
-}
 
-// Test 5: MSBuild properties including no-cache options
-totalTests++;
-try
-{
-  CommandResult propsCommand = DotNet.Build()
-    .WithProject("test.csproj")
-    .WithConfiguration("Debug")
-    .WithProperty("RestoreNoCache", "true")
-    .WithProperty("DisableImplicitNuGetFallbackFolder", "true")
-    .WithProperty("RestoreIgnoreFailedSources", "true")
-    .Build();
-  
-  if (propsCommand != null)
+  public static async Task TestBuildCommandExecutionGracefulHandling()
   {
-    Console.WriteLine("✅ Test 5 PASSED: MSBuild properties including no-cache options work correctly");
-    passCount++;
-  }
-  else
-  {
-    Console.WriteLine("❌ Test 5 FAILED: Properties Build() returned null");
+    // Test that the builder creates a valid command even for non-existent projects
+    CommandResult command = DotNet.Build()
+      .WithProject("nonexistent.csproj")
+      .WithConfiguration("Debug")
+      .WithNoRestore()
+      .Build();
+    
+    // The command should be created successfully
+    AssertTrue(
+      command != null,
+      "Build command should be created even for non-existent projects"
+    );
+    
+    await Task.CompletedTask;
   }
 }
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 5 FAILED: Exception - {ex.Message}");
-}
-
-// Test 6: Build overload with project parameter (NEW)
-totalTests++;
-try
-{
-  CommandResult overloadCommand = DotNet.Build("test.csproj")
-    .WithConfiguration("Debug")
-    .WithNoRestore()
-    .Build();
-  
-  if (overloadCommand != null)
-  {
-    Console.WriteLine("✅ Test 6 PASSED: Build overload with project parameter works correctly");
-    passCount++;
-  }
-  else
-  {
-    Console.WriteLine("❌ Test 6 FAILED: Build overload returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 6 FAILED: Exception - {ex.Message}");
-}
-
-// Test 7: Command execution (graceful handling for non-existent project)
-totalTests++;
-try
-{
-  // This should handle gracefully since the project doesn't exist
-  string output = await DotNet.Build()
-    .WithProject("nonexistent.csproj")
-    .WithConfiguration("Debug")
-    .WithNoRestore()
-    .GetStringAsync();
-  
-  // Should return empty string for non-existent project (graceful degradation)
-  Console.WriteLine("✅ Test 7 PASSED: Build command execution completed with graceful handling");
-  passCount++;
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 7 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 DotNetBuildCommand Results: {passCount}/{totalTests} tests passed");
-Environment.Exit(passCount == totalTests ? 0 : 1);

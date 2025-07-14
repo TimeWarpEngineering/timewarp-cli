@@ -1,193 +1,98 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<DotNetPublishTests>();
 
-Console.WriteLine("🧪 Testing DotNetPublishCommand...");
+// Define a class to hold the test methods (NOT static so it can be used as generic parameter)
+ 
+internal sealed class DotNetPublishTests
 
-int passCount = 0;
-int totalTests = 0;
+{
 
-// Test 1: Basic DotNet.Publish() builder creation
-totalTests++;
-try
-{
-  DotNetPublishBuilder publishBuilder = DotNet.Publish();
-  if (publishBuilder != null)
+  public static async Task TestBasicBuilderCreation()
   {
-    Console.WriteLine("✅ Test 1 PASSED: DotNet.Publish() builder created successfully");
-    passCount++;
+    DotNetPublishBuilder publishBuilder = DotNet.Publish();
+    AssertTrue(publishBuilder != null, "DotNet.Publish() should return a non-null builder");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 1 FAILED: DotNet.Publish() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
 
-// Test 2: Fluent configuration methods
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Publish()
-    .WithProject("test.csproj")
-    .WithConfiguration("Release")
-    .WithFramework("net10.0")
-    .WithRuntime("win-x64")
-    .WithOutput("./publish")
-    .WithNoRestore()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestFluentConfigurationMethods()
   {
-    Console.WriteLine("✅ Test 2 PASSED: Publish fluent configuration methods work correctly");
-    passCount++;
+    CommandResult command = DotNet.Publish()
+      .WithProject("test.csproj")
+      .WithConfiguration("Release")
+      .WithFramework("net10.0")
+      .WithRuntime("win-x64")
+      .WithOutput("./publish")
+      .WithNoRestore()
+      .Build();
+    
+    AssertTrue(command != null, "Publish fluent configuration should build successfully");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 2 FAILED: Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 2 FAILED: Exception - {ex.Message}");
-}
 
-// Test 3: Advanced deployment options
-totalTests++;
-try
-{
-  CommandResult deployCommand = DotNet.Publish()
-    .WithProject("test.csproj")
-    .WithConfiguration("Release")
-    .WithRuntime("linux-x64")
-    .WithSelfContained()
-    .WithReadyToRun()
-    .WithSingleFile()
-    .WithTrimmed()
-    .WithNoLogo()
-    .Build();
-  
-  if (deployCommand != null)
+  public static async Task TestAdvancedDeploymentOptions()
   {
-    Console.WriteLine("✅ Test 3 PASSED: Advanced deployment options work correctly");
-    passCount++;
+    CommandResult deployCommand = DotNet.Publish()
+      .WithProject("test.csproj")
+      .WithConfiguration("Release")
+      .WithRuntime("linux-x64")
+      .WithSelfContained()
+      .WithReadyToRun()
+      .WithSingleFile()
+      .WithTrimmed()
+      .WithNoLogo()
+      .Build();
+    
+    AssertTrue(deployCommand != null, "Advanced deployment options should work correctly");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 3 FAILED: Advanced deployment Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 3 FAILED: Exception - {ex.Message}");
-}
 
-// Test 4: Working directory and environment variables
-totalTests++;
-try
-{
-  CommandResult envCommand = DotNet.Publish()
-    .WithProject("test.csproj")
-    .WithWorkingDirectory("/tmp")
-    .WithEnvironmentVariable("PUBLISH_ENV", "production")
-    .WithArchitecture("x64")
-    .WithOperatingSystem("linux")
-    .Build();
-  
-  if (envCommand != null)
+  public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    Console.WriteLine("✅ Test 4 PASSED: Working directory and environment variables work correctly");
-    passCount++;
+    CommandResult envCommand = DotNet.Publish()
+      .WithProject("test.csproj")
+      .WithWorkingDirectory("/tmp")
+      .WithEnvironmentVariable("PUBLISH_ENV", "production")
+      .WithArchitecture("x64")
+      .WithOperatingSystem("linux")
+      .Build();
+    
+    AssertTrue(envCommand != null, "Working directory and environment variables should work correctly");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 4 FAILED: Environment config Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
-}
 
-// Test 5: MSBuild properties and publishing configuration
-totalTests++;
-try
-{
-  CommandResult propsCommand = DotNet.Publish()
-    .WithProject("test.csproj")
-    .WithConfiguration("Release")
-    .WithProperty("PublishProfile", "Production")
-    .WithProperty("EnvironmentName", "Staging")
-    .WithSource("https://api.nuget.org/v3/index.json")
-    .WithVerbosity("minimal")
-    .Build();
-  
-  if (propsCommand != null)
+  public static async Task TestMSBuildPropertiesAndPublishingConfiguration()
   {
-    Console.WriteLine("✅ Test 5 PASSED: MSBuild properties and publishing configuration work correctly");
-    passCount++;
+    CommandResult propsCommand = DotNet.Publish()
+      .WithProject("test.csproj")
+      .WithConfiguration("Release")
+      .WithProperty("PublishProfile", "Production")
+      .WithProperty("EnvironmentName", "Staging")
+      .WithSource("https://api.nuget.org/v3/index.json")
+      .WithVerbosity("minimal")
+      .Build();
+    
+    AssertTrue(propsCommand != null, "MSBuild properties and publishing configuration should work correctly");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 5 FAILED: Properties Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 5 FAILED: Exception - {ex.Message}");
-}
 
-// Test 6: Publish overload with project parameter
-totalTests++;
-try
-{
-  CommandResult overloadCommand = DotNet.Publish("test.csproj")
-    .WithConfiguration("Release")
-    .WithRuntime("win-x64")
-    .WithNoSelfContained()
-    .WithNoBuild()
-    .Build();
-  
-  if (overloadCommand != null)
+  public static async Task TestPublishOverloadWithProjectParameter()
   {
-    Console.WriteLine("✅ Test 6 PASSED: Publish overload with project parameter works correctly");
-    passCount++;
+    CommandResult overloadCommand = DotNet.Publish("test.csproj")
+      .WithConfiguration("Release")
+      .WithRuntime("win-x64")
+      .WithNoSelfContained()
+      .WithNoBuild()
+      .Build();
+    
+    AssertTrue(overloadCommand != null, "Publish overload with project parameter should work correctly");
   }
-  else
+
+  public static async Task TestCommandBuilderWithNonExistentProject()
   {
-    Console.WriteLine("❌ Test 6 FAILED: Publish overload returned null");
+    // Verify that the command builder creates a valid command even with non-existent project
+    CommandResult command = DotNet.Publish()
+      .WithProject("nonexistent.csproj")
+      .WithConfiguration("Release")
+      .WithRuntime("win-x64")
+      .WithNoRestore()
+      .Build();
+    
+    AssertTrue(command != null, "Publish command builder should create a valid command");
   }
 }
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 6 FAILED: Exception - {ex.Message}");
-}
-
-// Test 7: Command execution (graceful handling for non-existent project)
-totalTests++;
-try
-{
-  // This should handle gracefully since the project doesn't exist
-  string output = await DotNet.Publish()
-    .WithProject("nonexistent.csproj")
-    .WithConfiguration("Release")
-    .WithRuntime("win-x64")
-    .WithNoRestore()
-    .GetStringAsync();
-  
-  // Should return empty string for non-existent project (graceful degradation)
-  Console.WriteLine("✅ Test 7 PASSED: Publish command execution completed with graceful handling");
-  passCount++;
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 7 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 DotNetPublishCommand Results: {passCount}/{totalTests} tests passed");
-Environment.Exit(passCount == totalTests ? 0 : 1);

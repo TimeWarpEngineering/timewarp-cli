@@ -1,273 +1,123 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<DotNetDevCertsCommandTests>();
 
-Console.WriteLine("🧪 Testing DotNetDevCertsCommand...");
+// Define a class to hold the test methods (NOT static so it can be used as generic parameter)
+ 
+internal sealed class DotNetDevCertsCommandTests
 
-int passCount = 0;
-int totalTests = 0;
+{
+  public static async Task TestBasicDotNetDevCertsBuilderCreation()
+  {
+    DotNetDevCertsBuilder devCertsBuilder = DotNet.DevCerts();
+    AssertTrue(devCertsBuilder != null, "DotNet.DevCerts() should return a valid builder instance");
+  }
 
-// Test 1: Basic DotNet.DevCerts() builder creation
-totalTests++;
-try
-{
-  DotNetDevCertsBuilder devCertsBuilder = DotNet.DevCerts();
-  if (devCertsBuilder != null)
+  public static async Task TestDevCertsHttpsBuilderCreation()
   {
-    Console.WriteLine("✅ Test 1 PASSED: DotNet.DevCerts() builder created successfully");
-    passCount++;
+    DotNetDevCertsHttpsBuilder httpsBuilder = DotNet.DevCerts().Https();
+    AssertTrue(httpsBuilder != null, "DotNet.DevCerts().Https() should return a valid builder instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 1 FAILED: DotNet.DevCerts() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
 
-// Test 2: DevCerts.Https() builder creation
-totalTests++;
-try
-{
-  DotNetDevCertsHttpsBuilder httpsBuilder = DotNet.DevCerts().Https();
-  if (httpsBuilder != null)
+  public static async Task TestDevCertsHttpsWithCheckOption()
   {
-    Console.WriteLine("✅ Test 2 PASSED: DotNet.DevCerts().Https() builder created successfully");
-    passCount++;
+    CommandResult command = DotNet.DevCerts()
+      .Https()
+      .WithCheck()
+      .Build();
+    
+    AssertTrue(command != null, "DevCerts Https with Check option should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 2 FAILED: DotNet.DevCerts().Https() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 2 FAILED: Exception - {ex.Message}");
-}
 
-// Test 3: DevCerts Https with Check option
-totalTests++;
-try
-{
-  CommandResult command = DotNet.DevCerts()
-    .Https()
-    .WithCheck()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestDevCertsHttpsWithCleanOption()
   {
-    Console.WriteLine("✅ Test 3 PASSED: DevCerts Https with Check option works correctly");
-    passCount++;
+    CommandResult command = DotNet.DevCerts()
+      .Https()
+      .WithClean()
+      .Build();
+    
+    AssertTrue(command != null, "DevCerts Https with Clean option should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 3 FAILED: DevCerts Https Check Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 3 FAILED: Exception - {ex.Message}");
-}
 
-// Test 4: DevCerts Https with Clean option
-totalTests++;
-try
-{
-  CommandResult command = DotNet.DevCerts()
-    .Https()
-    .WithClean()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestDevCertsHttpsWithExportOptions()
   {
-    Console.WriteLine("✅ Test 4 PASSED: DevCerts Https with Clean option works correctly");
-    passCount++;
+    CommandResult command = DotNet.DevCerts()
+      .Https()
+      .WithExport()
+      .WithExportPath("./localhost.pfx")
+      .WithPassword("testpassword")
+      .WithFormat("Pfx")
+      .Build();
+    
+    AssertTrue(command != null, "DevCerts Https with Export options should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 4 FAILED: DevCerts Https Clean Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
-}
 
-// Test 5: DevCerts Https with Export options
-totalTests++;
-try
-{
-  CommandResult command = DotNet.DevCerts()
-    .Https()
-    .WithExport()
-    .WithExportPath("./localhost.pfx")
-    .WithPassword("testpassword")
-    .WithFormat("Pfx")
-    .Build();
-  
-  if (command != null)
+  public static async Task TestDevCertsHttpsWithTrustOption()
   {
-    Console.WriteLine("✅ Test 5 PASSED: DevCerts Https with Export options works correctly");
-    passCount++;
+    CommandResult command = DotNet.DevCerts()
+      .Https()
+      .WithTrust()
+      .Build();
+    
+    AssertTrue(command != null, "DevCerts Https with Trust option should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 5 FAILED: DevCerts Https Export Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 5 FAILED: Exception - {ex.Message}");
-}
 
-// Test 6: DevCerts Https with Trust option
-totalTests++;
-try
-{
-  CommandResult command = DotNet.DevCerts()
-    .Https()
-    .WithTrust()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestDevCertsHttpsWithNoPasswordOption()
   {
-    Console.WriteLine("✅ Test 6 PASSED: DevCerts Https with Trust option works correctly");
-    passCount++;
+    CommandResult command = DotNet.DevCerts()
+      .Https()
+      .WithExport()
+      .WithExportPath("./localhost.pfx")
+      .WithNoPassword()
+      .Build();
+    
+    AssertTrue(command != null, "DevCerts Https with NoPassword option should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 6 FAILED: DevCerts Https Trust Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 6 FAILED: Exception - {ex.Message}");
-}
 
-// Test 7: DevCerts Https with NoPassword option
-totalTests++;
-try
-{
-  CommandResult command = DotNet.DevCerts()
-    .Https()
-    .WithExport()
-    .WithExportPath("./localhost.pfx")
-    .WithNoPassword()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestDevCertsHttpsWithVerboseAndQuietOptions()
   {
-    Console.WriteLine("✅ Test 7 PASSED: DevCerts Https with NoPassword option works correctly");
-    passCount++;
+    CommandResult verboseCommand = DotNet.DevCerts().Https().WithVerbose().Build();
+    CommandResult quietCommand = DotNet.DevCerts().Https().WithQuiet().Build();
+    
+    AssertTrue(verboseCommand != null && quietCommand != null, 
+      "DevCerts Https with Verbose and Quiet options should return valid CommandResult instances");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 7 FAILED: DevCerts Https NoPassword Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 7 FAILED: Exception - {ex.Message}");
-}
 
-// Test 8: DevCerts Https with Verbose and Quiet options
-totalTests++;
-try
-{
-  CommandResult verboseCommand = DotNet.DevCerts().Https().WithVerbose().Build();
-  CommandResult quietCommand = DotNet.DevCerts().Https().WithQuiet().Build();
-  
-  if (verboseCommand != null && quietCommand != null)
+  public static async Task TestDevCertsHttpsWithPemFormat()
   {
-    Console.WriteLine("✅ Test 8 PASSED: DevCerts Https with Verbose and Quiet options work correctly");
-    passCount++;
+    CommandResult command = DotNet.DevCerts()
+      .Https()
+      .WithExport()
+      .WithExportPath("./localhost.pem")
+      .WithFormat("Pem")
+      .WithNoPassword()
+      .Build();
+    
+    AssertTrue(command != null, "DevCerts Https with PEM format should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 8 FAILED: DevCerts Https Verbose/Quiet Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 8 FAILED: Exception - {ex.Message}");
-}
 
-// Test 9: DevCerts Https with PEM format
-totalTests++;
-try
-{
-  CommandResult command = DotNet.DevCerts()
-    .Https()
-    .WithExport()
-    .WithExportPath("./localhost.pem")
-    .WithFormat("Pem")
-    .WithNoPassword()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    Console.WriteLine("✅ Test 9 PASSED: DevCerts Https with PEM format works correctly");
-    passCount++;
+    CommandResult command = DotNet.DevCerts()
+      .WithWorkingDirectory("/tmp")
+      .WithEnvironmentVariable("DOTNET_ENV", "test")
+      .Https()
+      .WithCheck()
+      .Build();
+    
+    AssertTrue(command != null, "Working directory and environment variables should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 9 FAILED: DevCerts Https PEM Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 9 FAILED: Exception - {ex.Message}");
-}
 
-// Test 10: Working directory and environment variables
-totalTests++;
-try
-{
-  CommandResult command = DotNet.DevCerts()
-    .WithWorkingDirectory("/tmp")
-    .WithEnvironmentVariable("DOTNET_ENV", "test")
-    .Https()
-    .WithCheck()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestDevCertsCheckCommandExecution()
   {
-    Console.WriteLine("✅ Test 10 PASSED: Working directory and environment variables work correctly");
-    passCount++;
-  }
-  else
-  {
-    Console.WriteLine("❌ Test 10 FAILED: Environment config Build() returned null");
+    // This checks if a certificate exists without making changes
+    string output = await DotNet.DevCerts()
+      .Https()
+      .WithCheck()
+      .WithQuiet()
+      .GetStringAsync();
+    
+    // Should complete without errors (graceful handling)
+    AssertTrue(output != null, "DevCerts check command should execute successfully");
   }
 }
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 10 FAILED: Exception - {ex.Message}");
-}
-
-// Test 11: Command execution (check for existing certificate - safe to test)
-totalTests++;
-try
-{
-  // This checks if a certificate exists without making changes
-  string output = await DotNet.DevCerts()
-    .Https()
-    .WithCheck()
-    .WithQuiet()
-    .GetStringAsync();
-  
-  // Should complete without errors (graceful handling)
-  Console.WriteLine("✅ Test 11 PASSED: DevCerts check command execution completed successfully");
-  passCount++;
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 11 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 DotNetDevCertsCommand Results: {passCount}/{totalTests} tests passed");
-Environment.Exit(passCount == totalTests ? 0 : 1);

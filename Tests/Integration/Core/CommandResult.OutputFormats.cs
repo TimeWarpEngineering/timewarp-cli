@@ -1,116 +1,60 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<OutputFormatsTests>();
 
-Console.WriteLine("🧪 Testing OutputFormats...");
-
-int passCount = 0;
-int totalTests = 0;
-
-// Test 1: GetStringAsync returns raw output
-totalTests++;
-try
+internal sealed class OutputFormatsTests
 {
+  public static async Task TestGetStringAsyncReturnsRawOutput()
+  {
     string result = await Run("echo", "line1\nline2\nline3").GetStringAsync();
-    if (result.Contains("line1", StringComparison.Ordinal) && result.Contains("line2", StringComparison.Ordinal) && result.Contains("line3", StringComparison.Ordinal))
-    {
-        Console.WriteLine("✅ Test 1 PASSED: GetStringAsync returns raw output with newlines");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 1 FAILED: Expected multi-line output, got '{result}'");
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
+    
+    AssertTrue(
+      result.Contains("line1", StringComparison.Ordinal) && 
+      result.Contains("line2", StringComparison.Ordinal) && 
+      result.Contains("line3", StringComparison.Ordinal),
+      "GetStringAsync should return raw output with all lines"
+    );
+  }
 
-// Test 2: GetLinesAsync splits lines correctly
-totalTests++;
-try
-{
+  public static async Task TestGetLinesAsyncSplitsLinesCorrectly()
+  {
     // Use printf to ensure consistent cross-platform newlines
     string[] lines = await Run("printf", "line1\nline2\nline3").GetLinesAsync();
-    if (lines.Length == 3 && lines[0] == "line1" && lines[1] == "line2" && lines[2] == "line3")
-    {
-        Console.WriteLine("✅ Test 2 PASSED: GetLinesAsync splits lines correctly");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 2 FAILED: Expected 3 lines [line1, line2, line3], got {lines.Length} lines: [{string.Join(", ", lines)}]");
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 2 FAILED: Exception - {ex.Message}");
-}
+    
+    AssertTrue(
+      lines.Length == 3 && lines[0] == "line1" && lines[1] == "line2" && lines[2] == "line3",
+      $"GetLinesAsync should return 3 lines [line1, line2, line3], got {lines.Length} lines: [{string.Join(", ", lines)}]"
+    );
+  }
 
-// Test 3: GetLinesAsync removes empty lines
-totalTests++;
-try
-{
+  public static async Task TestGetLinesAsyncRemovesEmptyLines()
+  {
     string[] lines = await Run("printf", "line1\n\nline2\n\n").GetLinesAsync();
-    if (lines.Length == 2 && lines[0] == "line1" && lines[1] == "line2")
-    {
-        Console.WriteLine("✅ Test 3 PASSED: GetLinesAsync removes empty lines");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 3 FAILED: Expected 2 lines [line1, line2], got {lines.Length} lines: [{string.Join(", ", lines)}]");
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 3 FAILED: Exception - {ex.Message}");
-}
+    
+    AssertTrue(
+      lines.Length == 2 && lines[0] == "line1" && lines[1] == "line2",
+      $"GetLinesAsync should remove empty lines, expected [line1, line2], got [{string.Join(", ", lines)}]"
+    );
+  }
 
-// Test 4: Empty output handling
-totalTests++;
-try
-{
+  public static async Task TestEmptyOutputHandling()
+  {
     string result = await Run("echo", "").GetStringAsync();
     string[] lines = await Run("echo", "").GetLinesAsync();
     
-    if (result.Length <= 2 && lines.Length == 0) // Allow for just newline character
-    {
-        Console.WriteLine("✅ Test 4 PASSED: Empty output handled correctly");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 4 FAILED: Empty output not handled correctly - string length: {result.Length}, lines count: {lines.Length}");
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
-}
+    AssertTrue(
+      result.Length <= 2 && lines.Length == 0,
+      $"Empty output should be handled correctly - string length: {result.Length}, lines count: {lines.Length}"
+    );
+  }
 
-// Test 5: Test with ls command (real-world scenario)
-totalTests++;
-try
-{
+  public static async Task TestRealWorldLsCommand()
+  {
     string[] files = await Run("ls", "-1").GetLinesAsync();
-    if (files.Length > 0)
-    {
-        Console.WriteLine($"✅ Test 5 PASSED: ls command returns {files.Length} files/directories");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine("❌ Test 5 FAILED: ls command returned no files");
-    }
+    
+    AssertTrue(
+      files.Length > 0,
+      $"ls command should return files/directories, found {files.Length} items"
+    );
+  }
 }
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 5 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 OutputFormats Results: {passCount}/{totalTests} tests passed");
-Environment.Exit(passCount == totalTests ? 0 : 1);

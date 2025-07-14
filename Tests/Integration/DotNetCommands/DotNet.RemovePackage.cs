@@ -1,171 +1,93 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<DotNetRemovePackageTests>();
 
-Console.WriteLine("🧪 Testing DotNetRemovePackageCommand...");
+// Define a class to hold the test methods (NOT static so it can be used as generic parameter)
+internal sealed class DotNetRemovePackageTests
+{
+  public static async Task TestBasicRemovePackageBuilderCreation()
+  {
+    DotNetRemovePackageBuilder removePackageBuilder = DotNet.RemovePackage("TestPackage");
+    
+    AssertTrue(
+      removePackageBuilder != null,
+      "DotNet.RemovePackage() should create builder successfully"
+    );
+  }
 
-int passCount = 0;
-int totalTests = 0;
+  public static async Task TestFluentConfigurationMethods()
+  {
+    CommandResult command = DotNet.RemovePackage("Microsoft.Extensions.Logging")
+      .WithProject("test.csproj")
+      .Build();
+    
+    AssertTrue(
+      command != null,
+      "RemovePackage fluent configuration methods should work correctly"
+    );
+  }
 
-// Test 1: Basic DotNet.RemovePackage() builder creation
-totalTests++;
-try
-{
-  DotNetRemovePackageBuilder removePackageBuilder = DotNet.RemovePackage("TestPackage");
-  if (removePackageBuilder != null)
+  public static async Task TestWorkingDirectoryConfiguration()
   {
-    Console.WriteLine("✅ Test 1 PASSED: DotNet.RemovePackage() builder created successfully");
-    passCount++;
+    CommandResult dirCommand = DotNet.RemovePackage("Newtonsoft.Json")
+      .WithProject("test.csproj")
+      .WithWorkingDirectory("/tmp")
+      .Build();
+    
+    AssertTrue(
+      dirCommand != null,
+      "Working directory configuration should work correctly"
+    );
   }
-  else
-  {
-    Console.WriteLine("❌ Test 1 FAILED: DotNet.RemovePackage() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
 
-// Test 2: Fluent configuration methods
-totalTests++;
-try
-{
-  CommandResult command = DotNet.RemovePackage("Microsoft.Extensions.Logging")
-    .WithProject("test.csproj")
-    .Build();
-  
-  if (command != null)
+  public static async Task TestEnvironmentVariables()
   {
-    Console.WriteLine("✅ Test 2 PASSED: RemovePackage fluent configuration methods work correctly");
-    passCount++;
+    CommandResult envCommand = DotNet.RemovePackage("TestPackage")
+      .WithProject("test.csproj")
+      .WithEnvironmentVariable("NUGET_ENV", "test")
+      .WithEnvironmentVariable("REMOVE_PACKAGE_LOG", "verbose")
+      .Build();
+    
+    AssertTrue(
+      envCommand != null,
+      "Environment variables should work correctly"
+    );
   }
-  else
-  {
-    Console.WriteLine("❌ Test 2 FAILED: Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 2 FAILED: Exception - {ex.Message}");
-}
 
-// Test 3: Working directory configuration
-totalTests++;
-try
-{
-  CommandResult dirCommand = DotNet.RemovePackage("Newtonsoft.Json")
-    .WithProject("test.csproj")
-    .WithWorkingDirectory("/tmp")
-    .Build();
-  
-  if (dirCommand != null)
+  public static async Task TestPackageNameValidation()
   {
-    Console.WriteLine("✅ Test 3 PASSED: Working directory configuration works correctly");
-    passCount++;
+    CommandResult validationCommand = DotNet.RemovePackage("Valid.Package.Name")
+      .WithProject("MyProject.csproj")
+      .Build();
+    
+    AssertTrue(
+      validationCommand != null,
+      "Package name validation should work correctly"
+    );
   }
-  else
-  {
-    Console.WriteLine("❌ Test 3 FAILED: Working directory Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 3 FAILED: Exception - {ex.Message}");
-}
 
-// Test 4: Environment variables
-totalTests++;
-try
-{
-  CommandResult envCommand = DotNet.RemovePackage("TestPackage")
-    .WithProject("test.csproj")
-    .WithEnvironmentVariable("NUGET_ENV", "test")
-    .WithEnvironmentVariable("REMOVE_PACKAGE_LOG", "verbose")
-    .Build();
-  
-  if (envCommand != null)
+  public static async Task TestMultipleConfigurationChaining()
   {
-    Console.WriteLine("✅ Test 4 PASSED: Environment variables work correctly");
-    passCount++;
+    CommandResult chainCommand = DotNet.RemovePackage("ChainedPackage")
+      .WithProject("test.csproj")
+      .WithWorkingDirectory("/project")
+      .WithEnvironmentVariable("BUILD_ENV", "test")
+      .Build();
+    
+    AssertTrue(
+      chainCommand != null,
+      "Multiple configuration chaining should work correctly"
+    );
   }
-  else
-  {
-    Console.WriteLine("❌ Test 4 FAILED: Environment config Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
-}
 
-// Test 5: Package name validation
-totalTests++;
-try
-{
-  CommandResult validationCommand = DotNet.RemovePackage("Valid.Package.Name")
-    .WithProject("MyProject.csproj")
-    .Build();
-  
-  if (validationCommand != null)
+  public static async Task TestCommandExecutionGracefulHandling()
   {
-    Console.WriteLine("✅ Test 5 PASSED: Package name validation works correctly");
-    passCount++;
-  }
-  else
-  {
-    Console.WriteLine("❌ Test 5 FAILED: Package name validation Build() returned null");
+    // This should throw an exception since the project doesn't exist
+    await AssertThrowsAsync<Exception>(
+      async () => await DotNet.RemovePackage("TestPackage")
+        .WithProject("nonexistent.csproj")
+        .GetStringAsync(),
+      "RemovePackage should throw exception for non-existent project"
+    );
   }
 }
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 5 FAILED: Exception - {ex.Message}");
-}
-
-// Test 6: Multiple configuration chaining
-totalTests++;
-try
-{
-  CommandResult chainCommand = DotNet.RemovePackage("ChainedPackage")
-    .WithProject("test.csproj")
-    .WithWorkingDirectory("/project")
-    .WithEnvironmentVariable("BUILD_ENV", "test")
-    .Build();
-  
-  if (chainCommand != null)
-  {
-    Console.WriteLine("✅ Test 6 PASSED: Multiple configuration chaining works correctly");
-    passCount++;
-  }
-  else
-  {
-    Console.WriteLine("❌ Test 6 FAILED: Chained config Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 6 FAILED: Exception - {ex.Message}");
-}
-
-// Test 7: Command execution (graceful handling for non-existent project)
-totalTests++;
-try
-{
-  // This should handle gracefully since the project doesn't exist
-  string output = await DotNet.RemovePackage("TestPackage")
-    .WithProject("nonexistent.csproj")
-    .GetStringAsync();
-  
-  // Should return empty string for non-existent project (graceful degradation)
-  Console.WriteLine("✅ Test 7 PASSED: RemovePackage command execution completed with graceful handling");
-  passCount++;
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 7 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 DotNetRemovePackageCommand Results: {passCount}/{totalTests} tests passed");
-Environment.Exit(passCount == totalTests ? 0 : 1);

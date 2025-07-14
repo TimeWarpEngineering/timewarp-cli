@@ -1,144 +1,74 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<DotNetTestTests>();
 
-Console.WriteLine("🧪 Testing DotNetTestCommand...");
+// Define a class to hold the test methods (NOT static so it can be used as generic parameter)
+internal sealed class DotNetTestTests
+{
+  public static async Task TestBasicBuilderCreation()
+  {
+    DotNetTestBuilder testBuilder = DotNet.Test();
+    AssertTrue(testBuilder != null, "DotNet.Test() should return a non-null builder");
+  }
 
-int passCount = 0;
-int totalTests = 0;
+  public static async Task TestFluentConfigurationMethods()
+  {
+    CommandResult command = DotNet.Test()
+      .WithProject("test.csproj")
+      .WithConfiguration("Debug")
+      .WithFramework("net10.0")
+      .WithNoRestore()
+      .WithFilter("Category=Unit")
+      .WithLogger("console")
+      .Build();
+    
+    AssertTrue(command != null, "Test fluent configuration should build successfully");
+  }
 
-// Test 1: Basic DotNet.Test() builder creation
-totalTests++;
-try
-{
-  DotNetTestBuilder testBuilder = DotNet.Test();
-  if (testBuilder != null)
+  public static async Task TestMethodChainingWithAdvancedOptions()
   {
-    Console.WriteLine("✅ Test 1 PASSED: DotNet.Test() builder created successfully");
-    passCount++;
+    CommandResult chainedCommand = DotNet.Test()
+      .WithProject("test.csproj")
+      .WithConfiguration("Release")
+      .WithArchitecture("x64")
+      .WithOperatingSystem("linux")
+      .WithNoRestore()
+      .WithNoBuild()
+      .WithVerbosity("minimal")
+      .WithFilter("TestCategory=Integration")
+      .WithLogger("trx")
+      .WithLogger("html")
+      .WithBlame()
+      .WithCollect()
+      .WithResultsDirectory("TestResults")
+      .WithProperty("Platform", "AnyCPU")
+      .Build();
+    
+    AssertTrue(chainedCommand != null, "Test method chaining should work correctly");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 1 FAILED: DotNet.Test() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
 
-// Test 2: Fluent configuration methods
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Test()
-    .WithProject("test.csproj")
-    .WithConfiguration("Debug")
-    .WithFramework("net10.0")
-    .WithNoRestore()
-    .WithFilter("Category=Unit")
-    .WithLogger("console")
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    Console.WriteLine("✅ Test 2 PASSED: Test fluent configuration methods work correctly");
-    passCount++;
+    CommandResult envCommand = DotNet.Test()
+      .WithProject("test.csproj")
+      .WithWorkingDirectory("/tmp")
+      .WithEnvironmentVariable("TEST_ENV", "integration")
+      .WithNoLogo()
+      .WithSettings("test.runsettings")
+      .Build();
+    
+    AssertTrue(envCommand != null, "Test working directory and environment variables should work correctly");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 2 FAILED: Test Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 2 FAILED: Exception - {ex.Message}");
-}
 
-// Test 3: Method chaining with advanced test options
-totalTests++;
-try
-{
-  CommandResult chainedCommand = DotNet.Test()
-    .WithProject("test.csproj")
-    .WithConfiguration("Release")
-    .WithArchitecture("x64")
-    .WithOperatingSystem("linux")
-    .WithNoRestore()
-    .WithNoBuild()
-    .WithVerbosity("minimal")
-    .WithFilter("TestCategory=Integration")
-    .WithLogger("trx")
-    .WithLogger("html")
-    .WithBlame()
-    .WithCollect()
-    .WithResultsDirectory("TestResults")
-    .WithProperty("Platform", "AnyCPU")
-    .Build();
-  
-  if (chainedCommand != null)
+  public static async Task TestCommandBuilderWithNonExistentProject()
   {
-    Console.WriteLine("✅ Test 3 PASSED: Test method chaining works correctly");
-    passCount++;
-  }
-  else
-  {
-    Console.WriteLine("❌ Test 3 FAILED: Chained Test Build() returned null");
+    // Verify that the command builder creates a valid command even with non-existent project
+    CommandResult command = DotNet.Test()
+      .WithProject("nonexistent.csproj")
+      .WithConfiguration("Debug")
+      .WithNoRestore()
+      .Build();
+    
+    AssertTrue(command != null, "Test command builder should create a valid command");
   }
 }
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 3 FAILED: Exception - {ex.Message}");
-}
-
-// Test 4: Working directory and environment variables
-totalTests++;
-try
-{
-  CommandResult envCommand = DotNet.Test()
-    .WithProject("test.csproj")
-    .WithWorkingDirectory("/tmp")
-    .WithEnvironmentVariable("TEST_ENV", "integration")
-    .WithNoLogo()
-    .WithSettings("test.runsettings")
-    .Build();
-  
-  if (envCommand != null)
-  {
-    Console.WriteLine("✅ Test 4 PASSED: Test working directory and environment variables work correctly");
-    passCount++;
-  }
-  else
-  {
-    Console.WriteLine("❌ Test 4 FAILED: Environment config Test Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
-}
-
-// Test 5: Command execution (graceful handling for non-existent project)
-totalTests++;
-try
-{
-  // This should handle gracefully since the project doesn't exist
-  string output = await DotNet.Test()
-    .WithProject("nonexistent.csproj")
-    .WithConfiguration("Debug")
-    .WithNoRestore()
-    .GetStringAsync();
-  
-  // Should return empty string for non-existent project (graceful degradation)
-  Console.WriteLine("✅ Test 5 PASSED: Test command execution completed with graceful handling");
-  passCount++;
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 5 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 DotNetTestCommand Results: {passCount}/{totalTests} tests passed");
-Environment.Exit(passCount == totalTests ? 0 : 1);

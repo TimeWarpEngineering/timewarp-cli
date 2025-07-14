@@ -1,251 +1,126 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<DotNetNuGetTests>();
 
-Console.WriteLine("🧪 Testing DotNetNuGetCommand...");
+// Define a class to hold the test methods (NOT static so it can be used as generic parameter)
+ 
+internal sealed class DotNetNuGetTests
 
-int passCount = 0;
-int totalTests = 0;
+{
+  public static async Task BasicDotNetNuGetBuilderCreation()
+  {
+    DotNetNuGetBuilder nugetBuilder = DotNet.NuGet();
+    AssertTrue(nugetBuilder != null, "DotNet.NuGet() returned null");
+    await Task.CompletedTask;
+  }
 
-// Test 1: Basic DotNet.NuGet() builder creation
-totalTests++;
-try
-{
-  DotNetNuGetBuilder nugetBuilder = DotNet.NuGet();
-  if (nugetBuilder != null)
+  public static async Task NuGetPushCommandBuilder()
   {
-    Console.WriteLine("✅ Test 1 PASSED: DotNet.NuGet() builder created successfully");
-    passCount++;
+    CommandResult command = DotNet.NuGet()
+      .Push("package.nupkg")
+      .WithSource("https://api.nuget.org/v3/index.json")
+      .WithApiKey("test-key")
+      .WithTimeout(300)
+      .Build();
+    
+    AssertTrue(command != null, "NuGet Push Build() returned null");
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 1 FAILED: DotNet.NuGet() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
 
-// Test 2: NuGet Push command builder
-totalTests++;
-try
-{
-  CommandResult command = DotNet.NuGet()
-    .Push("package.nupkg")
-    .WithSource("https://api.nuget.org/v3/index.json")
-    .WithApiKey("test-key")
-    .WithTimeout(300)
-    .Build();
-  
-  if (command != null)
+  public static async Task NuGetDeleteCommandBuilder()
   {
-    Console.WriteLine("✅ Test 2 PASSED: NuGet Push command works correctly");
-    passCount++;
+    CommandResult command = DotNet.NuGet()
+      .Delete("MyPackage", "1.0.0")
+      .WithSource("https://api.nuget.org/v3/index.json")
+      .WithApiKey("test-key")
+      .WithInteractive()
+      .Build();
+    
+    AssertTrue(command != null, "NuGet Delete Build() returned null");
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 2 FAILED: NuGet Push Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 2 FAILED: Exception - {ex.Message}");
-}
 
-// Test 3: NuGet Delete command builder
-totalTests++;
-try
-{
-  CommandResult command = DotNet.NuGet()
-    .Delete("MyPackage", "1.0.0")
-    .WithSource("https://api.nuget.org/v3/index.json")
-    .WithApiKey("test-key")
-    .WithInteractive()
-    .Build();
-  
-  if (command != null)
+  public static async Task NuGetListSourcesCommandBuilder()
   {
-    Console.WriteLine("✅ Test 3 PASSED: NuGet Delete command works correctly");
-    passCount++;
+    CommandResult command = DotNet.NuGet()
+      .ListSources()
+      .WithFormat("Detailed")
+      .WithConfigFile("nuget.config")
+      .Build();
+    
+    AssertTrue(command != null, "NuGet ListSources Build() returned null");
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 3 FAILED: NuGet Delete Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 3 FAILED: Exception - {ex.Message}");
-}
 
-// Test 4: NuGet ListSources command builder
-totalTests++;
-try
-{
-  CommandResult command = DotNet.NuGet()
-    .ListSources()
-    .WithFormat("Detailed")
-    .WithConfigFile("nuget.config")
-    .Build();
-  
-  if (command != null)
+  public static async Task NuGetAddSourceCommandBuilder()
   {
-    Console.WriteLine("✅ Test 4 PASSED: NuGet ListSources command works correctly");
-    passCount++;
+    CommandResult command = DotNet.NuGet()
+      .AddSource("https://my-private-feed.com/v3/index.json")
+      .WithName("MyPrivateFeed")
+      .WithUsername("testuser")
+      .WithPassword("testpass")
+      .Build();
+    
+    AssertTrue(command != null, "NuGet AddSource Build() returned null");
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 4 FAILED: NuGet ListSources Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
-}
 
-// Test 5: NuGet AddSource command builder
-totalTests++;
-try
-{
-  CommandResult command = DotNet.NuGet()
-    .AddSource("https://my-private-feed.com/v3/index.json")
-    .WithName("MyPrivateFeed")
-    .WithUsername("testuser")
-    .WithPassword("testpass")
-    .Build();
-  
-  if (command != null)
+  public static async Task NuGetSourceManagementCommands()
   {
-    Console.WriteLine("✅ Test 5 PASSED: NuGet AddSource command works correctly");
-    passCount++;
+    CommandResult enableCommand = DotNet.NuGet().EnableSource("MySource").Build();
+    CommandResult disableCommand = DotNet.NuGet().DisableSource("MySource").Build();
+    CommandResult removeCommand = DotNet.NuGet().RemoveSource("MySource").Build();
+    CommandResult updateCommand = DotNet.NuGet().UpdateSource("MySource").WithSource("https://new-url.com").Build();
+    
+    AssertTrue(
+      enableCommand != null && disableCommand != null && removeCommand != null && updateCommand != null,
+      "One or more source management commands returned null"
+    );
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 5 FAILED: NuGet AddSource Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 5 FAILED: Exception - {ex.Message}");
-}
 
-// Test 6: NuGet source management commands
-totalTests++;
-try
-{
-  CommandResult enableCommand = DotNet.NuGet().EnableSource("MySource").Build();
-  CommandResult disableCommand = DotNet.NuGet().DisableSource("MySource").Build();
-  CommandResult removeCommand = DotNet.NuGet().RemoveSource("MySource").Build();
-  CommandResult updateCommand = DotNet.NuGet().UpdateSource("MySource").WithSource("https://new-url.com").Build();
-  
-  if (enableCommand != null && disableCommand != null && removeCommand != null && updateCommand != null)
+  public static async Task NuGetLocalsCommandBuilder()
   {
-    Console.WriteLine("✅ Test 6 PASSED: NuGet source management commands work correctly");
-    passCount++;
+    CommandResult clearCommand = DotNet.NuGet().Locals().Clear("http-cache").Build();
+    CommandResult listCommand = DotNet.NuGet().Locals().List("global-packages").Build();
+    
+    AssertTrue(clearCommand != null && listCommand != null, "NuGet Locals commands returned null");
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 6 FAILED: One or more source management commands returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 6 FAILED: Exception - {ex.Message}");
-}
 
-// Test 7: NuGet Locals command builder
-totalTests++;
-try
-{
-  CommandResult clearCommand = DotNet.NuGet().Locals().Clear("http-cache").Build();
-  CommandResult listCommand = DotNet.NuGet().Locals().List("global-packages").Build();
-  
-  if (clearCommand != null && listCommand != null)
+  public static async Task NuGetWhyCommandBuilder()
   {
-    Console.WriteLine("✅ Test 7 PASSED: NuGet Locals commands work correctly");
-    passCount++;
+    CommandResult command = DotNet.NuGet()
+      .Why("Microsoft.Extensions.Logging")
+      .WithProject("MyApp.csproj")
+      .WithFramework("net10.0")
+      .Build();
+    
+    AssertTrue(command != null, "NuGet Why Build() returned null");
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 7 FAILED: NuGet Locals commands returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 7 FAILED: Exception - {ex.Message}");
-}
 
-// Test 8: NuGet Why command builder
-totalTests++;
-try
-{
-  CommandResult command = DotNet.NuGet()
-    .Why("Microsoft.Extensions.Logging")
-    .WithProject("MyApp.csproj")
-    .WithFramework("net10.0")
-    .Build();
-  
-  if (command != null)
+  public static async Task WorkingDirectoryAndEnvironmentVariables()
   {
-    Console.WriteLine("✅ Test 8 PASSED: NuGet Why command works correctly");
-    passCount++;
+    CommandResult command = DotNet.NuGet()
+      .WithWorkingDirectory("/tmp")
+      .WithEnvironmentVariable("NUGET_ENV", "test")
+      .ListSources()
+      .Build();
+    
+    AssertTrue(command != null, "Environment config Build() returned null");
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 8 FAILED: NuGet Why Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 8 FAILED: Exception - {ex.Message}");
-}
 
-// Test 9: Working directory and environment variables
-totalTests++;
-try
-{
-  CommandResult command = DotNet.NuGet()
-    .WithWorkingDirectory("/tmp")
-    .WithEnvironmentVariable("NUGET_ENV", "test")
-    .ListSources()
-    .Build();
-  
-  if (command != null)
+  public static async Task CommandExecutionListSources()
   {
-    Console.WriteLine("✅ Test 9 PASSED: Working directory and environment variables work correctly");
-    passCount++;
-  }
-  else
-  {
-    Console.WriteLine("❌ Test 9 FAILED: Environment config Build() returned null");
+    // This should show configured NuGet sources
+    string output = await DotNet.NuGet()
+      .ListSources()
+      .WithFormat("Short")
+      .GetStringAsync();
+    
+    // Should return source information or handle gracefully
+    AssertTrue(true, "NuGet ListSources command execution should not throw");
   }
 }
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 9 FAILED: Exception - {ex.Message}");
-}
-
-// Test 10: Command execution (list sources - safe to test)
-totalTests++;
-try
-{
-  // This should show configured NuGet sources
-  string output = await DotNet.NuGet()
-    .ListSources()
-    .WithFormat("Short")
-    .GetStringAsync();
-  
-  // Should return source information or handle gracefully
-  Console.WriteLine("✅ Test 10 PASSED: NuGet ListSources command execution completed successfully");
-  passCount++;
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 10 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 DotNetNuGetCommand Results: {passCount}/{totalTests} tests passed");
-Environment.Exit(passCount == totalTests ? 0 : 1);

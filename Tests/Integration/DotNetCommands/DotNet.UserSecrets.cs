@@ -1,288 +1,123 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<DotNetUserSecretsCommandTests>();
 
-Console.WriteLine("🧪 Testing DotNetUserSecretsCommand...");
+// Define a class to hold the test methods (NOT static so it can be used as generic parameter)
+ 
+internal sealed class DotNetUserSecretsCommandTests
 
-int passCount = 0;
-int totalTests = 0;
+{
+  public static async Task TestBasicDotNetUserSecretsBuilderCreation()
+  {
+    DotNetUserSecretsBuilder userSecretsBuilder = DotNet.UserSecrets();
+    AssertTrue(userSecretsBuilder != null, "DotNet.UserSecrets() should return a valid builder instance");
+  }
 
-// Test 1: Basic DotNet.UserSecrets() builder creation
-totalTests++;
-try
-{
-  DotNetUserSecretsBuilder userSecretsBuilder = DotNet.UserSecrets();
-  if (userSecretsBuilder != null)
+  public static async Task TestUserSecretsInitCommand()
   {
-    Console.WriteLine("✅ Test 1 PASSED: DotNet.UserSecrets() builder created successfully");
-    passCount++;
+    CommandResult command = DotNet.UserSecrets()
+      .Init()
+      .Build();
+    
+    AssertTrue(command != null, "UserSecrets Init command should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 1 FAILED: DotNet.UserSecrets() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
 
-// Test 2: UserSecrets Init command
-totalTests++;
-try
-{
-  CommandResult command = DotNet.UserSecrets()
-    .Init()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestUserSecretsInitWithProject()
   {
-    Console.WriteLine("✅ Test 2 PASSED: UserSecrets Init command works correctly");
-    passCount++;
+    CommandResult command = DotNet.UserSecrets()
+      .WithProject("MyApp.csproj")
+      .Init()
+      .Build();
+    
+    AssertTrue(command != null, "UserSecrets Init with project should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 2 FAILED: UserSecrets Init Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 2 FAILED: Exception - {ex.Message}");
-}
 
-// Test 3: UserSecrets Init with project
-totalTests++;
-try
-{
-  CommandResult command = DotNet.UserSecrets()
-    .WithProject("MyApp.csproj")
-    .Init()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestUserSecretsInitWithId()
   {
-    Console.WriteLine("✅ Test 3 PASSED: UserSecrets Init with project works correctly");
-    passCount++;
+    CommandResult command = DotNet.UserSecrets()
+      .WithId("my-app-secrets")
+      .Init()
+      .Build();
+    
+    AssertTrue(command != null, "UserSecrets Init with ID should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 3 FAILED: UserSecrets Init with project Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 3 FAILED: Exception - {ex.Message}");
-}
 
-// Test 4: UserSecrets Init with ID
-totalTests++;
-try
-{
-  CommandResult command = DotNet.UserSecrets()
-    .WithId("my-app-secrets")
-    .Init()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestUserSecretsSetCommand()
   {
-    Console.WriteLine("✅ Test 4 PASSED: UserSecrets Init with ID works correctly");
-    passCount++;
+    CommandResult command = DotNet.UserSecrets()
+      .Set("ConnectionString", "Server=localhost;Database=MyApp;")
+      .Build();
+    
+    AssertTrue(command != null, "UserSecrets Set command should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 4 FAILED: UserSecrets Init with ID Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
-}
 
-// Test 5: UserSecrets Set command
-totalTests++;
-try
-{
-  CommandResult command = DotNet.UserSecrets()
-    .Set("ConnectionString", "Server=localhost;Database=MyApp;")
-    .Build();
-  
-  if (command != null)
+  public static async Task TestUserSecretsSetWithProject()
   {
-    Console.WriteLine("✅ Test 5 PASSED: UserSecrets Set command works correctly");
-    passCount++;
+    CommandResult command = DotNet.UserSecrets()
+      .WithProject("MyApp.csproj")
+      .Set("ApiKey", "secret-key-value")
+      .Build();
+    
+    AssertTrue(command != null, "UserSecrets Set with project should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 5 FAILED: UserSecrets Set Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 5 FAILED: Exception - {ex.Message}");
-}
 
-// Test 6: UserSecrets Set with project
-totalTests++;
-try
-{
-  CommandResult command = DotNet.UserSecrets()
-    .WithProject("MyApp.csproj")
-    .Set("ApiKey", "secret-key-value")
-    .Build();
-  
-  if (command != null)
+  public static async Task TestUserSecretsRemoveCommand()
   {
-    Console.WriteLine("✅ Test 6 PASSED: UserSecrets Set with project works correctly");
-    passCount++;
+    CommandResult command = DotNet.UserSecrets()
+      .Remove("ConnectionString")
+      .Build();
+    
+    AssertTrue(command != null, "UserSecrets Remove command should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 6 FAILED: UserSecrets Set with project Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 6 FAILED: Exception - {ex.Message}");
-}
 
-// Test 7: UserSecrets Remove command
-totalTests++;
-try
-{
-  CommandResult command = DotNet.UserSecrets()
-    .Remove("ConnectionString")
-    .Build();
-  
-  if (command != null)
+  public static async Task TestUserSecretsListCommand()
   {
-    Console.WriteLine("✅ Test 7 PASSED: UserSecrets Remove command works correctly");
-    passCount++;
+    CommandResult command = DotNet.UserSecrets()
+      .List()
+      .Build();
+    
+    AssertTrue(command != null, "UserSecrets List command should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 7 FAILED: UserSecrets Remove Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 7 FAILED: Exception - {ex.Message}");
-}
 
-// Test 8: UserSecrets List command
-totalTests++;
-try
-{
-  CommandResult command = DotNet.UserSecrets()
-    .List()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestUserSecretsClearCommand()
   {
-    Console.WriteLine("✅ Test 8 PASSED: UserSecrets List command works correctly");
-    passCount++;
+    CommandResult command = DotNet.UserSecrets()
+      .Clear()
+      .Build();
+    
+    AssertTrue(command != null, "UserSecrets Clear command should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 8 FAILED: UserSecrets List Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 8 FAILED: Exception - {ex.Message}");
-}
 
-// Test 9: UserSecrets Clear command
-totalTests++;
-try
-{
-  CommandResult command = DotNet.UserSecrets()
-    .Clear()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestUserSecretsWithAllOptions()
   {
-    Console.WriteLine("✅ Test 9 PASSED: UserSecrets Clear command works correctly");
-    passCount++;
+    CommandResult command = DotNet.UserSecrets()
+      .WithProject("MyApp.csproj")
+      .WithId("my-app-secrets")
+      .Set("DatabaseConnection", "Server=localhost;")
+      .Build();
+    
+    AssertTrue(command != null, "UserSecrets with all options should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 9 FAILED: UserSecrets Clear Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 9 FAILED: Exception - {ex.Message}");
-}
 
-// Test 10: UserSecrets with all options
-totalTests++;
-try
-{
-  CommandResult command = DotNet.UserSecrets()
-    .WithProject("MyApp.csproj")
-    .WithId("my-app-secrets")
-    .Set("DatabaseConnection", "Server=localhost;")
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    Console.WriteLine("✅ Test 10 PASSED: UserSecrets with all options works correctly");
-    passCount++;
+    CommandResult command = DotNet.UserSecrets()
+      .WithWorkingDirectory("/tmp")
+      .WithEnvironmentVariable("DOTNET_ENV", "test")
+      .List()
+      .Build();
+    
+    AssertTrue(command != null, "Working directory and environment variables should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 10 FAILED: UserSecrets with all options Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 10 FAILED: Exception - {ex.Message}");
-}
 
-// Test 11: Working directory and environment variables
-totalTests++;
-try
-{
-  CommandResult command = DotNet.UserSecrets()
-    .WithWorkingDirectory("/tmp")
-    .WithEnvironmentVariable("DOTNET_ENV", "test")
-    .List()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestUserSecretsListCommandExecution()
   {
-    Console.WriteLine("✅ Test 11 PASSED: Working directory and environment variables work correctly");
-    passCount++;
-  }
-  else
-  {
-    Console.WriteLine("❌ Test 11 FAILED: Environment config Build() returned null");
+    // This will fail gracefully without a project but tests the execution path
+    await AssertThrowsAsync<Exception>(
+      async () => await DotNet.UserSecrets()
+        .List()
+        .GetStringAsync(),
+      "should throw for user secrets list without valid project (default validation behavior)"
+    );
   }
 }
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 11 FAILED: Exception - {ex.Message}");
-}
-
-// Test 12: Command execution (list - safe to test without project)
-totalTests++;
-try
-{
-  // This will fail gracefully without a project but tests the execution path
-  string output = await DotNet.UserSecrets()
-    .List()
-    .GetStringAsync();
-  
-  // Should handle gracefully (return empty or error message)
-  Console.WriteLine("✅ Test 12 PASSED: UserSecrets list command execution completed with graceful handling");
-  passCount++;
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 12 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 DotNetUserSecretsCommand Results: {passCount}/{totalTests} tests passed");
-Environment.Exit(passCount == totalTests ? 0 : 1);

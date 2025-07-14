@@ -1,194 +1,113 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<DotNetNewTests>();
 
-Console.WriteLine("🧪 Testing DotNetNewCommand...");
+// Define a class to hold the test methods (NOT static so it can be used as generic parameter)
+ 
+internal sealed class DotNetNewTests
 
-int passCount = 0;
-int totalTests = 0;
+{
+  public static async Task TestBasicNewBuilderCreation()
+  {
+    DotNetNewBuilder newBuilder = DotNet.New("console");
+    
+    AssertTrue(
+      newBuilder != null,
+      "DotNet.New() should create builder successfully"
+    );
+  }
 
-// Test 1: Basic DotNet.New() builder creation
-totalTests++;
-try
-{
-  DotNetNewBuilder newBuilder = DotNet.New("console");
-  if (newBuilder != null)
+  public static async Task TestNewWithoutTemplateName()
   {
-    Console.WriteLine("✅ Test 1 PASSED: DotNet.New() builder created successfully");
-    passCount++;
+    DotNetNewBuilder newBuilder = DotNet.New();
+    
+    AssertTrue(
+      newBuilder != null,
+      "DotNet.New() without template should create successfully"
+    );
   }
-  else
-  {
-    Console.WriteLine("❌ Test 1 FAILED: DotNet.New() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
 
-// Test 2: DotNet.New() without template name
-totalTests++;
-try
-{
-  DotNetNewBuilder newBuilder = DotNet.New();
-  if (newBuilder != null)
+  public static async Task TestFluentConfigurationMethods()
   {
-    Console.WriteLine("✅ Test 2 PASSED: DotNet.New() without template created successfully");
-    passCount++;
+    CommandResult command = DotNet.New("console")
+      .WithName("TestApp")
+      .WithOutput("./test-output")
+      .WithForce()
+      .WithDryRun()
+      .Build();
+    
+    AssertTrue(
+      command != null,
+      "New fluent configuration methods should work correctly"
+    );
   }
-  else
-  {
-    Console.WriteLine("❌ Test 2 FAILED: DotNet.New() without template returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 2 FAILED: Exception - {ex.Message}");
-}
 
-// Test 3: Fluent configuration methods
-totalTests++;
-try
-{
-  CommandResult command = DotNet.New("console")
-    .WithName("TestApp")
-    .WithOutput("./test-output")
-    .WithForce()
-    .WithDryRun()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestTemplateArgumentsAndAdvancedOptions()
   {
-    Console.WriteLine("✅ Test 3 PASSED: New fluent configuration methods work correctly");
-    passCount++;
+    CommandResult command = DotNet.New("web")
+      .WithName("MyWebApp")
+      .WithOutput("./web-output")
+      .WithTemplateArg("--framework")
+      .WithTemplateArg("net10.0")
+      .WithVerbosity("detailed")
+      .WithNoUpdateCheck()
+      .WithDiagnostics()
+      .Build();
+    
+    AssertTrue(
+      command != null,
+      "Template arguments and advanced options should work correctly"
+    );
   }
-  else
-  {
-    Console.WriteLine("❌ Test 3 FAILED: Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 3 FAILED: Exception - {ex.Message}");
-}
 
-// Test 4: Template arguments and advanced options
-totalTests++;
-try
-{
-  CommandResult command = DotNet.New("web")
-    .WithName("MyWebApp")
-    .WithOutput("./web-output")
-    .WithTemplateArg("--framework")
-    .WithTemplateArg("net10.0")
-    .WithVerbosity("detailed")
-    .WithNoUpdateCheck()
-    .WithDiagnostics()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    Console.WriteLine("✅ Test 4 PASSED: Template arguments and advanced options work correctly");
-    passCount++;
+    CommandResult command = DotNet.New("classlib")
+      .WithName("MyLibrary")
+      .WithWorkingDirectory("/tmp")
+      .WithEnvironmentVariable("TEMPLATE_ENV", "test")
+      .WithProject("test.csproj")
+      .Build();
+    
+    AssertTrue(
+      command != null,
+      "Working directory and environment variables should work correctly"
+    );
   }
-  else
-  {
-    Console.WriteLine("❌ Test 4 FAILED: Advanced options Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
-}
 
-// Test 5: Working directory and environment variables
-totalTests++;
-try
-{
-  CommandResult command = DotNet.New("classlib")
-    .WithName("MyLibrary")
-    .WithWorkingDirectory("/tmp")
-    .WithEnvironmentVariable("TEMPLATE_ENV", "test")
-    .WithProject("test.csproj")
-    .Build();
-  
-  if (command != null)
+  public static async Task TestNewListSubcommand()
   {
-    Console.WriteLine("✅ Test 5 PASSED: Working directory and environment variables work correctly");
-    passCount++;
+    DotNetNewListBuilder listCommand = DotNet.New().List("console");
+    
+    AssertTrue(
+      listCommand != null,
+      "New List() subcommand should work correctly"
+    );
   }
-  else
-  {
-    Console.WriteLine("❌ Test 5 FAILED: Environment config Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 5 FAILED: Exception - {ex.Message}");
-}
 
-// Test 6: Subcommands - List
-totalTests++;
-try
-{
-  DotNetNewListBuilder listCommand = DotNet.New().List("console");
-  if (listCommand != null)
+  public static async Task TestNewSearchSubcommand()
   {
-    Console.WriteLine("✅ Test 6 PASSED: New List() subcommand works correctly");
-    passCount++;
+    DotNetNewSearchBuilder searchCommand = DotNet.New().Search("blazor");
+    
+    AssertTrue(
+      searchCommand != null,
+      "New Search() subcommand should work correctly"
+    );
   }
-  else
-  {
-    Console.WriteLine("❌ Test 6 FAILED: List() subcommand returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 6 FAILED: Exception - {ex.Message}");
-}
 
-// Test 7: Subcommands - Search
-totalTests++;
-try
-{
-  DotNetNewSearchBuilder searchCommand = DotNet.New().Search("blazor");
-  if (searchCommand != null)
+  public static async Task TestCommandExecutionWithDryRun()
   {
-    Console.WriteLine("✅ Test 7 PASSED: New Search() subcommand works correctly");
-    passCount++;
+    // This should show what would happen without actually creating files
+    string output = await DotNet.New("console")
+      .WithName("TestConsoleApp")
+      .WithOutput("./dry-run-test")
+      .WithDryRun()
+      .GetStringAsync();
+    
+    // Should return output showing what would be created
+    AssertTrue(
+      true,
+      "New command execution with dry run should complete successfully"
+    );
   }
-  else
-  {
-    Console.WriteLine("❌ Test 7 FAILED: Search() subcommand returned null");
-  }
 }
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 7 FAILED: Exception - {ex.Message}");
-}
-
-// Test 8: Command execution with dry run (safe to test)
-totalTests++;
-try
-{
-  // This should show what would happen without actually creating files
-  string output = await DotNet.New("console")
-    .WithName("TestConsoleApp")
-    .WithOutput("./dry-run-test")
-    .WithDryRun()
-    .GetStringAsync();
-  
-  // Should return output showing what would be created
-  Console.WriteLine("✅ Test 8 PASSED: New command execution with dry run completed successfully");
-  passCount++;
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 8 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 DotNetNewCommand Results: {passCount}/{totalTests} tests passed");
-Environment.Exit(passCount == totalTests ? 0 : 1);

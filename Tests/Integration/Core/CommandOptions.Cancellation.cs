@@ -1,226 +1,118 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<CancellationTests>();
 
-Console.WriteLine("🧪 Testing CancellationCommands...");
-
-int passCount = 0;
-int totalTests = 0;
-
-// Test 1: Quick command that completes before cancellation
-totalTests++;
-try
+internal sealed class CancellationTests
 {
+  public static async Task TestQuickCommandWithCancellationToken()
+  {
     using var cts = new CancellationTokenSource();
     cts.CancelAfter(TimeSpan.FromSeconds(10)); // Long timeout, command should complete
     
     string result = await Run("echo", "Hello World").GetStringAsync(cts.Token);
-    if (result.Trim() == "Hello World")
-    {
-        Console.WriteLine("✅ Test 1 PASSED: Quick command with cancellation token works");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 1 FAILED: Expected 'Hello World', got '{result.Trim()}'");
-    }
-}
-catch (OperationCanceledException)
-{
-    Console.WriteLine("❌ Test 1 FAILED: Unexpected cancellation of quick command");
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
+    
+    AssertTrue(
+      result.Trim() == "Hello World",
+      "Quick command with cancellation token should complete normally"
+    );
+  }
 
-// Test 2: Immediate cancellation token (already cancelled)
-totalTests++;
-try
-{
+  public static async Task TestAlreadyCancelledToken()
+  {
     using var cts = new CancellationTokenSource();
     await cts.CancelAsync(); // Cancel immediately
     
-    string result = await Run("echo", "test").GetStringAsync(cts.Token);
-    // Should return empty string due to cancellation
-    if (string.IsNullOrEmpty(result))
+    try
     {
-        Console.WriteLine("✅ Test 2 PASSED: Already cancelled token returns empty result");
-        passCount++;
+      string result = await Run("echo", "test").GetStringAsync(cts.Token);
+      // Should return empty string due to cancellation
+      AssertTrue(
+        string.IsNullOrEmpty(result),
+        "Already cancelled token should return empty result"
+      );
     }
-    else
+    catch (OperationCanceledException)
     {
-        Console.WriteLine($"❌ Test 2 FAILED: Expected empty string, got '{result}'");
+      // This is also acceptable behavior - either empty result or exception
+      AssertTrue(true, "Already cancelled token can throw OperationCanceledException");
     }
-}
-catch (OperationCanceledException)
-{
-    // This is also acceptable behavior - either empty result or exception
-    Console.WriteLine("✅ Test 2 PASSED: Already cancelled token throws OperationCanceledException");
-    passCount++;
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 2 FAILED: Unexpected exception - {ex.Message}");
-}
+  }
 
-// Test 3: GetLinesAsync with cancellation token
-totalTests++;
-try
-{
+  public static async Task TestGetLinesAsyncWithCancellationToken()
+  {
     using var cts = new CancellationTokenSource();
     cts.CancelAfter(TimeSpan.FromSeconds(5));
     
     string[] lines = await Run("echo", "line1\nline2\nline3").GetLinesAsync(cts.Token);
-    if (lines.Length == 3 && lines[0] == "line1" && lines[1] == "line2" && lines[2] == "line3")
-    {
-        Console.WriteLine("✅ Test 3 PASSED: GetLinesAsync with cancellation token works");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 3 FAILED: Expected 3 lines, got {lines.Length}");
-    }
-}
-catch (OperationCanceledException)
-{
-    Console.WriteLine("❌ Test 3 FAILED: Unexpected cancellation of quick command");
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 3 FAILED: Exception - {ex.Message}");
-}
+    
+    AssertTrue(
+      lines.Length == 3 && lines[0] == "line1" && lines[1] == "line2" && lines[2] == "line3",
+      $"GetLinesAsync with cancellation token should return 3 lines, got {lines.Length}"
+    );
+  }
 
-// Test 4: ExecuteAsync with cancellation token
-totalTests++;
-try
-{
+  public static async Task TestExecuteAsyncWithCancellationToken()
+  {
     using var cts = new CancellationTokenSource();
     cts.CancelAfter(TimeSpan.FromSeconds(5));
     
     ExecutionResult result = await Run("echo", "execute test").ExecuteAsync(cts.Token);
-    Console.WriteLine($"✅ Test 4 PASSED: ExecuteAsync with cancellation token works (exit code: {result.ExitCode})");
-    passCount++;
-}
-catch (OperationCanceledException)
-{
-    Console.WriteLine("❌ Test 4 FAILED: Unexpected cancellation of quick command");
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
     
-    // Debug: Let's see what's in stderr
-    try
-    {
-        string[] echoArgs = { "execute test" };
-        ExecutionResult debugResult = await Run("echo", echoArgs, new CommandOptions().WithNoValidation()).ExecuteAsync();
-        Console.WriteLine($"   Debug - Exit code: {debugResult.ExitCode}");
-        Console.WriteLine($"   Debug - Stdout: '{debugResult.StandardOutput.Trim()}'");
-        Console.WriteLine($"   Debug - Stderr: '{debugResult.StandardError.Trim()}'");
-    }
-    catch
-    {
-        // Ignore debug errors
-    }
-}
+    AssertTrue(
+      result.ExitCode == 0,
+      $"ExecuteAsync with cancellation token should succeed with exit code 0, got {result.ExitCode}"
+    );
+  }
 
-// Test 5: Timeout scenario with a longer running command
-totalTests++;
-try
-{
+  public static async Task TestTimeoutCancellation()
+  {
     using var cts = new CancellationTokenSource();
     cts.CancelAfter(TimeSpan.FromMilliseconds(100)); // Very short timeout
     
     // Use sleep command that should be cancelled (works on both Unix and Windows with different commands)
     bool isWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
-    string result = isWindows 
+    
+    try
+    {
+      string result = isWindows 
         ? await Run("timeout", "5").GetStringAsync(cts.Token)  // Windows: timeout 5 seconds
         : await Run("sleep", "5").GetStringAsync(cts.Token);   // Unix: sleep 5 seconds
-    
-    // If we get here, either the command completed very quickly or returned empty due to cancellation
-    if (string.IsNullOrEmpty(result))
-    {
-        Console.WriteLine("✅ Test 5 PASSED: Timeout cancellation returns empty result");
-        passCount++;
+      
+      // If we get here, either the command completed very quickly or returned empty due to cancellation
+      AssertTrue(
+        string.IsNullOrEmpty(result) || result.Length < 100,
+        "Timeout should either cancel command or return quickly"
+      );
     }
-    else
+    catch (OperationCanceledException)
     {
-        Console.WriteLine("⚠️  Test 5 NOTE: Command completed before timeout could take effect");
-        passCount++; // Still count as pass since behavior is valid
+      // Expected behavior - timeout cancelled the command
+      AssertTrue(true, "Timeout properly cancelled long-running command");
     }
-}
-catch (OperationCanceledException)
-{
-    Console.WriteLine("✅ Test 5 PASSED: Timeout properly cancelled long-running command");
-    passCount++;
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 5 FAILED: Unexpected exception - {ex.Message}");
-}
+  }
 
-// Test 6: Pipeline with cancellation (basic test)
-totalTests++;
-try
-{
+  public static async Task TestPipelineWithCancellation()
+  {
     using var cts = new CancellationTokenSource();
     cts.CancelAfter(TimeSpan.FromSeconds(5));
     
     string result = await Run("echo", "line1\nline2\nline3")
-        .Pipe("grep", "line")
-        .GetStringAsync(cts.Token);
+      .Pipe("grep", "line")
+      .GetStringAsync(cts.Token);
     
-    if (!string.IsNullOrEmpty(result) && result.Contains("line", StringComparison.Ordinal))
-    {
-        Console.WriteLine("✅ Test 6 PASSED: Pipeline with cancellation token works");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 6 FAILED: Pipeline result unexpected: '{result}'");
-    }
-}
-catch (OperationCanceledException)
-{
-    Console.WriteLine("❌ Test 6 FAILED: Unexpected cancellation of quick pipeline");
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 6 FAILED: Exception - {ex.Message}");
-}
+    AssertTrue(
+      !string.IsNullOrEmpty(result) && result.Contains("line", StringComparison.Ordinal),
+      "Pipeline with cancellation token should work normally"
+    );
+  }
 
-// Test 7: Default cancellation token behavior (should work like before)
-totalTests++;
-try
-{
+  public static async Task TestDefaultCancellationTokenBehavior()
+  {
     string result = await Run("echo", "default token test").GetStringAsync();
-    if (result.Trim() == "default token test")
-    {
-        Console.WriteLine("✅ Test 7 PASSED: Default cancellation token behavior preserved");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 7 FAILED: Expected 'default token test', got '{result.Trim()}'");
-    }
+    
+    AssertTrue(
+      result.Trim() == "default token test",
+      "Default cancellation token behavior should be preserved"
+    );
+  }
 }
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 7 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 CancellationCommands Results: {passCount}/{totalTests} tests passed");
-
-if (passCount == totalTests)
-{
-    Console.WriteLine("🎉 All cancellation tests passed!");
-}
-else
-{
-    Console.WriteLine($"⚠️  {totalTests - passCount} test(s) failed. Cancellation support may need review.");
-}
-
-Environment.Exit(passCount == totalTests ? 0 : 1);

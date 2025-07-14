@@ -1,195 +1,99 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<DotNetPackageSearchTests>();
 
-Console.WriteLine("🧪 Testing DotNetPackageSearchCommand...");
+// Define a class to hold the test methods (NOT static so it can be used as generic parameter)
+ 
+internal sealed class DotNetPackageSearchTests
 
-int passCount = 0;
-int totalTests = 0;
+{
+  public static async Task BasicDotNetPackageSearchBuilderCreation()
+  {
+    DotNetPackageSearchBuilder searchBuilder = DotNet.PackageSearch("TimeWarp.Cli");
+    AssertTrue(searchBuilder != null, "DotNet.PackageSearch() returned null");
+    await Task.CompletedTask;
+  }
 
-// Test 1: Basic DotNet.PackageSearch() builder creation
-totalTests++;
-try
-{
-  DotNetPackageSearchBuilder searchBuilder = DotNet.PackageSearch("TimeWarp.Cli");
-  if (searchBuilder != null)
+  public static async Task DotNetPackageSearchWithoutSearchTerm()
   {
-    Console.WriteLine("✅ Test 1 PASSED: DotNet.PackageSearch() builder created successfully");
-    passCount++;
+    DotNetPackageSearchBuilder searchBuilder = DotNet.PackageSearch();
+    AssertTrue(searchBuilder != null, "DotNet.PackageSearch() without search term returned null");
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 1 FAILED: DotNet.PackageSearch() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
 
-// Test 2: DotNet.PackageSearch() without search term
-totalTests++;
-try
-{
-  DotNetPackageSearchBuilder searchBuilder = DotNet.PackageSearch();
-  if (searchBuilder != null)
+  public static async Task FluentConfigurationMethods()
   {
-    Console.WriteLine("✅ Test 2 PASSED: DotNet.PackageSearch() without search term created successfully");
-    passCount++;
+    CommandResult command = DotNet.PackageSearch("Microsoft.Extensions.Logging")
+      .WithSource("https://api.nuget.org/v3/index.json")
+      .WithTake(5)
+      .WithSkip(0)
+      .WithFormat("table")
+      .Build();
+    
+    AssertTrue(command != null, "Build() returned null");
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 2 FAILED: DotNet.PackageSearch() without search term returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 2 FAILED: Exception - {ex.Message}");
-}
 
-// Test 3: Fluent configuration methods
-totalTests++;
-try
-{
-  CommandResult command = DotNet.PackageSearch("Microsoft.Extensions.Logging")
-    .WithSource("https://api.nuget.org/v3/index.json")
-    .WithTake(5)
-    .WithSkip(0)
-    .WithFormat("table")
-    .Build();
-  
-  if (command != null)
+  public static async Task AdvancedSearchOptions()
   {
-    Console.WriteLine("✅ Test 3 PASSED: PackageSearch fluent configuration methods work correctly");
-    passCount++;
+    CommandResult command = DotNet.PackageSearch("Newtonsoft.Json")
+      .WithExactMatch()
+      .WithPrerelease()
+      .WithFormat("json")
+      .WithVerbosity("detailed")
+      .WithInteractive()
+      .Build();
+    
+    AssertTrue(command != null, "Advanced options Build() returned null");
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 3 FAILED: Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 3 FAILED: Exception - {ex.Message}");
-}
 
-// Test 4: Advanced search options
-totalTests++;
-try
-{
-  CommandResult command = DotNet.PackageSearch("Newtonsoft.Json")
-    .WithExactMatch()
-    .WithPrerelease()
-    .WithFormat("json")
-    .WithVerbosity("detailed")
-    .WithInteractive()
-    .Build();
-  
-  if (command != null)
+  public static async Task MultipleSourcesConfiguration()
   {
-    Console.WriteLine("✅ Test 4 PASSED: Advanced search options work correctly");
-    passCount++;
+    CommandResult command = DotNet.PackageSearch("TestPackage")
+      .WithSource("https://api.nuget.org/v3/index.json")
+      .WithSource("https://pkgs.dev.azure.com/example/feed")
+      .WithTake(10)
+      .WithConfigFile("nuget.config")
+      .Build();
+    
+    AssertTrue(command != null, "Multiple sources Build() returned null");
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 4 FAILED: Advanced options Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
-}
 
-// Test 5: Multiple sources configuration
-totalTests++;
-try
-{
-  CommandResult command = DotNet.PackageSearch("TestPackage")
-    .WithSource("https://api.nuget.org/v3/index.json")
-    .WithSource("https://pkgs.dev.azure.com/example/feed")
-    .WithTake(10)
-    .WithConfigFile("nuget.config")
-    .Build();
-  
-  if (command != null)
+  public static async Task WorkingDirectoryAndEnvironmentVariables()
   {
-    Console.WriteLine("✅ Test 5 PASSED: Multiple sources configuration works correctly");
-    passCount++;
+    CommandResult command = DotNet.PackageSearch("TestPackage")
+      .WithWorkingDirectory("/tmp")
+      .WithEnvironmentVariable("NUGET_ENV", "test")
+      .WithTake(1)
+      .Build();
+    
+    AssertTrue(command != null, "Environment config Build() returned null");
+    await Task.CompletedTask;
   }
-  else
-  {
-    Console.WriteLine("❌ Test 5 FAILED: Multiple sources Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 5 FAILED: Exception - {ex.Message}");
-}
 
-// Test 6: Working directory and environment variables
-totalTests++;
-try
-{
-  CommandResult command = DotNet.PackageSearch("TestPackage")
-    .WithWorkingDirectory("/tmp")
-    .WithEnvironmentVariable("NUGET_ENV", "test")
-    .WithTake(1)
-    .Build();
-  
-  if (command != null)
+  public static async Task CommandExecutionSearchWellKnownPackage()
   {
-    Console.WriteLine("✅ Test 6 PASSED: Working directory and environment variables work correctly");
-    passCount++;
+    // Search for a well-known package that should exist
+    string output = await DotNet.PackageSearch("Microsoft.Extensions.Logging")
+      .WithTake(1)
+      .WithFormat("table")
+      .GetStringAsync();
+    
+    // Should return search results
+    AssertTrue(true, "PackageSearch command execution should not throw");
   }
-  else
+
+  public static async Task ExactMatchSearch()
   {
-    Console.WriteLine("❌ Test 6 FAILED: Environment config Build() returned null");
+    // Search for TimeWarp.Cli with exact match and prerelease
+    string output = await DotNet.PackageSearch("TimeWarp.Cli")
+      .WithExactMatch()
+      .WithPrerelease()
+      .GetStringAsync();
+    
+    // Should return search results or handle gracefully
+    AssertTrue(true, "Exact match search should not throw");
   }
 }
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 6 FAILED: Exception - {ex.Message}");
-}
-
-// Test 7: Command execution (search for a well-known package)
-totalTests++;
-try
-{
-  // Search for a well-known package that should exist
-  string output = await DotNet.PackageSearch("Microsoft.Extensions.Logging")
-    .WithTake(1)
-    .WithFormat("table")
-    .GetStringAsync();
-  
-  // Should return search results
-  Console.WriteLine("✅ Test 7 PASSED: PackageSearch command execution completed successfully");
-  passCount++;
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 7 FAILED: Exception - {ex.Message}");
-}
-
-// Test 8: Exact match search
-totalTests++;
-try
-{
-  // Search for TimeWarp.Cli with exact match and prerelease
-  string output = await DotNet.PackageSearch("TimeWarp.Cli")
-    .WithExactMatch()
-    .WithPrerelease()
-    .GetStringAsync();
-  
-  // Should return search results or handle gracefully
-  Console.WriteLine("✅ Test 8 PASSED: Exact match search completed successfully");
-  passCount++;
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 8 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 DotNetPackageSearchCommand Results: {passCount}/{totalTests} tests passed");
-Environment.Exit(passCount == totalTests ? 0 : 1);

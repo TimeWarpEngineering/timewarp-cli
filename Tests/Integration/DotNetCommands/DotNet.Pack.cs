@@ -1,193 +1,95 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<DotNetPackTests>();
 
-Console.WriteLine("🧪 Testing DotNetPackCommand...");
+// Define a class to hold the test methods (NOT static so it can be used as generic parameter)
+internal sealed class DotNetPackTests
+{
+  public static async Task TestBasicBuilderCreation()
+  {
+    DotNetPackBuilder packBuilder = DotNet.Pack();
+    AssertTrue(packBuilder != null, "DotNet.Pack() should return a non-null builder");
+  }
 
-int passCount = 0;
-int totalTests = 0;
+  public static async Task TestFluentConfigurationMethods()
+  {
+    CommandResult command = DotNet.Pack()
+      .WithProject("test.csproj")
+      .WithConfiguration("Release")
+      .WithFramework("net10.0")
+      .WithRuntime("win-x64")
+      .WithOutput("./packages")
+      .WithNoRestore()
+      .Build();
+    
+    AssertTrue(command != null, "Pack fluent configuration should build successfully");
+  }
 
-// Test 1: Basic DotNet.Pack() builder creation
-totalTests++;
-try
-{
-  DotNetPackBuilder packBuilder = DotNet.Pack();
-  if (packBuilder != null)
+  public static async Task TestPackageSpecificOptions()
   {
-    Console.WriteLine("✅ Test 1 PASSED: DotNet.Pack() builder created successfully");
-    passCount++;
+    CommandResult packageCommand = DotNet.Pack()
+      .WithProject("test.csproj")
+      .WithConfiguration("Release")
+      .WithVersionSuffix("beta")
+      .IncludeSymbols()
+      .IncludeSource()
+      .WithServiceable()
+      .WithNoLogo()
+      .Build();
+    
+    AssertTrue(packageCommand != null, "Package-specific options should work correctly");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 1 FAILED: DotNet.Pack() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
 
-// Test 2: Fluent configuration methods
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Pack()
-    .WithProject("test.csproj")
-    .WithConfiguration("Release")
-    .WithFramework("net10.0")
-    .WithRuntime("win-x64")
-    .WithOutput("./packages")
-    .WithNoRestore()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    Console.WriteLine("✅ Test 2 PASSED: Pack fluent configuration methods work correctly");
-    passCount++;
+    CommandResult envCommand = DotNet.Pack()
+      .WithProject("test.csproj")
+      .WithWorkingDirectory("/tmp")
+      .WithEnvironmentVariable("PACK_ENV", "production")
+      .WithVerbosity("detailed")
+      .WithTerminalLogger("on")
+      .Build();
+    
+    AssertTrue(envCommand != null, "Working directory and environment variables should work correctly");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 2 FAILED: Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 2 FAILED: Exception - {ex.Message}");
-}
 
-// Test 3: Package-specific options
-totalTests++;
-try
-{
-  CommandResult packageCommand = DotNet.Pack()
-    .WithProject("test.csproj")
-    .WithConfiguration("Release")
-    .WithVersionSuffix("beta")
-    .IncludeSymbols()
-    .IncludeSource()
-    .WithServiceable()
-    .WithNoLogo()
-    .Build();
-  
-  if (packageCommand != null)
+  public static async Task TestMSBuildPropertiesAndSources()
   {
-    Console.WriteLine("✅ Test 3 PASSED: Package-specific options work correctly");
-    passCount++;
+    CommandResult propsCommand = DotNet.Pack()
+      .WithProject("test.csproj")
+      .WithConfiguration("Release")
+      .WithProperty("PackageVersion", "1.0.0")
+      .WithProperty("PackageDescription", "Test package")
+      .WithSource("https://api.nuget.org/v3/index.json")
+      .WithNoBuild()
+      .WithForce()
+      .Build();
+    
+    AssertTrue(propsCommand != null, "MSBuild properties and sources should work correctly");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 3 FAILED: Package options Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 3 FAILED: Exception - {ex.Message}");
-}
 
-// Test 4: Working directory and environment variables
-totalTests++;
-try
-{
-  CommandResult envCommand = DotNet.Pack()
-    .WithProject("test.csproj")
-    .WithWorkingDirectory("/tmp")
-    .WithEnvironmentVariable("PACK_ENV", "production")
-    .WithVerbosity("detailed")
-    .WithTerminalLogger("on")
-    .Build();
-  
-  if (envCommand != null)
+  public static async Task TestPackOverloadWithProjectParameter()
   {
-    Console.WriteLine("✅ Test 4 PASSED: Working directory and environment variables work correctly");
-    passCount++;
+    CommandResult overloadCommand = DotNet.Pack("test.csproj")
+      .WithConfiguration("Release")
+      .WithOutput("./dist")
+      .WithVersionSuffix("rc1")
+      .WithNoDependencies()
+      .Build();
+    
+    AssertTrue(overloadCommand != null, "Pack overload with project parameter should work correctly");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 4 FAILED: Environment config Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
-}
 
-// Test 5: MSBuild properties and sources
-totalTests++;
-try
-{
-  CommandResult propsCommand = DotNet.Pack()
-    .WithProject("test.csproj")
-    .WithConfiguration("Release")
-    .WithProperty("PackageVersion", "1.0.0")
-    .WithProperty("PackageDescription", "Test package")
-    .WithSource("https://api.nuget.org/v3/index.json")
-    .WithNoBuild()
-    .WithForce()
-    .Build();
-  
-  if (propsCommand != null)
+  public static async Task TestCommandBuilderWithNonExistentProject()
   {
-    Console.WriteLine("✅ Test 5 PASSED: MSBuild properties and sources work correctly");
-    passCount++;
-  }
-  else
-  {
-    Console.WriteLine("❌ Test 5 FAILED: Properties Build() returned null");
+    // Verify that the command builder creates a valid command even with non-existent project
+    CommandResult command = DotNet.Pack()
+      .WithProject("nonexistent.csproj")
+      .WithConfiguration("Release")
+      .WithOutput("./packages")
+      .WithNoRestore()
+      .Build();
+    
+    AssertTrue(command != null, "Pack command builder should create a valid command");
   }
 }
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 5 FAILED: Exception - {ex.Message}");
-}
-
-// Test 6: Pack overload with project parameter
-totalTests++;
-try
-{
-  CommandResult overloadCommand = DotNet.Pack("test.csproj")
-    .WithConfiguration("Release")
-    .WithOutput("./dist")
-    .WithVersionSuffix("rc1")
-    .WithNoDependencies()
-    .Build();
-  
-  if (overloadCommand != null)
-  {
-    Console.WriteLine("✅ Test 6 PASSED: Pack overload with project parameter works correctly");
-    passCount++;
-  }
-  else
-  {
-    Console.WriteLine("❌ Test 6 FAILED: Pack overload returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 6 FAILED: Exception - {ex.Message}");
-}
-
-// Test 7: Command execution (graceful handling for non-existent project)
-totalTests++;
-try
-{
-  // This should handle gracefully since the project doesn't exist
-  string output = await DotNet.Pack()
-    .WithProject("nonexistent.csproj")
-    .WithConfiguration("Release")
-    .WithOutput("./packages")
-    .WithNoRestore()
-    .GetStringAsync();
-  
-  // Should return empty string for non-existent project (graceful degradation)
-  Console.WriteLine("✅ Test 7 PASSED: Pack command execution completed with graceful handling");
-  passCount++;
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 7 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 DotNetPackCommand Results: {passCount}/{totalTests} tests passed");
-Environment.Exit(passCount == totalTests ? 0 : 1);

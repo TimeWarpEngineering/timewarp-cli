@@ -1,361 +1,168 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<DotNetWatchCommandTests>();
 
-Console.WriteLine("🧪 Testing DotNetWatchCommand...");
+// Define a class to hold the test methods (NOT static so it can be used as generic parameter)
+ 
+internal sealed class DotNetWatchCommandTests
 
-int passCount = 0;
-int totalTests = 0;
+{
+  public static async Task TestBasicDotNetWatchBuilderCreation()
+  {
+    DotNetWatchBuilder watchBuilder = DotNet.Watch();
+    AssertTrue(watchBuilder != null, "DotNet.Watch() should return a valid builder instance");
+  }
 
-// Test 1: Basic DotNet.Watch() builder creation
-totalTests++;
-try
-{
-  DotNetWatchBuilder watchBuilder = DotNet.Watch();
-  if (watchBuilder != null)
+  public static async Task TestWatchRunCommand()
   {
-    Console.WriteLine("✅ Test 1 PASSED: DotNet.Watch() builder created successfully");
-    passCount++;
+    CommandResult command = DotNet.Watch()
+      .Run()
+      .Build();
+    
+    AssertTrue(command != null, "Watch Run command should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 1 FAILED: DotNet.Watch() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
 
-// Test 2: Watch Run command
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Watch()
-    .Run()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWatchTestCommand()
   {
-    Console.WriteLine("✅ Test 2 PASSED: Watch Run command works correctly");
-    passCount++;
+    CommandResult command = DotNet.Watch()
+      .Test()
+      .Build();
+    
+    AssertTrue(command != null, "Watch Test command should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 2 FAILED: Watch Run Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 2 FAILED: Exception - {ex.Message}");
-}
 
-// Test 3: Watch Test command
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Watch()
-    .Test()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWatchBuildCommand()
   {
-    Console.WriteLine("✅ Test 3 PASSED: Watch Test command works correctly");
-    passCount++;
+    CommandResult command = DotNet.Watch()
+      .Build()
+      .Build();
+    
+    AssertTrue(command != null, "Watch Build command should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 3 FAILED: Watch Test Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 3 FAILED: Exception - {ex.Message}");
-}
 
-// Test 4: Watch Build command
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Watch()
-    .Build()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWatchWithProject()
   {
-    Console.WriteLine("✅ Test 4 PASSED: Watch Build command works correctly");
-    passCount++;
+    CommandResult command = DotNet.Watch()
+      .WithProject("MyApp.csproj")
+      .Run()
+      .Build();
+    
+    AssertTrue(command != null, "Watch with project should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 4 FAILED: Watch Build Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
-}
 
-// Test 5: Watch with project
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Watch()
-    .WithProject("MyApp.csproj")
-    .Run()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWatchWithBasicOptions()
   {
-    Console.WriteLine("✅ Test 5 PASSED: Watch with project works correctly");
-    passCount++;
+    CommandResult command = DotNet.Watch()
+      .WithQuiet()
+      .WithVerbose()
+      .WithList()
+      .Run()
+      .Build();
+    
+    AssertTrue(command != null, "Watch with basic options should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 5 FAILED: Watch with project Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 5 FAILED: Exception - {ex.Message}");
-}
 
-// Test 6: Watch with basic options
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Watch()
-    .WithQuiet()
-    .WithVerbose()
-    .WithList()
-    .Run()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWatchWithNoOptions()
   {
-    Console.WriteLine("✅ Test 6 PASSED: Watch with basic options works correctly");
-    passCount++;
+    CommandResult command = DotNet.Watch()
+      .WithNoRestore()
+      .WithNoLaunchProfile()
+      .WithNoHotReload()
+      .WithNoBuild()
+      .Run()
+      .Build();
+    
+    AssertTrue(command != null, "Watch with no-options should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 6 FAILED: Watch with basic options Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 6 FAILED: Exception - {ex.Message}");
-}
 
-// Test 7: Watch with no-options
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Watch()
-    .WithNoRestore()
-    .WithNoLaunchProfile()
-    .WithNoHotReload()
-    .WithNoBuild()
-    .Run()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWatchWithIncludeExcludePatterns()
   {
-    Console.WriteLine("✅ Test 7 PASSED: Watch with no-options works correctly");
-    passCount++;
+    CommandResult command = DotNet.Watch()
+      .WithInclude("**/*.cs")
+      .WithInclude("**/*.cshtml")
+      .WithExclude("**/bin/**")
+      .WithExclude("**/obj/**")
+      .Run()
+      .Build();
+    
+    AssertTrue(command != null, "Watch with include/exclude patterns should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 7 FAILED: Watch with no-options Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 7 FAILED: Exception - {ex.Message}");
-}
 
-// Test 8: Watch with include/exclude patterns
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Watch()
-    .WithInclude("**/*.cs")
-    .WithInclude("**/*.cshtml")
-    .WithExclude("**/bin/**")
-    .WithExclude("**/obj/**")
-    .Run()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWatchWithBuildConfiguration()
   {
-    Console.WriteLine("✅ Test 8 PASSED: Watch with include/exclude patterns works correctly");
-    passCount++;
+    CommandResult command = DotNet.Watch()
+      .WithConfiguration("Release")
+      .WithTargetFramework("net10.0")
+      .WithRuntime("linux-x64")
+      .WithVerbosity("detailed")
+      .Run()
+      .Build();
+    
+    AssertTrue(command != null, "Watch with build configuration should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 8 FAILED: Watch with include/exclude patterns Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 8 FAILED: Exception - {ex.Message}");
-}
 
-// Test 9: Watch with build configuration
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Watch()
-    .WithConfiguration("Release")
-    .WithTargetFramework("net10.0")
-    .WithRuntime("linux-x64")
-    .WithVerbosity("detailed")
-    .Run()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWatchWithPropertiesAndLaunchProfile()
   {
-    Console.WriteLine("✅ Test 9 PASSED: Watch with build configuration works correctly");
-    passCount++;
+    CommandResult command = DotNet.Watch()
+      .WithProperty("Configuration=Debug")
+      .WithProperty("Platform=x64")
+      .WithLaunchProfile("Development")
+      .Run()
+      .Build();
+    
+    AssertTrue(command != null, "Watch with properties and launch profile should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 9 FAILED: Watch with build configuration Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 9 FAILED: Exception - {ex.Message}");
-}
 
-// Test 10: Watch with properties and launch profile
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Watch()
-    .WithProperty("Configuration=Debug")
-    .WithProperty("Platform=x64")
-    .WithLaunchProfile("Development")
-    .Run()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWatchWithAdditionalArguments()
   {
-    Console.WriteLine("✅ Test 10 PASSED: Watch with properties and launch profile works correctly");
-    passCount++;
+    CommandResult command = DotNet.Watch()
+      .WithArguments("--environment", "Development")
+      .WithArgument("--port")
+      .WithArgument("5000")
+      .Run()
+      .Build();
+    
+    AssertTrue(command != null, "Watch with additional arguments should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 10 FAILED: Watch with properties and launch profile Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 10 FAILED: Exception - {ex.Message}");
-}
 
-// Test 11: Watch with additional arguments
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Watch()
-    .WithArguments("--environment", "Development")
-    .WithArgument("--port")
-    .WithArgument("5000")
-    .Run()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    Console.WriteLine("✅ Test 11 PASSED: Watch with additional arguments works correctly");
-    passCount++;
+    CommandResult command = DotNet.Watch()
+      .WithWorkingDirectory("/tmp")
+      .WithEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development")
+      .Run()
+      .Build();
+    
+    AssertTrue(command != null, "Working directory and environment variables should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 11 FAILED: Watch with additional arguments Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 11 FAILED: Exception - {ex.Message}");
-}
 
-// Test 12: Working directory and environment variables
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Watch()
-    .WithWorkingDirectory("/tmp")
-    .WithEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development")
-    .Run()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWatchWithComprehensiveOptions()
   {
-    Console.WriteLine("✅ Test 12 PASSED: Working directory and environment variables work correctly");
-    passCount++;
+    CommandResult command = DotNet.Watch()
+      .WithProject("MyApp.csproj")
+      .WithConfiguration("Release")
+      .WithTargetFramework("net10.0")
+      .WithVerbosity("minimal")
+      .WithInclude("**/*.cs")
+      .WithExclude("**/bin/**")
+      .WithProperty("DefineConstants=RELEASE")
+      .WithNoRestore()
+      .WithArguments("--environment", "Production")
+      .Run()
+      .Build();
+    
+    AssertTrue(command != null, "Watch with comprehensive options should return a valid CommandResult instance");
   }
-  else
-  {
-    Console.WriteLine("❌ Test 12 FAILED: Environment config Build() returned null");
-  }
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 12 FAILED: Exception - {ex.Message}");
-}
 
-// Test 13: Watch with comprehensive options
-totalTests++;
-try
-{
-  CommandResult command = DotNet.Watch()
-    .WithProject("MyApp.csproj")
-    .WithConfiguration("Release")
-    .WithTargetFramework("net10.0")
-    .WithVerbosity("minimal")
-    .WithInclude("**/*.cs")
-    .WithExclude("**/bin/**")
-    .WithProperty("DefineConstants=RELEASE")
-    .WithNoRestore()
-    .WithArguments("--environment", "Production")
-    .Run()
-    .Build();
-  
-  if (command != null)
+  public static async Task TestWatchListCommandExecution()
   {
-    Console.WriteLine("✅ Test 13 PASSED: Watch with comprehensive options works correctly");
-    passCount++;
-  }
-  else
-  {
-    Console.WriteLine("❌ Test 13 FAILED: Watch with comprehensive options Build() returned null");
+    // This lists watched files without actually starting the watcher
+    await AssertThrowsAsync<Exception>(
+      async () => await DotNet.Watch()
+        .WithList()
+        .Run()
+        .GetStringAsync(),
+      "should throw for watch list without valid project (default validation behavior)"
+    );
   }
 }
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 13 FAILED: Exception - {ex.Message}");
-}
-
-// Test 14: Command execution (list watched files - safe to test)
-totalTests++;
-try
-{
-  // This lists watched files without actually starting the watcher
-  string output = await DotNet.Watch()
-    .WithList()
-    .Run()
-    .GetStringAsync();
-  
-  // Should handle gracefully (may show error message about no project)
-  Console.WriteLine("✅ Test 14 PASSED: Watch list command execution completed with graceful handling");
-  passCount++;
-}
-catch (Exception ex)
-{
-  Console.WriteLine($"❌ Test 14 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 DotNetWatchCommand Results: {passCount}/{totalTests} tests passed");
-Environment.Exit(passCount == totalTests ? 0 : 1);

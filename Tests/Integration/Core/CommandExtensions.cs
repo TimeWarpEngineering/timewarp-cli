@@ -1,86 +1,44 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<BasicCommandTests>();
 
-Console.WriteLine("🧪 Testing BasicCommands...");
-
-int passCount = 0;
-int totalTests = 0;
-
-// Test 1: Simple echo command
-totalTests++;
-try
+internal sealed class BasicCommandTests
 {
+  public static async Task TestSimpleEchoCommand()
+  {
     string result = await Run("echo", "Hello World").GetStringAsync();
-    if (result.Trim() == "Hello World")
-    {
-        Console.WriteLine("✅ Test 1 PASSED: Echo command works");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 1 FAILED: Expected 'Hello World', got '{result.Trim()}'");
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
+    
+    AssertTrue(
+      result.Trim() == "Hello World",
+      "Echo command should return 'Hello World'"
+    );
+  }
 
-// Test 2: Command with multiple arguments
-totalTests++;
-try
-{
+  public static async Task TestCommandWithMultipleArguments()
+  {
     string result = await Run("echo", "arg1", "arg2", "arg3").GetStringAsync();
-    if (result.Trim() == "arg1 arg2 arg3")
-    {
-        Console.WriteLine("✅ Test 2 PASSED: Multiple arguments work");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 2 FAILED: Expected 'arg1 arg2 arg3', got '{result.Trim()}'");
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 2 FAILED: Exception - {ex.Message}");
-}
+    
+    AssertTrue(
+      result.Trim() == "arg1 arg2 arg3",
+      $"Multiple arguments should work correctly, got '{result.Trim()}'"
+    );
+  }
 
-// Test 3: ExecuteAsync doesn't throw
-totalTests++;
-try
-{
+  public static async Task TestExecuteAsyncDoesNotThrow()
+  {
     await Run("echo", "test").ExecuteAsync();
-    Console.WriteLine("✅ Test 3 PASSED: ExecuteAsync works without throwing");
-    passCount++;
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 3 FAILED: ExecuteAsync threw - {ex.Message}");
-}
+    
+    // Test passes if no exception is thrown
+    AssertTrue(true, "ExecuteAsync should work without throwing");
+  }
 
-// Test 4: Date command (cross-platform)
-totalTests++;
-try
-{
+  public static async Task TestDateCommand()
+  {
     string result = await Run("date").GetStringAsync();
-    if (!string.IsNullOrEmpty(result.Trim()))
-    {
-        Console.WriteLine("✅ Test 4 PASSED: Date command returns non-empty result");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine("❌ Test 4 FAILED: Date command returned empty result");
-    }
+    
+    AssertTrue(
+      !string.IsNullOrEmpty(result.Trim()),
+      "Date command should return non-empty result"
+    );
+  }
 }
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 BasicCommands Results: {passCount}/{totalTests} tests passed");
-Environment.Exit(passCount == totalTests ? 0 : 1);

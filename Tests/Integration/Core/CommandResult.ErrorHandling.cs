@@ -3,9 +3,7 @@
 await RunTests<ErrorHandlingTests>();
 
 // Define a class to hold the test methods (NOT static so it can be used as generic parameter)
-#pragma warning disable CA1812 // Avoid uninstantiated internal classes
 internal sealed class ErrorHandlingTests
-#pragma warning restore CA1812
 {
 
   // Create options with no validation for graceful degradation tests

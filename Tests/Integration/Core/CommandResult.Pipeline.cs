@@ -1,197 +1,103 @@
 #!/usr/bin/dotnet run
 
-#pragma warning disable IDE0005 // Using directive is unnecessary
-#pragma warning restore IDE0005
+await RunTests<PipelineTests>();
 
-Console.WriteLine("🧪 Testing PipelineCommands...");
-
-int passCount = 0;
-int totalTests = 0;
-
-// Create options with no validation for graceful degradation tests
-CommandOptions noValidation = new CommandOptions().WithNoValidation();
-
-// Test 1: Basic pipeline - echo | grep
-totalTests++;
-try
+internal sealed class PipelineTests
 {
+  // Create options with no validation for graceful degradation tests
+  static CommandOptions NoValidation = new CommandOptions().WithNoValidation();
+
+  public static async Task TestBasicPipeline()
+  {
     string result = await Run("echo", "hello\nworld\ntest")
-        .Pipe("grep", "world")
-        .GetStringAsync();
+      .Pipe("grep", "world")
+      .GetStringAsync();
     
-    if (result.Trim() == "world")
-    {
-        Console.WriteLine("✅ Test 1 PASSED: Basic pipeline works");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 1 FAILED: Expected 'world', got '{result.Trim()}'");
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 1 FAILED: Exception - {ex.Message}");
-}
+    AssertTrue(
+      result.Trim() == "world",
+      "Basic pipeline should filter for 'world'"
+    );
+  }
 
-// Test 2: Multi-stage pipeline - echo | grep | wc
-totalTests++;
-try
-{
+  public static async Task TestMultiStagePipeline()
+  {
     string result = await Run("echo", "line1\nline2\nline3\nline4")
-        .Pipe("grep", "line")
-        .Pipe("wc", "-l")
-        .GetStringAsync();
+      .Pipe("grep", "line")
+      .Pipe("wc", "-l")
+      .GetStringAsync();
     
-    if (result.Trim() == "4")
-    {
-        Console.WriteLine("✅ Test 2 PASSED: Multi-stage pipeline works");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 2 FAILED: Expected '4', got '{result.Trim()}'");
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 2 FAILED: Exception - {ex.Message}");
-}
+    AssertTrue(
+      result.Trim() == "4",
+      "Multi-stage pipeline should count 4 lines"
+    );
+  }
 
-// Test 3: Pipeline with GetLinesAsync
-totalTests++;
-try
-{
+  public static async Task TestPipelineWithGetLinesAsync()
+  {
     string[] lines = await Run("echo", "apple\nbanana\ncherry")
-        .Pipe("grep", "a")
-        .GetLinesAsync();
+      .Pipe("grep", "a")
+      .GetLinesAsync();
     
-    if (lines.Length == 2 && lines[0] == "apple" && lines[1] == "banana")
-    {
-        Console.WriteLine("✅ Test 3 PASSED: Pipeline with GetLinesAsync works");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 3 FAILED: Expected 2 lines [apple, banana], got {lines.Length} lines: [{string.Join(", ", lines)}]");
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 3 FAILED: Exception - {ex.Message}");
-}
+    AssertTrue(
+      lines.Length == 2 && lines[0] == "apple" && lines[1] == "banana",
+      $"Pipeline with GetLinesAsync should return [apple, banana], got [{string.Join(", ", lines)}]"
+    );
+  }
 
-// Test 4: Pipeline with ExecuteAsync (should not throw)
-totalTests++;
-try
-{
+  public static async Task TestPipelineWithExecuteAsync()
+  {
     await Run("echo", "test")
-        .Pipe("grep", "test")
-        .ExecuteAsync();
+      .Pipe("grep", "test")
+      .ExecuteAsync();
     
-    Console.WriteLine("✅ Test 4 PASSED: Pipeline with ExecuteAsync works");
-    passCount++;
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 4 FAILED: Exception - {ex.Message}");
-}
+    // Test passes if no exception is thrown
+    AssertTrue(true, "Pipeline with ExecuteAsync should not throw");
+  }
 
-// Test 5: Pipeline with failed first command (graceful degradation with no validation)
-totalTests++;
-try
-{
-    string result = await Run("nonexistentcommand12345", Array.Empty<string>(), noValidation)
+  public static async Task TestPipelineWithFailedFirstCommandThrows()
+  {
+    await AssertThrowsAsync<Exception>(
+      async () => await Run("nonexistentcommand12345", Array.Empty<string>(), NoValidation)
         .Pipe("grep", "anything")
-        .GetStringAsync();
-    
-    if (string.IsNullOrEmpty(result))
-    {
-        Console.WriteLine("✅ Test 5 PASSED: Pipeline with failed first command returns empty string");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 5 FAILED: Expected empty string, got '{result}'");
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 5 FAILED: Exception - {ex.Message}");
-}
+        .GetStringAsync(),
+      "Pipeline with non-existent first command should throw even with no validation"
+    );
+  }
 
-// Test 6: Pipeline with failed second command (graceful degradation with no validation)
-totalTests++;
-try
-{
+  public static async Task TestPipelineWithFailedSecondCommandThrows()
+  {
     string[] echoArgs = { "test" };
-    string result = await Run("echo", echoArgs, noValidation)
+    await AssertThrowsAsync<Exception>(
+      async () => await Run("echo", echoArgs, NoValidation)
         .Pipe("nonexistentcommand12345")
-        .GetStringAsync();
-    
-    if (string.IsNullOrEmpty(result))
-    {
-        Console.WriteLine("✅ Test 6 PASSED: Pipeline with failed second command returns empty string");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 6 FAILED: Expected empty string, got '{result}'");
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 6 FAILED: Exception - {ex.Message}");
-}
+        .GetStringAsync(),
+      "Pipeline with non-existent second command should throw even with no validation"
+    );
+  }
 
-// Test 7: Real-world scenario - find files and filter
-totalTests++;
-try
-{
+  public static async Task TestRealWorldPipelineFindAndFilter()
+  {
     string[] files = await Run("find", ".", "-name", "*.cs", "-type", "f")
-        .Pipe("head", "-5")
-        .GetLinesAsync();
+      .Pipe("head", "-5")
+      .GetLinesAsync();
     
-    if (files.Length <= 5 && files.All(f => f.EndsWith(".cs", StringComparison.Ordinal)))
-    {
-        Console.WriteLine($"✅ Test 7 PASSED: Real-world pipeline found {files.Length} .cs files");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 7 FAILED: Expected .cs files, got: [{string.Join(", ", files)}]");
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 7 FAILED: Exception - {ex.Message}");
-}
+    AssertTrue(
+      files.Length <= 5 && files.All(f => f.EndsWith(".cs", StringComparison.Ordinal)),
+      $"Real-world pipeline should find up to 5 .cs files, got {files.Length} files"
+    );
+  }
 
-// Test 8: Pipeline chaining multiple operations
-totalTests++;
-try
-{
+  public static async Task TestComplexPipelineChaining()
+  {
     string result = await Run("echo", "The quick brown fox jumps over the lazy dog")
-        .Pipe("tr", " ", "\n")
-        .Pipe("grep", "o")
-        .Pipe("wc", "-l")
-        .GetStringAsync();
+      .Pipe("tr", " ", "\n")
+      .Pipe("grep", "o")
+      .Pipe("wc", "-l")
+      .GetStringAsync();
     
-    if (result.Trim() == "4")  // "brown", "fox", "over", "dog"
-    {
-        Console.WriteLine("✅ Test 8 PASSED: Complex pipeline chaining works");
-        passCount++;
-    }
-    else
-    {
-        Console.WriteLine($"❌ Test 8 FAILED: Expected '4', got '{result.Trim()}'");
-    }
+    AssertTrue(
+      result.Trim() == "4",
+      "Complex pipeline should find 4 words containing 'o' (brown, fox, over, dog)"
+    );
+  }
 }
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Test 8 FAILED: Exception - {ex.Message}");
-}
-
-// Summary
-Console.WriteLine($"\n📊 PipelineCommands Results: {passCount}/{totalTests} tests passed");
-Environment.Exit(passCount == totalTests ? 0 : 1);
