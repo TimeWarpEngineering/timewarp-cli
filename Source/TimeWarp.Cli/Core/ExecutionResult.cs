@@ -2,7 +2,7 @@ namespace TimeWarp.Cli;
 
 public class ExecutionResult
 {
-  public CliWrap.CommandResult Result { get; }
+  private CliWrap.CommandResult Result { get; }
   public string StandardOutput { get; }
   public string StandardError { get; }
   

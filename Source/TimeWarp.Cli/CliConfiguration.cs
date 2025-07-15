@@ -1,12 +1,14 @@
 namespace TimeWarp.Cli;
 
+using System.Threading;
+
 /// <summary>
 /// Global configuration for TimeWarp.Cli, including command path overrides for testing.
 /// </summary>
 public static class CliConfiguration
 {
   private static readonly Dictionary<string, string> CommandPaths = new();
-  private static readonly object Lock = new();
+  private static readonly Lock Lock = new();
   
   /// <summary>
   /// Sets a custom path for a command executable. Useful for testing with mock executables.
