@@ -36,14 +36,14 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   private string? Format;
   private string? OutputVersion;
   private string? Config;
-  private bool Outdated;
-  private bool IncludeTransitive;
-  private bool Vulnerable;
-  private bool Deprecated;
+  private bool ShowOutdated;
+  private bool IncludesTransitive;
+  private bool ShowVulnerable;
+  private bool ShowDeprecated;
   private bool Interactive;
-  private bool IncludePrerelease;
-  private bool HighestMinor;
-  private bool HighestPatch;
+  private bool IncludesPrerelease;
+  private bool UseHighestMinor;
+  private bool UseHighestPatch;
   private List<string> Sources = new();
   private CommandOptions Options = new();
 
@@ -119,7 +119,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder Outdated()
   {
-    Outdated = true;
+    ShowOutdated = true;
     return this;
   }
 
@@ -129,7 +129,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder IncludeTransitive()
   {
-    IncludeTransitive = true;
+    IncludesTransitive = true;
     return this;
   }
 
@@ -139,7 +139,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder Vulnerable()
   {
-    Vulnerable = true;
+    ShowVulnerable = true;
     return this;
   }
 
@@ -149,7 +149,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder Deprecated()
   {
-    Deprecated = true;
+    ShowDeprecated = true;
     return this;
   }
 
@@ -169,7 +169,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder IncludePrerelease()
   {
-    IncludePrerelease = true;
+    IncludesPrerelease = true;
     return this;
   }
 
@@ -179,7 +179,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder HighestMinor()
   {
-    HighestMinor = true;
+    UseHighestMinor = true;
     return this;
   }
 
@@ -189,7 +189,7 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
   /// <returns>The builder instance for method chaining</returns>
   public DotNetListPackagesBuilder HighestPatch()
   {
-    HighestPatch = true;
+    UseHighestPatch = true;
     return this;
   }
 
@@ -305,22 +305,22 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
     }
 
     // Add boolean flags
-    if (Outdated)
+    if (ShowOutdated)
     {
       arguments.Add("--outdated");
     }
 
-    if (IncludeTransitive)
+    if (IncludesTransitive)
     {
       arguments.Add("--include-transitive");
     }
 
-    if (Vulnerable)
+    if (ShowVulnerable)
     {
       arguments.Add("--vulnerable");
     }
 
-    if (Deprecated)
+    if (ShowDeprecated)
     {
       arguments.Add("--deprecated");
     }
@@ -330,17 +330,17 @@ public class DotNetListPackagesBuilder : ICommandBuilder<DotNetListPackagesBuild
       arguments.Add("--interactive");
     }
 
-    if (IncludePrerelease)
+    if (IncludesPrerelease)
     {
       arguments.Add("--include-prerelease");
     }
 
-    if (HighestMinor)
+    if (UseHighestMinor)
     {
       arguments.Add("--highest-minor");
     }
 
-    if (HighestPatch)
+    if (UseHighestPatch)
     {
       arguments.Add("--highest-patch");
     }
