@@ -42,13 +42,13 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   private bool NoBuild;
   private bool NoDependencies;
   private bool NoLogo;
-  private bool IncludeSymbols;
-  private bool IncludeSource;
+  private bool IncludesSymbols;
+  private bool IncludesSource;
   private bool Force;
   private bool Interactive;
   private bool Serviceable;
-  private List<string> Sources = new();
-  private Dictionary<string, string> Properties = new();
+  private readonly List<string> Sources = [];
+  private readonly Dictionary<string, string> Properties = [];
   private CommandOptions Options = new();
 
   /// <summary>
@@ -185,7 +185,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder IncludeSymbols()
   {
-    IncludeSymbols = true;
+    IncludesSymbols = true;
     return this;
   }
 
@@ -195,7 +195,7 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
   /// <returns>The builder instance for method chaining</returns>
   public DotNetPackBuilder IncludeSource()
   {
-    IncludeSource = true;
+    IncludesSource = true;
     return this;
   }
 
@@ -376,12 +376,12 @@ public class DotNetPackBuilder : ICommandBuilder<DotNetPackBuilder>
       arguments.Add("--nologo");
     }
 
-    if (IncludeSymbols)
+    if (IncludesSymbols)
     {
       arguments.Add("--include-symbols");
     }
 
-    if (IncludeSource)
+    if (IncludesSource)
     {
       arguments.Add("--include-source");
     }

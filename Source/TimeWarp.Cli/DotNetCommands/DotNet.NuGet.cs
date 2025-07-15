@@ -1,6 +1,32 @@
 namespace TimeWarp.Cli;
 
 /// <summary>
+/// Represents the available NuGet cache types for the 'dotnet nuget locals' command.
+/// </summary>
+public enum NuGetCacheType
+{
+  /// <summary>
+  /// All cache locations.
+  /// </summary>
+  All,
+  
+  /// <summary>
+  /// HTTP request cache.
+  /// </summary>
+  HttpCache,
+  
+  /// <summary>
+  /// Global packages folder.
+  /// </summary>
+  GlobalPackages,
+  
+  /// <summary>
+  /// Temporary cache files.
+  /// </summary>
+  Temp
+}
+
+/// <summary>
 /// Fluent API for .NET CLI commands - NuGet command implementation.
 /// </summary>
 public static partial class DotNet
@@ -939,8 +965,8 @@ public class DotNetNuGetDisableSourceBuilder
 public class DotNetNuGetLocalsBuilder
 {
   private readonly CommandOptions Options;
-  private string? Clear;
-  private string? List;
+  private NuGetCacheType? ClearCacheType;
+  private NuGetCacheType? ListCacheType;
 
   public DotNetNuGetLocalsBuilder(CommandOptions options)
   {
@@ -950,37 +976,49 @@ public class DotNetNuGetLocalsBuilder
   /// <summary>
   /// Clears the specified local cache.
   /// </summary>
-  /// <param name="cache">The cache to clear (e.g., "all", "http-cache", "global-packages")</param>
+  /// <param name="cacheType">The cache type to clear</param>
   /// <returns>The builder instance for method chaining</returns>
-  public DotNetNuGetLocalsBuilder Clear(string cache)
+  public DotNetNuGetLocalsBuilder Clear(NuGetCacheType cacheType)
   {
-    Clear = cache;
+    ClearCacheType = cacheType;
     return this;
   }
 
   /// <summary>
   /// Lists the specified local cache.
   /// </summary>
-  /// <param name="cache">The cache to list (e.g., "all", "http-cache", "global-packages")</param>
+  /// <param name="cacheType">The cache type to list</param>
   /// <returns>The builder instance for method chaining</returns>
-  public DotNetNuGetLocalsBuilder List(string cache)
+  public DotNetNuGetLocalsBuilder List(NuGetCacheType cacheType)
   {
-    List = cache;
+    ListCacheType = cacheType;
     return this;
+  }
+
+  private static string GetCacheTypeString(NuGetCacheType cacheType)
+  {
+    return cacheType switch
+    {
+      NuGetCacheType.All => "all",
+      NuGetCacheType.HttpCache => "http-cache",
+      NuGetCacheType.GlobalPackages => "global-packages",
+      NuGetCacheType.Temp => "temp",
+      _ => throw new ArgumentOutOfRangeException(nameof(cacheType), cacheType, null)
+    };
   }
 
   public CommandResult Build()
   {
     List<string> arguments = new() { "nuget", "locals" };
 
-    if (!string.IsNullOrWhiteSpace(Clear))
+    if (ClearCacheType.HasValue)
     {
-      arguments.Add(Clear);
+      arguments.Add(GetCacheTypeString(ClearCacheType.Value));
       arguments.Add("--clear");
     }
-    else if (!string.IsNullOrWhiteSpace(List))
+    else if (ListCacheType.HasValue)
     {
-      arguments.Add(List);
+      arguments.Add(GetCacheTypeString(ListCacheType.Value));
       arguments.Add("--list");
     }
 
