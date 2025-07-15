@@ -35,7 +35,7 @@ public partial class GwqBuilder
   /// <returns>The builder instance for method chaining</returns>
   public GwqBuilder AddInteractive()
   {
-    _subCommand = "add";
+    SubCommand = "add";
     SubCommandArguments.Add("-i");
     return this;
   }

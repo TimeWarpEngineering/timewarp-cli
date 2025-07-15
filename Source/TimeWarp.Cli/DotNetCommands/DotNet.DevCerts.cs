@@ -58,7 +58,7 @@ public class DotNetDevCertsBuilder
 /// <summary>
 /// Fluent builder for 'dotnet dev-certs https' commands.
 /// </summary>
-public class DotNetDevCertsHttpsBuilder : ICommandBuilder<DotNetDevCertsHttpsBuilder>
+public class DotNetDevCertsHttpsBuilder
 {
   private readonly CommandOptions Options;
   private bool Check;
@@ -177,16 +177,6 @@ public class DotNetDevCertsHttpsBuilder : ICommandBuilder<DotNetDevCertsHttpsBui
   public DotNetDevCertsHttpsBuilder WithQuiet()
   {
     Quiet = true;
-    return this;
-  }
-
-  /// <summary>
-  /// Disables command validation, allowing the command to complete without throwing exceptions on non-zero exit codes.
-  /// </summary>
-  /// <returns>The builder instance for method chaining</returns>
-  public DotNetDevCertsHttpsBuilder WithNoValidation()
-  {
-    Options = Options.WithNoValidation();
     return this;
   }
 

@@ -113,6 +113,3 @@ public class DotNetToolBuilder
     return new DotNetToolRestoreBuilder(Options);
   }
 }
-
-
-
