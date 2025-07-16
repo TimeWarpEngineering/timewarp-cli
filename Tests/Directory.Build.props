@@ -8,13 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Add TimeWarp.Cli package reference for all test projects -->
-    <PackageReference Include="TimeWarp.Cli" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <!-- Reference TimeWarp.Cli library -->
+    <ProjectReference Include="$(MSBuildThisFileDirectory)../Source/TimeWarp.Cli/TimeWarp.Cli.csproj" />
+    
     <!-- Reference test helpers library -->
     <ProjectReference Include="$(MSBuildThisFileDirectory)TimeWarp.Cli.Test.Helpers/TimeWarp.Cli.Test.Helpers.csproj" />
+    
+    <!-- Direct reference to CliWrap for transitive dependency support -->
+    <PackageReference Include="CliWrap" />
   </ItemGroup>
 
   <ItemGroup>
