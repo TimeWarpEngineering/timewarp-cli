@@ -72,7 +72,13 @@ var warnings = await files.Pipe("grep", "WARN").GetLinesAsync();
 // C# scripts with arguments work seamlessly
 await Run("./myscript.cs", "--verbose", "-o", "output.txt").ExecuteAsync();
 
-// Use fluent command builders for complex commands
+// Use the new fluent builder API for complex commands
+var result = await Shell.Run("git")
+    .WithArguments("log", "--oneline", "-n", "10")
+    .WithWorkingDirectory("/my/repo")
+    .GetStringAsync();
+
+// Use fluent command builders for .NET commands
 var packages = await DotNet.ListPackages()
     .WithOutdated()
     .AsJson()

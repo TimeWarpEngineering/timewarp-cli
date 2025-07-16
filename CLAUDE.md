@@ -132,6 +132,22 @@ var count = await Run("git", "log", "--oneline", "-n", "10")
     .Pipe("head", "-5")
     .Pipe("wc", "-l")
     .GetStringAsync();
+
+// Fluent builder API (NEW in v0.6.0)
+var result = await Shell.Run("git")
+    .WithArguments("log", "--oneline", "-n", "10")
+    .WithWorkingDirectory("/my/repo")
+    .WithEnvironmentVariable("GIT_PAGER", "cat")
+    .WithNoValidation()
+    .GetStringAsync();
+
+// Complex command building
+var output = await Shell.Run("docker")
+    .WithArguments("run", "--rm")
+    .WithArguments("-e", "NODE_ENV=production")
+    .WithArguments("-v", "/host/path:/container/path")
+    .WithArguments("node:latest", "npm", "test")
+    .ExecuteAsync();
 ```
 
 ### Error Handling
