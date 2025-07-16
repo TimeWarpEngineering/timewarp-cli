@@ -3,6 +3,7 @@ namespace TimeWarp.Cli;
 public static class CommandExtensions
 {
   private const string CSharpScriptExtension = ".cs";
+  
   public static CommandResult Run
   (
     string executable,
