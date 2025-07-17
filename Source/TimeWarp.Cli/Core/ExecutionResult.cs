@@ -18,4 +18,64 @@ public class ExecutionResult
   public DateTimeOffset StartTime => Result.StartTime;
   public DateTimeOffset ExitTime => Result.ExitTime;
   public TimeSpan RunTime => Result.RunTime;
+  
+  public override string ToString()
+  {
+    var status = IsSuccess ? "Success" : "Failed";
+    return $"[{status}] Exit: {ExitCode}, Runtime: {RunTime.TotalSeconds:F2}s";
+  }
+  
+  /// <summary>
+  /// Returns a one-line summary of the execution result.
+  /// </summary>
+  public string ToSummary() => 
+    $"Exit: {ExitCode} | Runtime: {RunTime.TotalSeconds:F2}s | Output: {StandardOutput.Length} chars";
+  
+  /// <summary>
+  /// Returns a detailed, multi-line string representation of the execution result.
+  /// </summary>
+  public string ToDetailedString()
+  {
+    var sb = new StringBuilder();
+    sb.AppendLine($"=== Execution Result ===");
+    sb.AppendLine($"Status: {(IsSuccess ? "SUCCESS" : "FAILED")}");
+    sb.AppendLine($"Exit Code: {ExitCode}");
+    sb.AppendLine($"Runtime: {RunTime}");
+    
+    if (!string.IsNullOrEmpty(StandardOutput))
+    {
+      sb.AppendLine($"\nStandard Output:");
+      sb.AppendLine(StandardOutput);
+    }
+    
+    if (!string.IsNullOrEmpty(StandardError))
+    {
+      sb.AppendLine($"\nStandard Error:");
+      sb.AppendLine(StandardError);
+    }
+    
+    return sb.ToString();
+  }
+  
+  /// <summary>
+  /// Writes the execution result to the console with appropriate formatting and colors.
+  /// </summary>
+  public void WriteToConsole()
+  {
+    Console.ForegroundColor = IsSuccess ? ConsoleColor.Green : ConsoleColor.Red;
+    Console.WriteLine($"[{(IsSuccess ? "SUCCESS" : "FAILED")}] Exit Code: {ExitCode}");
+    Console.ResetColor();
+    
+    if (!string.IsNullOrEmpty(StandardOutput))
+    {
+      Console.WriteLine(StandardOutput);
+    }
+    
+    if (!string.IsNullOrEmpty(StandardError))
+    {
+      Console.ForegroundColor = ConsoleColor.Yellow;
+      Console.Error.WriteLine(StandardError);
+      Console.ResetColor();
+    }
+  }
 }
