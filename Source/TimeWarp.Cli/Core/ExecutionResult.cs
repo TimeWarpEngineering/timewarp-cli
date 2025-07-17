@@ -21,7 +21,7 @@ public class ExecutionResult
   
   public override string ToString()
   {
-    var status = IsSuccess ? "Success" : "Failed";
+    string status = IsSuccess ? "Success" : "Failed";
     return $"[{status}] Exit: {ExitCode}, Runtime: {RunTime.TotalSeconds:F2}s";
   }
   
@@ -36,21 +36,21 @@ public class ExecutionResult
   /// </summary>
   public string ToDetailedString()
   {
-    var sb = new StringBuilder();
-    sb.AppendLine($"=== Execution Result ===");
-    sb.AppendLine($"Status: {(IsSuccess ? "SUCCESS" : "FAILED")}");
-    sb.AppendLine($"Exit Code: {ExitCode}");
-    sb.AppendLine($"Runtime: {RunTime}");
+    StringBuilder sb = new();
+    sb.AppendLine("=== Execution Result ===");
+    sb.AppendLine(CultureInfo.InvariantCulture, $"Status: {(IsSuccess ? "SUCCESS" : "FAILED")}");
+    sb.AppendLine(CultureInfo.InvariantCulture, $"Exit Code: {ExitCode}");
+    sb.AppendLine(CultureInfo.InvariantCulture, $"Runtime: {RunTime}");
     
     if (!string.IsNullOrEmpty(StandardOutput))
     {
-      sb.AppendLine($"\nStandard Output:");
+      sb.AppendLine("\nStandard Output:");
       sb.AppendLine(StandardOutput);
     }
     
     if (!string.IsNullOrEmpty(StandardError))
     {
-      sb.AppendLine($"\nStandard Error:");
+      sb.AppendLine("\nStandard Error:");
       sb.AppendLine(StandardError);
     }
     
