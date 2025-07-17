@@ -160,7 +160,7 @@ public class CommandResult
     try
     {
       // Use Run() to create the next command instead of duplicating logic
-      CommandResult nextCommandResult = CommandExtensions.Run(executable, arguments ?? Array.Empty<string>());
+      CommandResult nextCommandResult = CommandExtensions.Run(executable, arguments);
       
       // If Run() failed, it returned a CommandResult with null Command
       if (nextCommandResult.InternalCommand == null)

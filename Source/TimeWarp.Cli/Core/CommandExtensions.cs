@@ -7,7 +7,7 @@ internal static class CommandExtensions
   internal static CommandResult Run
   (
     string executable,
-    params string[] arguments
+    params string[]? arguments
   )
   {
     return Run(executable, arguments, new CommandOptions());
@@ -16,7 +16,7 @@ internal static class CommandExtensions
   internal static CommandResult Run
   (
     string executable,
-    string[] arguments,
+    string[]? arguments,
     CommandOptions commandOptions,
     string? standardInput = null
   )
@@ -39,12 +39,12 @@ internal static class CommandExtensions
     if (executable.EndsWith(CSharpScriptExtension, StringComparison.OrdinalIgnoreCase))
     {
       // Insert -- at the beginning of arguments to prevent dotnet from intercepting them
-      List<string> newArgs = ["--", .. arguments];
+      List<string> newArgs = ["--", .. (arguments ?? [])];
       arguments = [.. newArgs];
     }
     
     Command cliCommand = CliWrap.Cli.Wrap(executable)
-      .WithArguments(arguments);
+      .WithArguments(arguments ?? []);
     
     // Apply configuration options
     cliCommand = commandOptions.ApplyTo(cliCommand);
