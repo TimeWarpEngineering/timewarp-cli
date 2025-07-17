@@ -143,7 +143,7 @@ public class CommandResult
   public CommandResult Pipe
   (
     string executable,
-    params string[] arguments
+    params string[]? arguments
   )
   {
     // Input validation
@@ -160,7 +160,7 @@ public class CommandResult
     try
     {
       // Use Run() to create the next command instead of duplicating logic
-      CommandResult nextCommandResult = CommandExtensions.Run(executable, arguments);
+      CommandResult nextCommandResult = CommandExtensions.Run(executable, arguments ?? Array.Empty<string>());
       
       // If Run() failed, it returned a CommandResult with null Command
       if (nextCommandResult.InternalCommand == null)

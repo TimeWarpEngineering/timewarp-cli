@@ -98,4 +98,20 @@ internal sealed class PipelineTests
       "Complex pipeline should find 4 words containing 'o' (brown, fox, over, dog)"
     );
   }
+
+  public static async Task TestPipeWithNoArguments()
+  {
+    // Test that Pipe works without arguments (using new optional parameter)
+    string result = await Shell.Run("echo").WithArguments("zebra\napple\nbanana")
+      .Build()
+      .Pipe("sort")  // No arguments!
+      .GetStringAsync();
+    
+    string[] lines = result.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+    
+    AssertTrue(
+      lines.Length == 3 && lines[0].Trim() == "apple",
+      $"Pipe with no arguments should work for sort command, first line should be 'apple', got '{lines[0].Trim()}'"
+    );
+  }
 }
