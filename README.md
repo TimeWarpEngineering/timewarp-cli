@@ -78,6 +78,12 @@ var result = await Shell.Run("git")
     .WithWorkingDirectory("/my/repo")
     .GetStringAsync();
 
+// Provide standard input to commands
+var grepResult = await Shell.Run("grep")
+    .WithArguments("pattern")
+    .WithStandardInput("line1\nline2 with pattern\nline3")
+    .GetStringAsync();
+
 // Use fluent command builders for .NET commands
 var packages = await DotNet.ListPackages()
     .WithOutdated()
@@ -111,6 +117,7 @@ Check out the latest NuGet package: [TimeWarp.Cli](https://www.nuget.org/package
 - **Async-First Design**: All operations support modern async/await patterns
 - **Smart Error Handling**: Commands throw on errors by default, with opt-in graceful degradation
 - **Pipeline Support**: Chain commands with Unix-like pipe semantics
+- **Standard Input Support**: Provide stdin to commands with `.WithStandardInput()`
 - **Opt-in Caching**: Cache expensive command results with `.Cached()` method
 - **Configuration Options**: Working directory, environment variables, and more
 - **Cancellation Support**: Full CancellationToken support for timeouts and manual cancellation

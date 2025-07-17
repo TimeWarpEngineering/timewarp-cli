@@ -131,4 +131,56 @@ internal sealed class RunBuilderTests
       $"Chained configuration should work correctly, got '{result.Trim()}'"
     );
   }
+
+  public static async Task TestRunBuilderWithStandardInput()
+  {
+    string result = await Shell.Run("grep")
+      .WithArguments("World")
+      .WithStandardInput("Hello World\nGoodbye Moon\nHello Universe")
+      .GetStringAsync();
+    
+    AssertTrue(
+      result.Trim() == "Hello World",
+      $"StandardInput with grep should find 'Hello World', got '{result.Trim()}'"
+    );
+  }
+
+  public static async Task TestRunBuilderWithStandardInputLines()
+  {
+    string result = await Shell.Run("wc")
+      .WithArguments("-l")
+      .WithStandardInput("Line 1\nLine 2\nLine 3\nLine 4\nLine 5\n")
+      .GetStringAsync();
+    
+    AssertTrue(
+      result.Trim() == "5",
+      $"StandardInput line count should be 5, got '{result.Trim()}'"
+    );
+  }
+
+  public static async Task TestRunBuilderWithStandardInputPipeline()
+  {
+    string[] result = await Shell.Run("cat")
+      .WithStandardInput("apple\nbanana\ncherry\ndate")
+      .Pipe("sort")
+      .Pipe("head", "-2")
+      .GetLinesAsync();
+    
+    AssertTrue(
+      result.Length == 2 && result[0] == "apple" && result[1] == "banana",
+      $"StandardInput with pipeline should return sorted first 2 items"
+    );
+  }
+
+  public static async Task TestRunBuilderWithEmptyStandardInput()
+  {
+    string result = await Shell.Run("cat")
+      .WithStandardInput("")
+      .GetStringAsync();
+    
+    AssertTrue(
+      result.Length == 0,
+      $"Empty StandardInput should return empty string"
+    );
+  }
 }

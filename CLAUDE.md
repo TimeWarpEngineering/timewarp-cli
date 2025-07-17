@@ -148,6 +148,18 @@ var output = await Shell.Run("docker")
     .WithArguments("-v", "/host/path:/container/path")
     .WithArguments("node:latest", "npm", "test")
     .ExecuteAsync();
+
+// Provide standard input to commands
+var grepResult = await Shell.Run("grep")
+    .WithArguments("pattern")
+    .WithStandardInput("line1\nline2 with pattern\nline3")
+    .GetStringAsync();
+
+// Combine standard input with pipelines
+var sortedTop3 = await Shell.Run("sort")
+    .WithStandardInput("banana\napple\ncherry\ndate")
+    .Pipe("head", "-3")
+    .GetLinesAsync();
 ```
 
 ### Error Handling

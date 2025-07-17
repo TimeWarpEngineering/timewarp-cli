@@ -8,6 +8,7 @@ public class RunBuilder : ICommandBuilder<RunBuilder>
   private readonly string Executable;
   private readonly List<string> Arguments = new();
   private CommandOptions Options = new();
+  private string? StandardInput;
 
   /// <summary>
   /// Initializes a new instance of the RunBuilder class.
@@ -67,12 +68,23 @@ public class RunBuilder : ICommandBuilder<RunBuilder>
   }
 
   /// <summary>
+  /// Provides standard input to the command.
+  /// </summary>
+  /// <param name="input">The text to provide as standard input</param>
+  /// <returns>The builder instance for method chaining</returns>
+  public RunBuilder WithStandardInput(string input)
+  {
+    StandardInput = input ?? throw new ArgumentNullException(nameof(input));
+    return this;
+  }
+
+  /// <summary>
   /// Builds the command and returns a CommandResult.
   /// </summary>
   /// <returns>A CommandResult for further processing</returns>
   public CommandResult Build()
   {
-    return CommandExtensions.Run(Executable, Arguments.ToArray(), Options);
+    return CommandExtensions.Run(Executable, Arguments.ToArray(), Options, StandardInput);
   }
 
   /// <summary>

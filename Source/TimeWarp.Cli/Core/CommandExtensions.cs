@@ -17,7 +17,8 @@ public static class CommandExtensions
   (
     string executable,
     string[] arguments,
-    CommandOptions commandOptions
+    CommandOptions commandOptions,
+    string? standardInput = null
   )
   {
     // Input validation
@@ -47,6 +48,12 @@ public static class CommandExtensions
     
     // Apply configuration options
     cliCommand = commandOptions.ApplyTo(cliCommand);
+    
+    // Apply standard input if provided
+    if (!string.IsNullOrEmpty(standardInput))
+    {
+      cliCommand = cliCommand.WithStandardInputPipe(PipeSource.FromString(standardInput));
+    }
       
     return new CommandResult(cliCommand);
   }
