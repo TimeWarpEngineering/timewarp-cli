@@ -35,6 +35,6 @@ public static class GhqExtensions
   {
     // This would need to be implemented to extract arguments from FzfBuilder
     // For now, return empty array
-    return Array.Empty<string>();
+    return [];
   }
 }

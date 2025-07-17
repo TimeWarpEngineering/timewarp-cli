@@ -24,6 +24,6 @@ public static class FzfExtensions
   {
     // This is a simplified implementation
     // In a real implementation, you'd extract the arguments from the FzfBuilder
-    return Array.Empty<string>();
+    return [];
   }
 }

@@ -37,7 +37,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   private string? TerminalLogger;
   private Dictionary<string, string> Properties = new();
   private Dictionary<string, string> EnvironmentVariables = new();
-  private string[] ProgramArguments = Array.Empty<string>();
+  private string[] ProgramArguments = [];
   private CommandOptions Options = new();
 
   /// <summary>

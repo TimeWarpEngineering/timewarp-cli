@@ -69,7 +69,7 @@ public class CommandResult
   {
     if (Command == null)
     {
-      return Array.Empty<string>();
+      return [];
     }
     
     // Check cache if caching is enabled
