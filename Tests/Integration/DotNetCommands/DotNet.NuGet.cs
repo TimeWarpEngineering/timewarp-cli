@@ -81,8 +81,8 @@ internal sealed class DotNetNuGetTests
 
   public static async Task NuGetLocalsCommandBuilder()
   {
-    CommandResult clearCommand = DotNet.NuGet().Locals().Clear("http-cache").Build();
-    CommandResult listCommand = DotNet.NuGet().Locals().List("global-packages").Build();
+    CommandResult clearCommand = DotNet.NuGet().Locals().Clear(NuGetCacheType.HttpCache).Build();
+    CommandResult listCommand = DotNet.NuGet().Locals().List(NuGetCacheType.GlobalPackages).Build();
     
     AssertTrue(clearCommand != null && listCommand != null, "NuGet Locals commands returned null");
     await Task.CompletedTask;

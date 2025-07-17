@@ -6,13 +6,10 @@ await RunTests<ErrorHandlingTests>();
 internal sealed class ErrorHandlingTests
 {
 
-  // Create options with no validation for graceful degradation tests
-  static CommandOptions NoValidationCommandOptions = new CommandOptions().WithNoValidation();
-
   public static async Task TestNonExistentCommandWithNoValidation()
   {
     await AssertThrowsAsync<Exception>(
-      async () => await Run("nonexistentcommand12345", Array.Empty<string>(), NoValidationCommandOptions).GetStringAsync(),
+      async () => await Shell.Run("nonexistentcommand12345").WithNoValidation().GetStringAsync(),
       "should have thrown for non-existent command"
     );
   }
@@ -21,7 +18,7 @@ internal sealed class ErrorHandlingTests
   {
     string[] lsArgs = ["/nonexistent/path/12345"];
 
-    string lines = await Run("ls", lsArgs, NoValidationCommandOptions).GetStringAsync();
+    string lines = await Shell.Run("ls").WithArguments(lsArgs).WithNoValidation().GetStringAsync();
 
     AssertTrue(
       string.IsNullOrEmpty(lines),
@@ -32,7 +29,7 @@ internal sealed class ErrorHandlingTests
   public static async Task TestExecuteAsyncThrowsOnNonZeroExit()
   {
     await AssertThrowsAsync<Exception>(
-      async () => await Run("ls", "/nonexistent/path/12345").ExecuteAsync(),
+      async () => await Shell.Run("ls").WithArguments("/nonexistent/path/12345").ExecuteAsync(),
       "should have thrown for command with non-zero exit code"
     );
   }
@@ -41,14 +38,14 @@ internal sealed class ErrorHandlingTests
   {
     string[] lsArgs2 = ["/nonexistent/path/12345"];
 
-    string[] lines = await Run("ls", lsArgs2, NoValidationCommandOptions).GetLinesAsync();
+    string[] lines = await Shell.Run("ls").WithArguments(lsArgs2).WithNoValidation().GetLinesAsync();
 
     AssertTrue(lines.Length == 0, "should return empty array for non-existent path with no validation");
   }
 
   public static async Task TestSpecialCharactersInArguments()
   {
-    string result = await Run("echo", "Hello \"World\" with 'quotes' and $pecial chars!").GetStringAsync();
+    string result = await Shell.Run("echo").WithArguments("Hello \"World\" with 'quotes' and $pecial chars!").GetStringAsync();
 
     AssertTrue(
       !string.IsNullOrEmpty(result),
@@ -58,7 +55,7 @@ internal sealed class ErrorHandlingTests
 
   public static async Task TestEmptyCommandReturnsEmptyString()
   {
-    string result = await Run("").GetStringAsync();
+    string result = await Shell.Run("").GetStringAsync();
     AssertTrue(
       string.IsNullOrEmpty(result),
       "should return empty string for empty command"
@@ -67,7 +64,7 @@ internal sealed class ErrorHandlingTests
 
   public static async Task TestWhitespaceCommandReturnsEmptyString()
   {
-    string result = await Run("   ").GetStringAsync();
+    string result = await Shell.Run("   ").GetStringAsync();
     AssertTrue(
       string.IsNullOrEmpty(result),
       "should return empty string for whitespace command"
@@ -77,7 +74,7 @@ internal sealed class ErrorHandlingTests
   public static async Task TestDefaultGetStringThrowsOnError()
   {
     await AssertThrowsAsync<Exception>(
-      async () => await Run("ls", "/nonexistent/path/12345").GetStringAsync(),
+      async () => await Shell.Run("ls").WithArguments("/nonexistent/path/12345").GetStringAsync(),
       "should have thrown for command with non-zero exit code"
     );
   }
@@ -85,7 +82,7 @@ internal sealed class ErrorHandlingTests
   public static async Task TestDefaultGetLinesThrowsOnError()
   {
     await AssertThrowsAsync<Exception>(
-      async () => await Run("ls", "/nonexistent/path/12345").GetLinesAsync(),
+      async () => await Shell.Run("ls").WithArguments("/nonexistent/path/12345").GetLinesAsync(),
       "should have thrown for command with non-zero exit code"
     );
   }
@@ -93,7 +90,7 @@ internal sealed class ErrorHandlingTests
   public static async Task TestExecuteAsyncWithNoValidation()
   {
     string[] lsArgs3 = ["/nonexistent/path/12345"];
-    await Run("ls", lsArgs3, NoValidationCommandOptions).ExecuteAsync();
+    await Shell.Run("ls").WithArguments(lsArgs3).WithNoValidation().ExecuteAsync();
     AssertTrue(
       true,
       "should not throw for command with no validation"

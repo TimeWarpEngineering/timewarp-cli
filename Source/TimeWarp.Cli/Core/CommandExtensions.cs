@@ -1,10 +1,10 @@
 namespace TimeWarp.Cli;
 
-public static class CommandExtensions
+internal static class CommandExtensions
 {
   private const string CSharpScriptExtension = ".cs";
   
-  public static CommandResult Run
+  internal static CommandResult Run
   (
     string executable,
     params string[] arguments
@@ -13,7 +13,7 @@ public static class CommandExtensions
     return Run(executable, arguments, new CommandOptions());
   }
   
-  public static CommandResult Run
+  internal static CommandResult Run
   (
     string executable,
     string[] arguments,

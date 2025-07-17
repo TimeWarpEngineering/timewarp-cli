@@ -10,7 +10,6 @@ internal sealed class ConfigurationTests
   static readonly string[] CombinedTestArray = { "combined_test" };
   static readonly string[] FluentTestArray = { "fluent_test" };
   static readonly string[] LineTestArray = { "line1\nline2\nline3" };
-  static readonly string[] NullTestArray = { "null_test" };
 
   public static async Task TestWorkingDirectoryConfiguration()
   {
@@ -22,13 +21,13 @@ internal sealed class ConfigurationTests
     try
     {
       CommandOptions options = new CommandOptions().WithWorkingDirectory(testDir);
-      string result = await Run("pwd", Array.Empty<string>(), options).GetStringAsync();
+      string result = await Shell.Run("pwd").WithWorkingDirectory(testDir).GetStringAsync();
       
       // On Windows, pwd might not exist, try different approach
       if (string.IsNullOrEmpty(result))
       {
         // Try with echo command that should work on all platforms
-        result = await Run("echo", TestArray, options).GetStringAsync();
+        result = await Shell.Run("echo").WithArguments(TestArray).WithWorkingDirectory(testDir).GetStringAsync();
         AssertTrue(
           result.Trim() == "test",
           "Working directory configuration should work (verified via echo)"
@@ -63,12 +62,12 @@ internal sealed class ConfigurationTests
       ? new[] { "%TEST_VAR%" }  // Windows batch style
       : new[] { "$TEST_VAR" };  // Unix shell style
     
-    string result = await Run("echo", echoArgs, options).GetStringAsync();
+    string result = await Shell.Run("echo").WithArguments(echoArgs).WithEnvironmentVariable("TEST_VAR", "test_value_123").GetStringAsync();
     
     if (!result.Trim().Contains("test_value_123", StringComparison.Ordinal))
     {
       // Fallback test - just verify the command ran successfully with options
-      string fallbackResult = await Run("echo", TestArray, options).GetStringAsync();
+      string fallbackResult = await Shell.Run("echo").WithArguments(TestArray).WithEnvironmentVariable("TEST_VAR", "test_value_123").GetStringAsync();
       AssertTrue(
         fallbackResult.Trim() == "test",
         "Configuration with environment variables should not break execution"
@@ -92,7 +91,7 @@ internal sealed class ConfigurationTests
     };
     
     CommandOptions options = new CommandOptions().WithEnvironmentVariables(envVars);
-    string result = await Run("echo", MultiEnvTestArray, options).GetStringAsync();
+    string result = await Shell.Run("echo").WithArguments(MultiEnvTestArray).WithEnvironmentVariable("VAR1", "value1").WithEnvironmentVariable("VAR2", "value2").GetStringAsync();
     
     AssertTrue(
       result.Trim() == "multi-env-test",
@@ -107,7 +106,7 @@ internal sealed class ConfigurationTests
       .WithWorkingDirectory(tempDir)
       .WithEnvironmentVariable("COMBINED_TEST", "success");
     
-    string result = await Run("echo", CombinedTestArray, options).GetStringAsync();
+    string result = await Shell.Run("echo").WithArguments(CombinedTestArray).WithWorkingDirectory(tempDir).WithEnvironmentVariable("COMBINED_TEST", "success").GetStringAsync();
     
     AssertTrue(
       result.Trim() == "combined_test",
@@ -122,7 +121,7 @@ internal sealed class ConfigurationTests
       .WithEnvironmentVariable("FLUENT1", "value1")
       .WithEnvironmentVariable("FLUENT2", "value2");
     
-    string result = await Run("echo", FluentTestArray, options).GetStringAsync();
+    string result = await Shell.Run("echo").WithArguments(FluentTestArray).WithWorkingDirectory(Path.GetTempPath()).WithEnvironmentVariable("TEST1", "value1").WithEnvironmentVariable("TEST2", "value2").GetStringAsync();
     
     AssertTrue(
       result.Trim() == "fluent_test",
@@ -132,7 +131,7 @@ internal sealed class ConfigurationTests
 
   public static async Task TestBackwardCompatibility()
   {
-    string result = await Run("echo", "backward_compatibility_test").GetStringAsync();
+    string result = await Shell.Run("echo").WithArguments("backward_compatibility_test").GetStringAsync();
     
     AssertTrue(
       result.Trim() == "backward_compatibility_test",
@@ -145,7 +144,7 @@ internal sealed class ConfigurationTests
     CommandOptions options = new CommandOptions()
       .WithEnvironmentVariable("PIPELINE_TEST", "pipeline_value");
     
-    string[] result = await Run("echo", LineTestArray, options)
+    string[] result = await Shell.Run("echo").WithArguments(LineTestArray).WithEnvironmentVariable("LINE_TEST", "value")
       .Pipe("grep", "line")
       .GetLinesAsync();
     
@@ -155,13 +154,4 @@ internal sealed class ConfigurationTests
     );
   }
 
-  public static async Task TestNullOptionsHandling()
-  {
-    string result = await Run("echo", NullTestArray, null!).GetStringAsync();
-    
-    AssertTrue(
-      string.IsNullOrEmpty(result),
-      "Null options should be handled gracefully"
-    );
-  }
 }
