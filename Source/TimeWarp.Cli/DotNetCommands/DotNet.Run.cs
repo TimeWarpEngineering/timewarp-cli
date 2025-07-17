@@ -35,9 +35,9 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   private bool Interactive;
   private string? Verbosity;
   private string? TerminalLogger;
-  private Dictionary<string, string> Properties = new();
-  private Dictionary<string, string> EnvironmentVariables = new();
-  private string[] ProgramArguments = [];
+  private readonly Dictionary<string, string> Properties = [];
+  private readonly Dictionary<string, string> EnvironmentVariables = [];
+  private string[]? ProgramArguments;
   private CommandOptions Options = new();
 
   /// <summary>
@@ -130,7 +130,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
   /// </summary>
   /// <param name="arguments">Arguments to pass to the program</param>
   /// <returns>The builder instance for method chaining</returns>
-  public DotNetRunBuilder WithArguments(params string[] arguments)
+  public DotNetRunBuilder WithArguments(params string[]? arguments)
   {
     ProgramArguments = arguments;
     return this;
@@ -398,7 +398,7 @@ public class DotNetRunBuilder : ICommandBuilder<DotNetRunBuilder>
     }
 
     // Add program arguments if specified
-    if (ProgramArguments.Length > 0)
+    if (ProgramArguments?.Length > 0)
     {
       arguments.Add("--");
       arguments.AddRange(ProgramArguments);
