@@ -257,4 +257,10 @@ public class CommandResult
       return NullCommandResult;
     }
   }
+  
+  /// <summary>
+  /// Returns the command string that would be executed, useful for debugging.
+  /// </summary>
+  /// <returns>The command string in the format "executable arguments", or "[No command]" if no command is configured</returns>
+  public string ToCommandString() => Command?.ToString() ?? "[No command]";
 }
