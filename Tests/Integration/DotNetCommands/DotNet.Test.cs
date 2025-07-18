@@ -5,29 +5,58 @@ await RunTests<DotNetTestTests>();
 // Define a class to hold the test methods (NOT static so it can be used as generic parameter)
 internal sealed class DotNetTestTests
 {
-  public static async Task TestBasicBuilderCreation()
+  public static async Task TestBasicDotNetTestCommand()
   {
-    DotNetTestBuilder testBuilder = DotNet.Test();
-    AssertTrue(testBuilder != null, "DotNet.Test() should return a non-null builder");
+    string command = DotNet.Test()
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "dotnet test",
+      $"Expected 'dotnet test', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
+  }
+  
+  public static async Task TestTestWithProjectOnly()
+  {
+    string command = DotNet.Test()
+      .WithProject("MyApp.Tests.csproj")
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "dotnet test MyApp.Tests.csproj",
+      $"Expected 'dotnet test MyApp.Tests.csproj', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestFluentConfigurationMethods()
   {
-    CommandResult command = DotNet.Test()
+    string command = DotNet.Test()
       .WithProject("test.csproj")
       .WithConfiguration("Debug")
       .WithFramework("net10.0")
       .WithNoRestore()
       .WithFilter("Category=Unit")
       .WithLogger("console")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Test fluent configuration should build successfully");
+    AssertTrue(
+      command == "dotnet test test.csproj --configuration Debug --framework net10.0 --filter Category=Unit --logger console --no-restore",
+      $"Expected correct test command with configuration options, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestMethodChainingWithAdvancedOptions()
   {
-    CommandResult chainedCommand = DotNet.Test()
+    string command = DotNet.Test()
       .WithProject("test.csproj")
       .WithConfiguration("Release")
       .WithArchitecture("x64")
@@ -42,33 +71,52 @@ internal sealed class DotNetTestTests
       .WithCollect()
       .WithResultsDirectory("TestResults")
       .WithProperty("Platform", "AnyCPU")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(chainedCommand != null, "Test method chaining should work correctly");
+    AssertTrue(
+      command == "dotnet test test.csproj --configuration Release --arch x64 --os linux --verbosity minimal --filter TestCategory=Integration --results-directory TestResults --logger trx --logger html --no-restore --no-build --blame --collect --property:Platform=AnyCPU",
+      $"Expected correct test command with advanced options, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    CommandResult envCommand = DotNet.Test()
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    string command = DotNet.Test()
       .WithProject("test.csproj")
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("TEST_ENV", "integration")
       .WithNoLogo()
       .WithSettings("test.runsettings")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(envCommand != null, "Test working directory and environment variables should work correctly");
+    AssertTrue(
+      command == "dotnet test test.csproj --settings test.runsettings --nologo",
+      $"Expected 'dotnet test test.csproj --settings test.runsettings --nologo', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestCommandBuilderWithNonExistentProject()
   {
     // Verify that the command builder creates a valid command even with non-existent project
-    CommandResult command = DotNet.Test()
+    string command = DotNet.Test()
       .WithProject("nonexistent.csproj")
       .WithConfiguration("Debug")
       .WithNoRestore()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Test command builder should create a valid command");
+    AssertTrue(
+      command == "dotnet test nonexistent.csproj --configuration Debug --no-restore",
+      $"Expected correct command string even for non-existent projects, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 }

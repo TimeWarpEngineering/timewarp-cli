@@ -4,81 +4,139 @@ await RunTests<DotNetSlnCommandTests>();
 
 internal sealed class DotNetSlnCommandTests
 {
-  public static async Task BasicDotNetSlnBuilderCreation()
+  public static async Task BasicDotNetSlnCommand()
   {
-    DotNetSlnBuilder slnBuilder = DotNet.Sln();
-    AssertTrue(slnBuilder != null, "DotNet.Sln() should create a valid builder");
+    // DotNet.Sln() alone doesn't build a valid command - needs a subcommand
+    // This test verifies the builder is created
+    DotNetSlnBuilder builder = DotNet.Sln();
+    
+    AssertTrue(
+      builder != null,
+      "DotNet.Sln() should create a valid builder"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task DotNetSlnWithSolutionFileParameter()
   {
-    DotNetSlnBuilder slnBuilder = DotNet.Sln("MySolution.sln");
-    AssertTrue(slnBuilder != null, "DotNet.Sln() with solution file should create a valid builder");
+    // Test that we can create a builder with solution file
+    DotNetSlnBuilder builder = DotNet.Sln("MySolution.sln");
+    
+    AssertTrue(
+      builder != null,
+      "DotNet.Sln() with solution file should create a valid builder"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task SolutionAddCommand()
   {
-    CommandResult command = DotNet.Sln("MySolution.sln")
+    string command = DotNet.Sln("MySolution.sln")
       .Add("MyApp.csproj")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Solution Add command should build successfully");
+    AssertTrue(
+      command == "dotnet sln MySolution.sln add MyApp.csproj",
+      $"Expected 'dotnet sln MySolution.sln add MyApp.csproj', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task SolutionAddWithMultipleProjects()
   {
-    CommandResult command = DotNet.Sln("MySolution.sln")
+    string command = DotNet.Sln("MySolution.sln")
       .Add("MyApp.csproj", "MyLibrary.csproj", "MyTests.csproj")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Solution Add with multiple projects should build successfully");
+    AssertTrue(
+      command == "dotnet sln MySolution.sln add MyApp.csproj MyLibrary.csproj MyTests.csproj",
+      $"Expected 'dotnet sln MySolution.sln add MyApp.csproj MyLibrary.csproj MyTests.csproj', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task SolutionListCommand()
   {
-    CommandResult command = DotNet.Sln("MySolution.sln")
+    string command = DotNet.Sln("MySolution.sln")
       .List()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Solution List command should build successfully");
+    AssertTrue(
+      command == "dotnet sln MySolution.sln list",
+      $"Expected 'dotnet sln MySolution.sln list', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task SolutionRemoveCommand()
   {
-    CommandResult command = DotNet.Sln("MySolution.sln")
+    string command = DotNet.Sln("MySolution.sln")
       .Remove("MyApp.csproj")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Solution Remove command should build successfully");
+    AssertTrue(
+      command == "dotnet sln MySolution.sln remove MyApp.csproj",
+      $"Expected 'dotnet sln MySolution.sln remove MyApp.csproj', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task SolutionMigrateCommand()
   {
-    CommandResult command = DotNet.Sln("MySolution.sln")
+    string command = DotNet.Sln("MySolution.sln")
       .Migrate()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Solution Migrate command should build successfully");
+    AssertTrue(
+      command == "dotnet sln MySolution.sln migrate",
+      $"Expected 'dotnet sln MySolution.sln migrate', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task WorkingDirectoryAndEnvironmentVariables()
   {
-    CommandResult command = DotNet.Sln()
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    string command = DotNet.Sln()
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("DOTNET_ENV", "test")
       .List()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Working directory and environment variables should work correctly");
+    AssertTrue(
+      command == "dotnet sln list",
+      $"Expected 'dotnet sln list', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task CommandBuilderWithNonExistentSolution()
   {
     // Verify that the command builder creates a valid command even with non-existent solution
-    CommandResult command = DotNet.Sln("nonexistent.sln")
+    string command = DotNet.Sln("nonexistent.sln")
       .List()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Solution command builder should create a valid command");
+    AssertTrue(
+      command == "dotnet sln nonexistent.sln list",
+      $"Expected 'dotnet sln nonexistent.sln list', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 }
