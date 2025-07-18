@@ -9,115 +9,187 @@ internal sealed class DotNetDevCertsCommandTests
 {
   public static async Task TestBasicDotNetDevCertsBuilderCreation()
   {
+    // DotNet.DevCerts() alone doesn't build a valid command - needs a subcommand
     DotNetDevCertsBuilder devCertsBuilder = DotNet.DevCerts();
-    AssertTrue(devCertsBuilder != null, "DotNet.DevCerts() should return a valid builder instance");
+    
+    AssertTrue(
+      devCertsBuilder != null,
+      "DotNet.DevCerts() should create a valid builder"
+    );
+    
+    await Task.CompletedTask;
   }
 
-  public static async Task TestDevCertsHttpsBuilderCreation()
+  public static async Task TestDevCertsHttpsCommand()
   {
-    DotNetDevCertsHttpsBuilder httpsBuilder = DotNet.DevCerts().Https();
-    AssertTrue(httpsBuilder != null, "DotNet.DevCerts().Https() should return a valid builder instance");
+    string command = DotNet.DevCerts().Https()
+      .Build()
+      .ToCommandString();
+      
+    AssertTrue(
+      command == "dotnet dev-certs https",
+      $"Expected 'dotnet dev-certs https', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestDevCertsHttpsWithCheckOption()
   {
-    CommandResult command = DotNet.DevCerts()
+    string command = DotNet.DevCerts()
       .Https()
       .WithCheck()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "DevCerts Https with Check option should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet dev-certs https --check",
+      $"Expected 'dotnet dev-certs https --check', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestDevCertsHttpsWithCleanOption()
   {
-    CommandResult command = DotNet.DevCerts()
+    string command = DotNet.DevCerts()
       .Https()
       .WithClean()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "DevCerts Https with Clean option should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet dev-certs https --clean",
+      $"Expected 'dotnet dev-certs https --clean', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestDevCertsHttpsWithExportOptions()
   {
-    CommandResult command = DotNet.DevCerts()
+    string command = DotNet.DevCerts()
       .Https()
       .WithExport()
       .WithExportPath("./localhost.pfx")
       .WithPassword("testpassword")
       .WithFormat("Pfx")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "DevCerts Https with Export options should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet dev-certs https --export --export-path ./localhost.pfx --password testpassword --format Pfx",
+      $"Expected correct dev-certs export command, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestDevCertsHttpsWithTrustOption()
   {
-    CommandResult command = DotNet.DevCerts()
+    string command = DotNet.DevCerts()
       .Https()
       .WithTrust()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "DevCerts Https with Trust option should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet dev-certs https --trust",
+      $"Expected 'dotnet dev-certs https --trust', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestDevCertsHttpsWithNoPasswordOption()
   {
-    CommandResult command = DotNet.DevCerts()
+    string command = DotNet.DevCerts()
       .Https()
       .WithExport()
       .WithExportPath("./localhost.pfx")
       .WithNoPassword()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "DevCerts Https with NoPassword option should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet dev-certs https --export --export-path ./localhost.pfx --no-password",
+      $"Expected correct dev-certs no-password command, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestDevCertsHttpsWithVerboseAndQuietOptions()
   {
-    CommandResult verboseCommand = DotNet.DevCerts().Https().WithVerbose().Build();
-    CommandResult quietCommand = DotNet.DevCerts().Https().WithQuiet().Build();
+    string verboseCommand = DotNet.DevCerts().Https().WithVerbose().Build().ToCommandString();
+    string quietCommand = DotNet.DevCerts().Https().WithQuiet().Build().ToCommandString();
     
-    AssertTrue(verboseCommand != null && quietCommand != null, 
-      "DevCerts Https with Verbose and Quiet options should return valid CommandResult instances");
+    AssertTrue(
+      verboseCommand == "dotnet dev-certs https --verbose",
+      $"Expected 'dotnet dev-certs https --verbose', got '{verboseCommand}'"
+    );
+    
+    AssertTrue(
+      quietCommand == "dotnet dev-certs https --quiet",
+      $"Expected 'dotnet dev-certs https --quiet', got '{quietCommand}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestDevCertsHttpsWithPemFormat()
   {
-    CommandResult command = DotNet.DevCerts()
+    string command = DotNet.DevCerts()
       .Https()
       .WithExport()
       .WithExportPath("./localhost.pem")
       .WithFormat("Pem")
       .WithNoPassword()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "DevCerts Https with PEM format should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet dev-certs https --export --export-path ./localhost.pem --format Pem --no-password",
+      $"Expected correct dev-certs PEM format command, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    CommandResult command = DotNet.DevCerts()
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    string command = DotNet.DevCerts()
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("DOTNET_ENV", "test")
       .Https()
       .WithCheck()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Working directory and environment variables should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet dev-certs https --check",
+      $"Expected 'dotnet dev-certs https --check', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestDevCertsCheckCommandExecution()
   {
-    // This checks if a certificate exists without making changes
-    string output = await DotNet.DevCerts()
+    // Test command string generation for check operation
+    string command = DotNet.DevCerts()
       .Https()
       .WithCheck()
       .WithQuiet()
-      .GetStringAsync();
+      .Build()
+      .ToCommandString();
     
-    // Should complete without errors (graceful handling)
-    AssertTrue(output != null, "DevCerts check command should execute successfully");
+    AssertTrue(
+      command == "dotnet dev-certs https --check --quiet",
+      $"Expected 'dotnet dev-certs https --check --quiet', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 }

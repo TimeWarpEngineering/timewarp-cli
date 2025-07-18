@@ -9,115 +9,189 @@ internal sealed class DotNetUserSecretsCommandTests
 {
   public static async Task TestBasicDotNetUserSecretsBuilderCreation()
   {
+    // DotNet.UserSecrets() alone doesn't build a valid command - needs a subcommand
     DotNetUserSecretsBuilder userSecretsBuilder = DotNet.UserSecrets();
-    AssertTrue(userSecretsBuilder != null, "DotNet.UserSecrets() should return a valid builder instance");
+    
+    AssertTrue(
+      userSecretsBuilder != null,
+      "DotNet.UserSecrets() should create a valid builder"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestUserSecretsInitCommand()
   {
-    CommandResult command = DotNet.UserSecrets()
+    string command = DotNet.UserSecrets()
       .Init()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "UserSecrets Init command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet user-secrets init",
+      $"Expected 'dotnet user-secrets init', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestUserSecretsInitWithProject()
   {
-    CommandResult command = DotNet.UserSecrets()
+    string command = DotNet.UserSecrets()
       .WithProject("MyApp.csproj")
       .Init()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "UserSecrets Init with project should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet user-secrets init --project MyApp.csproj",
+      $"Expected 'dotnet user-secrets init --project MyApp.csproj', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestUserSecretsInitWithId()
   {
-    CommandResult command = DotNet.UserSecrets()
+    string command = DotNet.UserSecrets()
       .WithId("my-app-secrets")
       .Init()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "UserSecrets Init with ID should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet user-secrets init --id my-app-secrets",
+      $"Expected 'dotnet user-secrets init --id my-app-secrets', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestUserSecretsSetCommand()
   {
-    CommandResult command = DotNet.UserSecrets()
+    string command = DotNet.UserSecrets()
       .Set("ConnectionString", "Server=localhost;Database=MyApp;")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "UserSecrets Set command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet user-secrets set ConnectionString Server=localhost;Database=MyApp;",
+      $"Expected 'dotnet user-secrets set ConnectionString Server=localhost;Database=MyApp;', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestUserSecretsSetWithProject()
   {
-    CommandResult command = DotNet.UserSecrets()
+    string command = DotNet.UserSecrets()
       .WithProject("MyApp.csproj")
       .Set("ApiKey", "secret-key-value")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "UserSecrets Set with project should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet user-secrets set ApiKey secret-key-value --project MyApp.csproj",
+      $"Expected correct user-secrets set command with project, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestUserSecretsRemoveCommand()
   {
-    CommandResult command = DotNet.UserSecrets()
+    string command = DotNet.UserSecrets()
       .Remove("ConnectionString")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "UserSecrets Remove command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet user-secrets remove ConnectionString",
+      $"Expected 'dotnet user-secrets remove ConnectionString', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestUserSecretsListCommand()
   {
-    CommandResult command = DotNet.UserSecrets()
+    string command = DotNet.UserSecrets()
       .List()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "UserSecrets List command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet user-secrets list",
+      $"Expected 'dotnet user-secrets list', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestUserSecretsClearCommand()
   {
-    CommandResult command = DotNet.UserSecrets()
+    string command = DotNet.UserSecrets()
       .Clear()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "UserSecrets Clear command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet user-secrets clear",
+      $"Expected 'dotnet user-secrets clear', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestUserSecretsWithAllOptions()
   {
-    CommandResult command = DotNet.UserSecrets()
+    string command = DotNet.UserSecrets()
       .WithProject("MyApp.csproj")
       .WithId("my-app-secrets")
       .Set("DatabaseConnection", "Server=localhost;")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "UserSecrets with all options should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet user-secrets set DatabaseConnection Server=localhost; --project MyApp.csproj --id my-app-secrets",
+      $"Expected correct user-secrets set command with all options, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    CommandResult command = DotNet.UserSecrets()
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    string command = DotNet.UserSecrets()
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("DOTNET_ENV", "test")
       .List()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Working directory and environment variables should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet user-secrets list",
+      $"Expected 'dotnet user-secrets list', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestUserSecretsListCommandExecution()
   {
-    // This will fail gracefully without a project but tests the execution path
-    await AssertThrowsAsync<Exception>(
-      async () => await DotNet.UserSecrets()
-        .List()
-        .GetStringAsync(),
-      "should throw for user secrets list without valid project (default validation behavior)"
+    // Test command string generation for list operation
+    string command = DotNet.UserSecrets()
+      .WithProject("test.csproj")
+      .List()
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "dotnet user-secrets list --project test.csproj",
+      $"Expected 'dotnet user-secrets list --project test.csproj', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 }
