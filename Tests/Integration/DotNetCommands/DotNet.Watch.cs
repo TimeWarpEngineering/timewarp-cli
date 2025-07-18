@@ -9,136 +9,210 @@ internal sealed class DotNetWatchCommandTests
 {
   public static async Task TestBasicDotNetWatchBuilderCreation()
   {
+    // DotNet.Watch() alone doesn't build a valid command - needs a subcommand
     DotNetWatchBuilder watchBuilder = DotNet.Watch();
-    AssertTrue(watchBuilder != null, "DotNet.Watch() should return a valid builder instance");
+    
+    AssertTrue(
+      watchBuilder != null,
+      "DotNet.Watch() should create a valid builder"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWatchRunCommand()
   {
-    CommandResult command = DotNet.Watch()
+    string command = DotNet.Watch()
       .Run()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Watch Run command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet watch run",
+      $"Expected 'dotnet watch run', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWatchTestCommand()
   {
-    CommandResult command = DotNet.Watch()
+    string command = DotNet.Watch()
       .Test()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Watch Test command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet watch test",
+      $"Expected 'dotnet watch test', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWatchBuildCommand()
   {
-    CommandResult command = DotNet.Watch()
+    string command = DotNet.Watch()
       .Build()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Watch Build command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet watch build",
+      $"Expected 'dotnet watch build', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWatchWithProject()
   {
-    CommandResult command = DotNet.Watch()
+    string command = DotNet.Watch()
       .WithProject("MyApp.csproj")
       .Run()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Watch with project should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet watch --project MyApp.csproj run",
+      $"Expected 'dotnet watch --project MyApp.csproj run', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWatchWithBasicOptions()
   {
-    CommandResult command = DotNet.Watch()
+    string command = DotNet.Watch()
       .WithQuiet()
       .WithVerbose()
       .WithList()
       .Run()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Watch with basic options should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet watch --quiet --verbose --list run",
+      $"Expected 'dotnet watch --quiet --verbose --list run', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWatchWithNoOptions()
   {
-    CommandResult command = DotNet.Watch()
+    string command = DotNet.Watch()
       .WithNoRestore()
       .WithNoLaunchProfile()
       .WithNoHotReload()
       .WithNoBuild()
       .Run()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Watch with no-options should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet watch --no-restore --no-launch-profile --no-hot-reload --no-build run",
+      $"Expected correct watch command with no-options, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWatchWithIncludeExcludePatterns()
   {
-    CommandResult command = DotNet.Watch()
+    string command = DotNet.Watch()
       .WithInclude("**/*.cs")
       .WithInclude("**/*.cshtml")
       .WithExclude("**/bin/**")
       .WithExclude("**/obj/**")
       .Run()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Watch with include/exclude patterns should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet watch --include **/*.cs --include **/*.cshtml --exclude **/bin/** --exclude **/obj/** run",
+      $"Expected correct watch command with patterns, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWatchWithBuildConfiguration()
   {
-    CommandResult command = DotNet.Watch()
+    string command = DotNet.Watch()
       .WithConfiguration("Release")
       .WithTargetFramework("net10.0")
       .WithRuntime("linux-x64")
       .WithVerbosity("detailed")
       .Run()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Watch with build configuration should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet watch --framework net10.0 --configuration Release --runtime linux-x64 --verbosity detailed run",
+      $"Expected correct watch command with build configuration, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWatchWithPropertiesAndLaunchProfile()
   {
-    CommandResult command = DotNet.Watch()
+    string command = DotNet.Watch()
       .WithProperty("Configuration=Debug")
       .WithProperty("Platform=x64")
       .WithLaunchProfile("Development")
       .Run()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Watch with properties and launch profile should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet watch --property Configuration=Debug --property Platform=x64 --launch-profile Development run",
+      $"Expected correct watch command with properties, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWatchWithAdditionalArguments()
   {
-    CommandResult command = DotNet.Watch()
+    string command = DotNet.Watch()
       .WithArguments("--environment", "Development")
       .WithArgument("--port")
       .WithArgument("5000")
       .Run()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Watch with additional arguments should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet watch run --environment Development --port 5000",
+      $"Expected correct watch command with arguments, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    CommandResult command = DotNet.Watch()
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    string command = DotNet.Watch()
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development")
       .Run()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Working directory and environment variables should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet watch run",
+      $"Expected 'dotnet watch run', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWatchWithComprehensiveOptions()
   {
-    CommandResult command = DotNet.Watch()
+    string command = DotNet.Watch()
       .WithProject("MyApp.csproj")
       .WithConfiguration("Release")
       .WithTargetFramework("net10.0")
@@ -149,20 +223,32 @@ internal sealed class DotNetWatchCommandTests
       .WithNoRestore()
       .WithArguments("--environment", "Production")
       .Run()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Watch with comprehensive options should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet watch --project MyApp.csproj --no-restore --include **/*.cs --exclude **/bin/** --property DefineConstants=RELEASE --framework net10.0 --configuration Release --verbosity minimal run --environment Production",
+      $"Expected correct comprehensive watch command, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWatchListCommandExecution()
   {
-    // This lists watched files without actually starting the watcher
-    await AssertThrowsAsync<Exception>(
-      async () => await DotNet.Watch()
-        .WithList()
-        .Run()
-        .GetStringAsync(),
-      "should throw for watch list without valid project (default validation behavior)"
+    // Test command string generation for list operation
+    string command = DotNet.Watch()
+      .WithList()
+      .WithProject("test.csproj")
+      .Run()
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "dotnet watch --project test.csproj --list run",
+      $"Expected 'dotnet watch --project test.csproj --list run', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 }

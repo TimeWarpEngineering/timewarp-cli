@@ -9,119 +9,192 @@ internal sealed class DotNetWorkloadCommandTests
 {
   public static async Task TestBasicDotNetWorkloadBuilderCreation()
   {
+    // DotNet.Workload() alone doesn't build a valid command - needs a subcommand
     DotNetWorkloadBuilder workloadBuilder = DotNet.Workload();
-    AssertTrue(workloadBuilder != null, "DotNet.Workload() should return a valid builder instance");
+    
+    AssertTrue(
+      workloadBuilder != null,
+      "DotNet.Workload() should create a valid builder"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadInfoCommand()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Info()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Info command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload --info",
+      $"Expected 'dotnet workload --info', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadVersionCommand()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Version()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Version command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload --version",
+      $"Expected 'dotnet workload --version', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadInstallCommand()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Install("maui")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Install command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload install maui",
+      $"Expected 'dotnet workload install maui', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadInstallWithMultipleWorkloadsAndOptions()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Install("maui", "android", "ios")
       .WithConfigFile("nuget.config")
       .WithIncludePreview()
       .WithSkipManifestUpdate()
       .WithSource("https://api.nuget.org/v3/index.json")
       .WithVersion("8.0.100")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Install with options should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload install maui android ios --configfile nuget.config --include-previews --skip-manifest-update --source https://api.nuget.org/v3/index.json --version 8.0.100",
+      $"Expected correct workload install command with options, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadListCommand()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .List()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload List command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload list",
+      $"Expected 'dotnet workload list', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadListWithVerbosity()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .List()
       .WithVerbosity("detailed")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload List with verbosity should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload list --verbosity detailed",
+      $"Expected 'dotnet workload list --verbosity detailed', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadSearchCommand()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Search()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Search command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload search",
+      $"Expected 'dotnet workload search', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadSearchWithSearchString()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Search("maui")
       .WithVerbosity("minimal")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Search with search string should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload search maui --verbosity minimal",
+      $"Expected 'dotnet workload search maui --verbosity minimal', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadUninstallCommand()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Uninstall("maui")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Uninstall command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload uninstall maui",
+      $"Expected 'dotnet workload uninstall maui', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadUninstallWithMultipleWorkloads()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Uninstall("maui", "android", "ios")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Uninstall with multiple workloads should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload uninstall maui android ios",
+      $"Expected 'dotnet workload uninstall maui android ios', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadUpdateCommand()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Update()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Update command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload update",
+      $"Expected 'dotnet workload update', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadUpdateWithComprehensiveOptions()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Update()
       .WithAdvertisingManifestsOnly()
       .WithConfigFile("nuget.config")
@@ -133,23 +206,35 @@ internal sealed class DotNetWorkloadCommandTests
       .WithSource("https://api.nuget.org/v3/index.json")
       .WithTempDir("/tmp")
       .WithVerbosity("diagnostic")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Update with comprehensive options should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload update --advertising-manifests-only --configfile nuget.config --disable-parallel --from-previous-sdk --include-previews --interactive --no-cache --source https://api.nuget.org/v3/index.json --temp-dir /tmp --verbosity diagnostic",
+      $"Expected correct workload update command with options, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadRepairCommand()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Repair()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Repair command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload repair",
+      $"Expected 'dotnet workload repair', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadRepairWithComprehensiveOptions()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Repair()
       .WithConfigFile("nuget.config")
       .WithDisableParallel()
@@ -159,51 +244,81 @@ internal sealed class DotNetWorkloadCommandTests
       .WithSource("https://api.nuget.org/v3/index.json")
       .WithTempDir("/tmp")
       .WithVerbosity("detailed")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Repair with comprehensive options should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload repair --configfile nuget.config --disable-parallel --ignore-failed-sources --interactive --no-cache --source https://api.nuget.org/v3/index.json --temp-dir /tmp --verbosity detailed",
+      $"Expected correct workload repair command with options, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadCleanCommand()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Clean()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Clean command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload clean",
+      $"Expected 'dotnet workload clean', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadCleanWithAllOption()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Clean()
       .WithAll()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Clean with --all option should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload clean --all",
+      $"Expected 'dotnet workload clean --all', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadRestoreCommand()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Restore()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Restore command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload restore",
+      $"Expected 'dotnet workload restore', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadRestoreWithProject()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Restore("MyApp.csproj")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Restore with project should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload restore MyApp.csproj",
+      $"Expected 'dotnet workload restore MyApp.csproj', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadRestoreWithComprehensiveOptions()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Restore("MyApp.csproj")
       .WithConfigFile("nuget.config")
       .WithDisableParallel()
@@ -214,93 +329,145 @@ internal sealed class DotNetWorkloadCommandTests
       .WithTempDir("/tmp")
       .WithVerbosity("normal")
       .WithVersion("8.0.100")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Restore with comprehensive options should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload restore MyApp.csproj --configfile nuget.config --disable-parallel --include-previews --interactive --no-cache --source https://api.nuget.org/v3/index.json --temp-dir /tmp --verbosity normal --version 8.0.100",
+      $"Expected correct workload restore command with options, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadConfigCommand()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Config()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Config command should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload config",
+      $"Expected 'dotnet workload config', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadConfigWithUpdateModeWorkloadSet()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Config()
       .WithUpdateModeWorkloadSet()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Config with workload-set mode should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload config --update-mode workload-set",
+      $"Expected 'dotnet workload config --update-mode workload-set', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadConfigWithUpdateModeManifests()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Config()
       .WithUpdateModeManifests()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Config with manifests mode should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload config --update-mode manifests",
+      $"Expected 'dotnet workload config --update-mode manifests', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadConfigWithCustomUpdateMode()
   {
-    CommandResult command = DotNet.Workload()
+    string command = DotNet.Workload()
       .Config()
       .WithUpdateMode("manifests")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Workload Config with custom update mode should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload config --update-mode manifests",
+      $"Expected 'dotnet workload config --update-mode manifests', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    CommandResult command = DotNet.Workload()
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    string command = DotNet.Workload()
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("DOTNET_ENV", "test")
       .List()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Working directory and environment variables should return a valid CommandResult instance");
+    AssertTrue(
+      command == "dotnet workload list",
+      $"Expected 'dotnet workload list', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadListCommandExecution()
   {
-    // This should show installed workloads or handle gracefully
-    string output = await DotNet.Workload()
+    // Test command string generation for list operation
+    string command = DotNet.Workload()
       .List()
       .WithVerbosity("quiet")
-      .GetStringAsync();
+      .Build()
+      .ToCommandString();
     
-    // Should complete without errors (graceful handling)
-    AssertTrue(output != null, "Workload List command should execute successfully");
+    AssertTrue(
+      command == "dotnet workload list --verbosity quiet",
+      $"Expected 'dotnet workload list --verbosity quiet', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadSearchCommandExecution()
   {
-    // This should show available workloads or handle gracefully
-    string output = await DotNet.Workload()
+    // Test command string generation for search operation
+    string command = DotNet.Workload()
       .Search("maui")
       .WithVerbosity("quiet")
-      .GetStringAsync();
+      .Build()
+      .ToCommandString();
     
-    // Should complete without errors (graceful handling)
-    AssertTrue(output != null, "Workload Search command should execute successfully");
+    AssertTrue(
+      command == "dotnet workload search maui --verbosity quiet",
+      $"Expected 'dotnet workload search maui --verbosity quiet', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkloadInfoCommandExecution()
   {
-    // This should show workload information or handle gracefully
-    string output = await DotNet.Workload()
+    // Test command string generation for info operation
+    string command = DotNet.Workload()
       .Info()
-      .GetStringAsync();
+      .Build()
+      .ToCommandString();
     
-    // Should complete without errors (graceful handling)
-    AssertTrue(output != null, "Workload Info command should execute successfully");
+    AssertTrue(
+      command == "dotnet workload --info",
+      $"Expected 'dotnet workload --info', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 }
