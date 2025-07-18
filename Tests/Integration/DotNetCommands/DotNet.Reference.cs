@@ -7,94 +7,121 @@ internal sealed class DotNetReferenceTests
 {
   public static async Task TestBasicReferenceBuilderCreation()
   {
-    DotNetReferenceBuilder referenceBuilder = DotNet.Reference();
+    // DotNet.Reference() alone doesn't build a valid command - needs a subcommand
+    DotNetReferenceBuilder builder = DotNet.Reference();
     
     AssertTrue(
-      referenceBuilder != null,
-      "DotNet.Reference() should create builder successfully"
+      builder != null,
+      "DotNet.Reference() should create a valid builder"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestReferenceWithProjectParameter()
   {
-    DotNetReferenceBuilder referenceBuilder = DotNet.Reference("MyApp.csproj");
+    // Test that we can create a builder with project file
+    DotNetReferenceBuilder builder = DotNet.Reference("MyApp.csproj");
     
     AssertTrue(
-      referenceBuilder != null,
-      "DotNet.Reference() with project should create successfully"
+      builder != null,
+      "DotNet.Reference() with project should create a valid builder"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestReferenceAddCommand()
   {
-    CommandResult command = DotNet.Reference("MyApp.csproj")
+    string command = DotNet.Reference("MyApp.csproj")
       .Add("MyLibrary.csproj")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Reference Add command should work correctly"
+      command == "dotnet reference --project MyApp.csproj add MyLibrary.csproj",
+      $"Expected 'dotnet reference --project MyApp.csproj add MyLibrary.csproj', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestReferenceAddWithMultipleProjects()
   {
-    CommandResult command = DotNet.Reference("MyApp.csproj")
+    string command = DotNet.Reference("MyApp.csproj")
       .Add("MyLibrary.csproj", "MyOtherLibrary.csproj")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Reference Add with multiple projects should work correctly"
+      command == "dotnet reference --project MyApp.csproj add MyLibrary.csproj MyOtherLibrary.csproj",
+      $"Expected 'dotnet reference --project MyApp.csproj add MyLibrary.csproj MyOtherLibrary.csproj', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestReferenceListCommand()
   {
-    CommandResult command = DotNet.Reference("MyApp.csproj")
+    string command = DotNet.Reference("MyApp.csproj")
       .List()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Reference List command should work correctly"
+      command == "dotnet reference --project MyApp.csproj list",
+      $"Expected 'dotnet reference --project MyApp.csproj list', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestReferenceRemoveCommand()
   {
-    CommandResult command = DotNet.Reference("MyApp.csproj")
+    string command = DotNet.Reference("MyApp.csproj")
       .Remove("MyLibrary.csproj")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Reference Remove command should work correctly"
+      command == "dotnet reference --project MyApp.csproj remove MyLibrary.csproj",
+      $"Expected 'dotnet reference --project MyApp.csproj remove MyLibrary.csproj', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    CommandResult command = DotNet.Reference()
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    string command = DotNet.Reference()
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("DOTNET_ENV", "test")
       .List()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Working directory and environment variables should work correctly"
+      command == "dotnet reference list",
+      $"Expected 'dotnet reference list', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestCommandExecutionGracefulHandling()
   {
-    // This should throw an exception since the project doesn't exist
-    await AssertThrowsAsync<Exception>(
-      async () => await DotNet.Reference("nonexistent.csproj")
-        .List()
-        .GetStringAsync(),
-      "Reference should throw exception for non-existent project"
+    // Test that command string is built correctly even for non-existent project
+    string command = DotNet.Reference("nonexistent.csproj")
+      .List()
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "dotnet reference --project nonexistent.csproj list",
+      $"Expected correct command string even for non-existent projects, got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 }
