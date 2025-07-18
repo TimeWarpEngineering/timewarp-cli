@@ -116,6 +116,29 @@ public class RunBuilder : ICommandBuilder<RunBuilder>
   {
     return await Build().ExecuteAsync(cancellationToken);
   }
+  
+  /// <summary>
+  /// Executes the command interactively with stdin, stdout, and stderr connected to the console.
+  /// This allows interactive commands like fzf, vim, or interactive prompts to work properly.
+  /// </summary>
+  /// <param name="cancellationToken">Cancellation token for the operation</param>
+  /// <returns>The execution result (output strings will be empty since output goes to console)</returns>
+  public async Task<ExecutionResult> ExecuteInteractiveAsync(CancellationToken cancellationToken = default)
+  {
+    return await Build().ExecuteInteractiveAsync(cancellationToken);
+  }
+  
+  /// <summary>
+  /// Executes the command interactively and captures the output.
+  /// The UI is rendered to the console (via stderr) while stdout is captured and returned.
+  /// This is ideal for interactive selection tools like fzf.
+  /// </summary>
+  /// <param name="cancellationToken">Cancellation token for the operation</param>
+  /// <returns>The captured output string from the interactive command</returns>
+  public async Task<string> GetStringInteractiveAsync(CancellationToken cancellationToken = default)
+  {
+    return await Build().GetStringInteractiveAsync(cancellationToken);
+  }
 
   /// <summary>
   /// Creates a pipeline by chaining this command with another command.

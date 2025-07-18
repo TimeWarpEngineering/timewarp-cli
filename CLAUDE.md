@@ -105,6 +105,10 @@ public async Task<string> GetStringAsync()      // Get full output as string
 public async Task<string[]> GetLinesAsync()     // Get output as line array
 public async Task ExecuteAsync()                // Execute without capturing output
 public CommandResult Pipe(string executable, params string[] arguments)  // Chain commands
+
+// Interactive methods (NEW in v0.6.0)
+public async Task<string> GetStringInteractiveAsync()    // Interactive UI with captured output
+public async Task<ExecutionResult> ExecuteInteractiveAsync()  // Full interactive mode
 ```
 
 ### Usage Examples
@@ -160,6 +164,24 @@ var sortedTop3 = await Shell.Run("sort")
     .WithStandardInput("banana\napple\ncherry\ndate")
     .Pipe("head", "-3")
     .GetLinesAsync();
+
+// Interactive command execution (NEW in v0.6.0)
+// Select a file with FZF and capture the selection
+var selectedFile = await Fzf.Run()
+    .FromInput("file1.txt", "file2.txt", "file3.txt")
+    .WithPreview("cat {}")
+    .GetStringInteractiveAsync();
+
+// Interactive pipeline - find and select files
+var chosenCsFile = await Shell.Run("find")
+    .WithArguments(".", "-name", "*.cs")
+    .Pipe("fzf", "--preview", "head -20 {}")
+    .GetStringInteractiveAsync();
+
+// Full interactive mode for editors, REPLs, etc.
+await Shell.Run("vim")
+    .WithArguments("config.json")
+    .ExecuteInteractiveAsync();
 ```
 
 ### Error Handling

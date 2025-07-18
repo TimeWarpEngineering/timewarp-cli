@@ -103,4 +103,26 @@ public partial class FzfBuilder
   {
     return await Build().ExecuteAsync(cancellationToken);
   }
+  
+  /// <summary>
+  /// Executes fzf interactively, allowing user to select items with keyboard navigation.
+  /// This method connects stdin, stdout, and stderr to the console for full interactive use.
+  /// </summary>
+  /// <param name="cancellationToken">Cancellation token for the operation</param>
+  /// <returns>The execution result (output strings will be empty since output goes to console)</returns>
+  public async Task<ExecutionResult> ExecuteInteractiveAsync(CancellationToken cancellationToken = default)
+  {
+    return await Build().ExecuteInteractiveAsync(cancellationToken);
+  }
+  
+  /// <summary>
+  /// Executes fzf interactively and returns the selected item(s).
+  /// The fzf UI is displayed on the console, but the selection is captured and returned.
+  /// </summary>
+  /// <param name="cancellationToken">Cancellation token for the operation</param>
+  /// <returns>The selected item(s) as a string, or empty string if cancelled</returns>
+  public async Task<string> GetStringInteractiveAsync(CancellationToken cancellationToken = default)
+  {
+    return await Build().GetStringInteractiveAsync(cancellationToken);
+  }
 }

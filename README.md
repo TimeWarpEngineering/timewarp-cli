@@ -90,11 +90,29 @@ var packages = await DotNet.ListPackages()
     .AsJson()
     .ToListAsync();
 
-// Interactive file selection with Fzf
+// Interactive file selection with Fzf (NEW in v0.6.0)
+// Use GetStringInteractiveAsync() to show FZF UI and capture selection
 var selectedFile = await Fzf.Run()
     .FromInput("file1.txt", "file2.txt", "file3.txt")
     .WithPreview("cat {}")
-    .GetStringAsync();
+    .GetStringInteractiveAsync();
+
+// Interactive pipeline - find files and select with FZF
+var chosenFile = await Shell.Run("find")
+    .WithArguments(".", "-name", "*.cs")
+    .Pipe("fzf", "--preview", "head -20 {}")
+    .GetStringInteractiveAsync();
+
+// Multi-select with interactive FZF
+var selectedItems = await Fzf.Run()
+    .FromInput("Red", "Green", "Blue", "Yellow")
+    .WithMulti()
+    .GetStringInteractiveAsync();
+
+// Full interactive mode (e.g., for vim, nano, etc.)
+await Shell.Run("vim")
+    .WithArguments("myfile.txt")
+    .ExecuteInteractiveAsync();
 ```
 
 ## Installation
@@ -124,6 +142,7 @@ Check out the latest NuGet package: [TimeWarp.Cli](https://www.nuget.org/package
 - **Cross-Platform**: Works on Windows, Linux, and macOS
 - **C# Script Support**: Seamless execution of C# scripts with proper argument handling
 - **Command Builders**: Fluent builders for complex commands (DotNet, Fzf, Ghq, Gwq)
+- **Interactive Commands**: Support for interactive tools like FZF with `GetStringInteractiveAsync()` and `ExecuteInteractiveAsync()`
 
 ## Error Handling
 
