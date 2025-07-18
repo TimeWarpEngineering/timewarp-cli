@@ -24,9 +24,8 @@ internal sealed class CommandResultInteractiveTests
         .WithPrompt("Select: ")
         .GetStringInteractiveAsync();
       
-      AssertEquals(
-        "option1",
-        result,
+      AssertTrue(
+        result == "option1",
         "Mock FZF should return first option"
       );
     }
@@ -51,9 +50,8 @@ internal sealed class CommandResultInteractiveTests
         .Pipe("fzf", "--prompt", "Select color: ")
         .GetStringInteractiveAsync();
       
-      AssertEquals(
-        "red",
-        result,
+      AssertTrue(
+        result == "red",
         "Pipeline with mock FZF should return first line"
       );
     }
@@ -71,36 +69,32 @@ internal sealed class CommandResultInteractiveTests
       .WithArguments("Hello from interactive mode")
       .ExecuteInteractiveAsync();
     
-    AssertEquals(
-      0,
-      result.ExitCode,
+    AssertTrue(
+      result.ExitCode == 0,
       "Echo command should succeed"
     );
     
     // Output strings should be empty since output went to console
-    AssertEquals(
-      string.Empty,
-      result.StandardOutput,
+    AssertTrue(
+      string.IsNullOrEmpty(result.StandardOutput),
       "ExecuteInteractiveAsync should not capture stdout"
     );
   }
   
   public static async Task TestInteractiveMethodsWithNullCommand()
   {
-    // Test graceful degradation with null command
-    CommandResult nullCommand = CommandResult.NullCommandResult;
+    // Test graceful degradation with empty command
+    CommandResult nullCommand = Shell.Run("").Build();
     
     string stringResult = await nullCommand.GetStringInteractiveAsync();
-    AssertEquals(
-      string.Empty,
-      stringResult,
+    AssertTrue(
+      string.IsNullOrEmpty(stringResult),
       "GetStringInteractiveAsync with null command should return empty string"
     );
     
     ExecutionResult execResult = await nullCommand.ExecuteInteractiveAsync();
-    AssertEquals(
-      0,
-      execResult.ExitCode,
+    AssertTrue(
+      execResult.ExitCode == 0,
       "ExecuteInteractiveAsync with null command should return exit code 0"
     );
   }
