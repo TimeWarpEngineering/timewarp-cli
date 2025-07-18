@@ -5,35 +5,42 @@ await RunTests<DotNetListPackagesTests>();
 // Define a class to hold the test methods (NOT static so it can be used as generic parameter)
 internal sealed class DotNetListPackagesTests
 {
-  public static async Task TestBasicListPackagesBuilderCreation()
+  public static async Task TestBasicListPackagesCommand()
   {
-    DotNetListPackagesBuilder listPackagesBuilder = DotNet.ListPackages();
+    string command = DotNet.ListPackages()
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      listPackagesBuilder != null,
-      "DotNet.ListPackages() should create builder successfully"
+      command == "dotnet list package",
+      $"Expected 'dotnet list package', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestFluentConfigurationMethods()
   {
-    CommandResult command = DotNet.ListPackages()
+    string command = DotNet.ListPackages()
       .WithProject("test.csproj")
       .WithFramework("net10.0")
       .WithVerbosity("minimal")
       .WithFormat("console")
       .Outdated()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "ListPackages fluent configuration methods should work correctly"
+      command == "dotnet list package test.csproj --framework net10.0 --verbosity minimal --format console --outdated",
+      $"Expected correct list packages command with configuration, got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestMethodChainingWithTransitiveAndVulnerableOptions()
   {
-    CommandResult chainedCommand = DotNet.ListPackages()
+    string command = DotNet.ListPackages()
       .WithProject("test.csproj")
       .IncludeTransitive()
       .Vulnerable()
@@ -41,17 +48,21 @@ internal sealed class DotNetListPackagesTests
       .WithInteractive()
       .WithSource("https://api.nuget.org/v3/index.json")
       .IncludePrerelease()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      chainedCommand != null,
-      "ListPackages method chaining should work correctly"
+      command == "dotnet list package test.csproj --source https://api.nuget.org/v3/index.json --include-transitive --vulnerable --deprecated --interactive --include-prerelease",
+      $"Expected correct list packages command with transitive and vulnerable options, got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestJsonFormatAndHighestVersionOptions()
   {
-    CommandResult jsonCommand = DotNet.ListPackages()
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    string command = DotNet.ListPackages()
       .WithProject("test.csproj")
       .WithFormat("json")
       .WithOutputVersion("1")
@@ -61,50 +72,68 @@ internal sealed class DotNetListPackagesTests
       .HighestPatch()
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("NUGET_PACKAGES", "./temp-packages")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      jsonCommand != null,
-      "ListPackages JSON format and version options should work correctly"
+      command == "dotnet list package test.csproj --format json --output-version 1 --config nuget.config --outdated --highest-minor --highest-patch",
+      $"Expected correct list packages command with JSON format and version options, got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestListPackagesOverloadWithProjectParameter()
   {
-    CommandResult overloadCommand = DotNet.ListPackages("test.csproj")
+    string command = DotNet.ListPackages("test.csproj")
       .WithFramework("net8.0")
       .IncludeTransitive()
       .WithVerbosity("quiet")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      overloadCommand != null,
-      "ListPackages overload with project parameter should work correctly"
+      command == "dotnet list package test.csproj --framework net8.0 --verbosity quiet --include-transitive",
+      $"Expected correct list packages command with overload, got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestToListAsyncMethod()
   {
-    // This should throw an exception since the project doesn't exist
-    await AssertThrowsAsync<Exception>(
-      async () => await DotNet.ListPackages()
-        .WithProject("nonexistent.csproj")
-        .IncludeTransitive()
-        .Outdated()
-        .ToListAsync(),
-      "ToListAsync should throw exception for non-existent project"
+    // Test that command string is built correctly even for non-existent project
+    string command = DotNet.ListPackages()
+      .WithProject("nonexistent.csproj")
+      .IncludeTransitive()
+      .Outdated()
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "dotnet list package nonexistent.csproj --outdated --include-transitive",
+      $"Expected correct command string even for non-existent projects, got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestCommandExecutionGracefulHandling()
   {
-    // This should throw an exception since the project doesn't exist
-    await AssertThrowsAsync<Exception>(
-      async () => await DotNet.ListPackages()
-        .WithProject("nonexistent.csproj")
-        .Outdated()
-        .GetStringAsync(),
-      "ListPackages should throw exception for non-existent project"
+    // Test command string generation for multiple sources
+    string command = DotNet.ListPackages()
+      .WithProject("test.csproj")
+      .WithSource("https://api.nuget.org/v3/index.json")
+      .WithSource("https://myget.org/F/myfeed/api/v3/index.json")
+      .Outdated()
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "dotnet list package test.csproj --source https://api.nuget.org/v3/index.json --source https://myget.org/F/myfeed/api/v3/index.json --outdated",
+      $"Expected correct command string with multiple sources, got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 }

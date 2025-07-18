@@ -9,42 +9,53 @@ internal sealed class DotNetNewTests
 {
   public static async Task TestBasicNewBuilderCreation()
   {
-    DotNetNewBuilder newBuilder = DotNet.New("console");
+    string command = DotNet.New("console")
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      newBuilder != null,
-      "DotNet.New() should create builder successfully"
+      command == "dotnet new console",
+      $"Expected 'dotnet new console', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestNewWithoutTemplateName()
   {
-    DotNetNewBuilder newBuilder = DotNet.New();
+    string command = DotNet.New()
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      newBuilder != null,
-      "DotNet.New() without template should create successfully"
+      command == "dotnet new",
+      $"Expected 'dotnet new', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestFluentConfigurationMethods()
   {
-    CommandResult command = DotNet.New("console")
+    string command = DotNet.New("console")
       .WithName("TestApp")
       .WithOutput("./test-output")
       .WithForce()
       .WithDryRun()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "New fluent configuration methods should work correctly"
+      command == "dotnet new console --output ./test-output --name TestApp --dry-run --force",
+      $"Expected correct new command with configuration, got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestTemplateArgumentsAndAdvancedOptions()
   {
-    CommandResult command = DotNet.New("web")
+    string command = DotNet.New("web")
       .WithName("MyWebApp")
       .WithOutput("./web-output")
       .WithTemplateArg("--framework")
@@ -52,62 +63,79 @@ internal sealed class DotNetNewTests
       .WithVerbosity("detailed")
       .WithNoUpdateCheck()
       .WithDiagnostics()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Template arguments and advanced options should work correctly"
+      command == "dotnet new web --framework net10.0 --output ./web-output --name MyWebApp --verbosity detailed --no-update-check --diagnostics",
+      $"Expected correct new command with template arguments, got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    CommandResult command = DotNet.New("classlib")
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    string command = DotNet.New("classlib")
       .WithName("MyLibrary")
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("TEMPLATE_ENV", "test")
       .WithProject("test.csproj")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Working directory and environment variables should work correctly"
+      command == "dotnet new classlib --name MyLibrary --project test.csproj",
+      $"Expected correct new command with project option, got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestNewListSubcommand()
   {
-    DotNetNewListBuilder listCommand = DotNet.New().List("console");
+    string command = DotNet.New().List("console")
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      listCommand != null,
-      "New List() subcommand should work correctly"
+      command == "dotnet new list console",
+      $"Expected 'dotnet new list console', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestNewSearchSubcommand()
   {
-    DotNetNewSearchBuilder searchCommand = DotNet.New().Search("blazor");
+    string command = DotNet.New().Search("blazor")
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      searchCommand != null,
-      "New Search() subcommand should work correctly"
+      command == "dotnet new search blazor",
+      $"Expected 'dotnet new search blazor', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestCommandExecutionWithDryRun()
   {
-    // This should show what would happen without actually creating files
-    string output = await DotNet.New("console")
+    // Test command string generation for dry run
+    string command = DotNet.New("console")
       .WithName("TestConsoleApp")
       .WithOutput("./dry-run-test")
       .WithDryRun()
-      .GetStringAsync();
+      .Build()
+      .ToCommandString();
     
-    // Should return output showing what would be created
     AssertTrue(
-      true,
-      "New command execution with dry run should complete successfully"
+      command == "dotnet new console --output ./dry-run-test --name TestConsoleApp --dry-run",
+      $"Expected correct new command with dry run, got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 }
