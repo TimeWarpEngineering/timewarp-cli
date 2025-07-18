@@ -8,29 +8,58 @@ internal sealed class DotNetPublishTests
 
 {
 
-  public static async Task TestBasicBuilderCreation()
+  public static async Task TestBasicDotNetPublishCommand()
   {
-    DotNetPublishBuilder publishBuilder = DotNet.Publish();
-    AssertTrue(publishBuilder != null, "DotNet.Publish() should return a non-null builder");
+    string command = DotNet.Publish()
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "dotnet publish",
+      $"Expected 'dotnet publish', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
+  }
+  
+  public static async Task TestPublishWithProjectOnly()
+  {
+    string command = DotNet.Publish()
+      .WithProject("MyApp.csproj")
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "dotnet publish MyApp.csproj",
+      $"Expected 'dotnet publish MyApp.csproj', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestFluentConfigurationMethods()
   {
-    CommandResult command = DotNet.Publish()
+    string command = DotNet.Publish()
       .WithProject("test.csproj")
       .WithConfiguration("Release")
       .WithFramework("net10.0")
       .WithRuntime("win-x64")
       .WithOutput("./publish")
       .WithNoRestore()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Publish fluent configuration should build successfully");
+    AssertTrue(
+      command == "dotnet publish test.csproj --configuration Release --framework net10.0 --runtime win-x64 --output ./publish --no-restore",
+      $"Expected correct publish command with configuration options, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestAdvancedDeploymentOptions()
   {
-    CommandResult deployCommand = DotNet.Publish()
+    string command = DotNet.Publish()
       .WithProject("test.csproj")
       .WithConfiguration("Release")
       .WithRuntime("linux-x64")
@@ -39,60 +68,91 @@ internal sealed class DotNetPublishTests
       .WithSingleFile()
       .WithTrimmed()
       .WithNoLogo()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(deployCommand != null, "Advanced deployment options should work correctly");
+    AssertTrue(
+      command == "dotnet publish test.csproj --configuration Release --runtime linux-x64 --nologo --self-contained --property:PublishReadyToRun=true --property:PublishSingleFile=true --property:PublishTrimmed=true",
+      $"Expected correct publish command with advanced deployment options, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestWorkingDirectoryAndEnvironmentVariables()
   {
-    CommandResult envCommand = DotNet.Publish()
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    string command = DotNet.Publish()
       .WithProject("test.csproj")
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("PUBLISH_ENV", "production")
       .WithArchitecture("x64")
       .WithOperatingSystem("linux")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(envCommand != null, "Working directory and environment variables should work correctly");
+    AssertTrue(
+      command == "dotnet publish test.csproj --arch x64 --os linux",
+      $"Expected 'dotnet publish test.csproj --arch x64 --os linux', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestMSBuildPropertiesAndPublishingConfiguration()
   {
-    CommandResult propsCommand = DotNet.Publish()
+    string command = DotNet.Publish()
       .WithProject("test.csproj")
       .WithConfiguration("Release")
       .WithProperty("PublishProfile", "Production")
       .WithProperty("EnvironmentName", "Staging")
       .WithSource("https://api.nuget.org/v3/index.json")
       .WithVerbosity("minimal")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(propsCommand != null, "MSBuild properties and publishing configuration should work correctly");
+    AssertTrue(
+      command == "dotnet publish test.csproj --configuration Release --verbosity minimal --source https://api.nuget.org/v3/index.json --property:PublishProfile=Production --property:EnvironmentName=Staging",
+      $"Expected correct publish command with MSBuild properties, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestPublishOverloadWithProjectParameter()
   {
-    CommandResult overloadCommand = DotNet.Publish("test.csproj")
+    string command = DotNet.Publish("test.csproj")
       .WithConfiguration("Release")
       .WithRuntime("win-x64")
       .WithNoSelfContained()
       .WithNoBuild()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(overloadCommand != null, "Publish overload with project parameter should work correctly");
+    AssertTrue(
+      command == "dotnet publish test.csproj --configuration Release --runtime win-x64 --no-build --no-self-contained",
+      $"Expected correct publish command with overload, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestCommandBuilderWithNonExistentProject()
   {
     // Verify that the command builder creates a valid command even with non-existent project
-    CommandResult command = DotNet.Publish()
+    string command = DotNet.Publish()
       .WithProject("nonexistent.csproj")
       .WithConfiguration("Release")
       .WithRuntime("win-x64")
       .WithNoRestore()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Publish command builder should create a valid command");
+    AssertTrue(
+      command == "dotnet publish nonexistent.csproj --configuration Release --runtime win-x64 --no-restore",
+      $"Expected correct command string even for non-existent projects, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 }

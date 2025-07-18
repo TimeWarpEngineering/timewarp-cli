@@ -7,93 +7,138 @@ await RunTests<DotNetPackageSearchTests>();
 internal sealed class DotNetPackageSearchTests
 
 {
-  public static async Task BasicDotNetPackageSearchBuilderCreation()
+  public static async Task BasicDotNetPackageSearchCommand()
   {
-    DotNetPackageSearchBuilder searchBuilder = DotNet.PackageSearch("TimeWarp.Cli");
-    AssertTrue(searchBuilder != null, "DotNet.PackageSearch() returned null");
+    string command = DotNet.PackageSearch("TimeWarp.Cli")
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "dotnet package search TimeWarp.Cli",
+      $"Expected 'dotnet package search TimeWarp.Cli', got '{command}'"
+    );
+    
     await Task.CompletedTask;
   }
 
   public static async Task DotNetPackageSearchWithoutSearchTerm()
   {
-    DotNetPackageSearchBuilder searchBuilder = DotNet.PackageSearch();
-    AssertTrue(searchBuilder != null, "DotNet.PackageSearch() without search term returned null");
+    string command = DotNet.PackageSearch()
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "dotnet package search",
+      $"Expected 'dotnet package search', got '{command}'"
+    );
+    
     await Task.CompletedTask;
   }
 
   public static async Task FluentConfigurationMethods()
   {
-    CommandResult command = DotNet.PackageSearch("Microsoft.Extensions.Logging")
+    string command = DotNet.PackageSearch("Microsoft.Extensions.Logging")
       .WithSource("https://api.nuget.org/v3/index.json")
       .WithTake(5)
       .WithSkip(0)
       .WithFormat("table")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Build() returned null");
+    AssertTrue(
+      command == "dotnet package search Microsoft.Extensions.Logging --source https://api.nuget.org/v3/index.json --take 5 --skip 0 --format table",
+      $"Expected correct package search command with configuration, got '{command}'"
+    );
+    
     await Task.CompletedTask;
   }
 
   public static async Task AdvancedSearchOptions()
   {
-    CommandResult command = DotNet.PackageSearch("Newtonsoft.Json")
+    string command = DotNet.PackageSearch("Newtonsoft.Json")
       .WithExactMatch()
       .WithPrerelease()
       .WithFormat("json")
       .WithVerbosity("detailed")
       .WithInteractive()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Advanced options Build() returned null");
+    AssertTrue(
+      command == "dotnet package search Newtonsoft.Json --format json --verbosity detailed --exact-match --interactive --prerelease",
+      $"Expected correct package search command with advanced options, got '{command}'"
+    );
+    
     await Task.CompletedTask;
   }
 
   public static async Task MultipleSourcesConfiguration()
   {
-    CommandResult command = DotNet.PackageSearch("TestPackage")
+    string command = DotNet.PackageSearch("TestPackage")
       .WithSource("https://api.nuget.org/v3/index.json")
       .WithSource("https://pkgs.dev.azure.com/example/feed")
       .WithTake(10)
       .WithConfigFile("nuget.config")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Multiple sources Build() returned null");
+    AssertTrue(
+      command == "dotnet package search TestPackage --source https://api.nuget.org/v3/index.json --source https://pkgs.dev.azure.com/example/feed --take 10 --configfile nuget.config",
+      $"Expected correct package search command with multiple sources, got '{command}'"
+    );
+    
     await Task.CompletedTask;
   }
 
   public static async Task WorkingDirectoryAndEnvironmentVariables()
   {
-    CommandResult command = DotNet.PackageSearch("TestPackage")
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    string command = DotNet.PackageSearch("TestPackage")
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("NUGET_ENV", "test")
       .WithTake(1)
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    AssertTrue(command != null, "Environment config Build() returned null");
+    AssertTrue(
+      command == "dotnet package search TestPackage --take 1",
+      $"Expected 'dotnet package search TestPackage --take 1', got '{command}'"
+    );
+    
     await Task.CompletedTask;
   }
 
   public static async Task CommandExecutionSearchWellKnownPackage()
   {
-    // Search for a well-known package that should exist
-    string output = await DotNet.PackageSearch("Microsoft.Extensions.Logging")
+    // Test command string generation for well-known package search
+    string command = DotNet.PackageSearch("Microsoft.Extensions.Logging")
       .WithTake(1)
       .WithFormat("table")
-      .GetStringAsync();
+      .Build()
+      .ToCommandString();
     
-    // Should return search results
-    AssertTrue(true, "PackageSearch command execution should not throw");
+    AssertTrue(
+      command == "dotnet package search Microsoft.Extensions.Logging --take 1 --format table",
+      $"Expected correct command for well-known package search, got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task ExactMatchSearch()
   {
-    // Search for TimeWarp.Cli with exact match and prerelease
-    string output = await DotNet.PackageSearch("TimeWarp.Cli")
+    // Test command string for exact match search
+    string command = DotNet.PackageSearch("TimeWarp.Cli")
       .WithExactMatch()
       .WithPrerelease()
-      .GetStringAsync();
+      .Build()
+      .ToCommandString();
     
-    // Should return search results or handle gracefully
-    AssertTrue(true, "Exact match search should not throw");
+    AssertTrue(
+      command == "dotnet package search TimeWarp.Cli --exact-match --prerelease",
+      $"Expected 'dotnet package search TimeWarp.Cli --exact-match --prerelease', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 }
