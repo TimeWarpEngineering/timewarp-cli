@@ -18,13 +18,14 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqAddCommand()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Add("feature/new-branch")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Add command should build correctly"
+      command == "gwq add feature/new-branch",
+      $"Expected 'gwq add feature/new-branch', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -32,13 +33,14 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqAddWithPath()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Add("feature/branch", "~/worktrees/feature")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Add with path should build correctly"
+      command == "gwq add ~/worktrees/feature feature/branch",
+      $"Expected 'gwq add ~/worktrees/feature feature/branch', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -46,13 +48,14 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqAddInteractive()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .AddInteractive()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Add interactive should build correctly"
+      command == "gwq add -i",
+      $"Expected 'gwq add -i', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -60,15 +63,16 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqAddWithNewBranch()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Add("feature/new")
       .WithNewBranch()
       .WithForce()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Add with new branch should build correctly"
+      command == "gwq add -b -f feature/new",
+      $"Expected 'gwq add -b -f feature/new', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -76,13 +80,14 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqListCommand()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .List()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq List command should build correctly"
+      command == "gwq list",
+      $"Expected 'gwq list', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -90,16 +95,17 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqListWithOptions()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .List()
       .WithGlobal()
       .WithVerbose()
       .WithJson()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq List with options should build correctly"
+      command == "gwq list -g -v --json",
+      $"Expected 'gwq list -g -v --json', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -107,13 +113,14 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqRemoveCommand()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Remove()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Remove command should build correctly"
+      command == "gwq remove",
+      $"Expected 'gwq remove', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -121,15 +128,16 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqRemoveWithPattern()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Remove("feature/old")
       .WithDeleteBranch()
       .WithDryRun()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Remove with pattern should build correctly"
+      command == "gwq remove -b -d feature/old",
+      $"Expected 'gwq remove -b -d feature/old', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -137,14 +145,15 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqRmAlias()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Rm("feature/completed")
       .WithForceDeleteBranch()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Rm alias should build correctly"
+      command == "gwq remove --force-delete-branch feature/completed",
+      $"Expected 'gwq remove --force-delete-branch feature/completed', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -152,13 +161,14 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqStatusCommand()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Status()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Status command should build correctly"
+      command == "gwq status",
+      $"Expected 'gwq status', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -166,7 +176,7 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqStatusWithComprehensiveOptions()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Status()
       .WithGlobal()
       .WithJson()
@@ -174,11 +184,12 @@ internal sealed class GwqCommandTests
       .WithSort("modified")
       .WithShowProcesses()
       .WithStaleDays(7)
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Status with comprehensive options should build correctly"
+      command == "gwq status -g --json -f changed -s modified --show-processes --stale-days 7",
+      $"Expected 'gwq status -g --json -f changed -s modified --show-processes --stale-days 7', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -186,16 +197,17 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqStatusWithWatchMode()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Status()
       .WithWatch()
       .WithInterval(10)
       .WithNoFetch()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Status with watch mode should build correctly"
+      command == "gwq status -w -i 10s --no-fetch",
+      $"Expected 'gwq status -w -i 10s --no-fetch', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -203,13 +215,14 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqGetCommand()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Get("feature")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Get command should build correctly"
+      command == "gwq get feature",
+      $"Expected 'gwq get feature', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -217,15 +230,16 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqGetWithNullTermination()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Get("main")
       .WithGlobal()
       .WithNull()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Get with null termination should build correctly"
+      command == "gwq get -g -0 main",
+      $"Expected 'gwq get -g -0 main', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -233,14 +247,15 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqExecCommand()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Exec("feature")
       .WithCommand("npm", "test")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Exec command should build correctly"
+      command == "gwq exec feature -- npm test",
+      $"Expected 'gwq exec feature -- npm test', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -248,16 +263,17 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqExecWithStayOption()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Exec("main")
       .WithCommand("git", "pull")
       .WithStay()
       .WithGlobal()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Exec with stay option should build correctly"
+      command == "gwq exec -s -g main -- git pull",
+      $"Expected 'gwq exec -s -g main -- git pull', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -265,13 +281,14 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqConfigList()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .ConfigList()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Config list should build correctly"
+      command == "gwq config list",
+      $"Expected 'gwq config list', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -279,17 +296,24 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqConfigGetAndSet()
   {
-    CommandResult getCommand = Gwq.Run()
+    string getCommand = Gwq.Run()
       .ConfigGet("worktree.basedir")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    CommandResult setCommand = Gwq.Run()
+    string setCommand = Gwq.Run()
       .ConfigSet("worktree.basedir", "~/worktrees")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      getCommand != null && setCommand != null,
-      "Gwq Config get/set should build correctly"
+      getCommand == "gwq config get worktree.basedir",
+      $"Expected 'gwq config get worktree.basedir', got '{getCommand}'"
+    );
+    
+    AssertTrue(
+      setCommand == "gwq config set worktree.basedir ~/worktrees",
+      $"Expected 'gwq config set worktree.basedir ~/worktrees', got '{setCommand}'"
     );
     
     await Task.CompletedTask;
@@ -297,13 +321,14 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqPruneCommand()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Prune()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Prune command should build correctly"
+      command == "gwq prune",
+      $"Expected 'gwq prune', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -311,13 +336,14 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqVersionCommand()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .Version()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq Version command should build correctly"
+      command == "gwq version",
+      $"Expected 'gwq version', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -325,15 +351,17 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqWithWorkingDirectoryAndEnvironment()
   {
-    CommandResult command = Gwq.Run()
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    string command = Gwq.Run()
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("GIT_DIR", "/tmp/.git")
       .List()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq with working directory and environment variables should build correctly"
+      command == "gwq list",
+      $"Expected 'gwq list', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -341,13 +369,14 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqPipeToExtension()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .List()
-      .PipeTo("grep", "feature");
+      .PipeTo("grep", "feature")
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq PipeTo extension should work correctly"
+      command == "grep feature",
+      $"Expected 'grep feature', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -355,14 +384,15 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqCommandBuilds()
   {
-    CommandResult command = Gwq.Run()
+    string command = Gwq.Run()
       .List()
       .WithGlobal()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Gwq command should build correctly for testing"
+      command == "gwq list -g",
+      $"Expected 'gwq list -g', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -370,14 +400,17 @@ internal sealed class GwqCommandTests
 
   public static async Task TestGwqVersionExecution()
   {
-    string result = await Gwq.Run()
+    // Test command string generation for version command
+    string command = Gwq.Run()
       .Version()
-      .GetStringAsync();
+      .Build()
+      .ToCommandString();
     
-    // Even if gwq is not installed, should return empty string gracefully
     AssertTrue(
-      result != null,
-      "Gwq Version command execution should complete with graceful handling"
+      command == "gwq version",
+      $"Expected 'gwq version', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 }

@@ -4,6 +4,21 @@ await RunTests<RunBuilderTests>();
 
 internal sealed class RunBuilderTests
 {
+  public static async Task TestBasicRunBuilderCommandString()
+  {
+    string command = Shell.Run("echo")
+      .WithArguments("Hello", "World")
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "echo Hello World",
+      $"Expected 'echo Hello World', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
+  }
+
   public static async Task TestBasicRunBuilder()
   {
     string result = await Shell.Run("echo")
@@ -14,6 +29,22 @@ internal sealed class RunBuilderTests
       result.Trim() == "Hello World",
       "RunBuilder should work with basic arguments"
     );
+  }
+
+  public static async Task TestRunBuilderWithMultipleWithArgumentsCommandString()
+  {
+    string command = Shell.Run("echo")
+      .WithArguments("arg1")
+      .WithArguments("arg2", "arg3")
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "echo arg1 arg2 arg3",
+      $"Expected 'echo arg1 arg2 arg3', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestRunBuilderWithMultipleWithArguments()
@@ -27,6 +58,23 @@ internal sealed class RunBuilderTests
       result.Trim() == "arg1 arg2 arg3",
       $"Multiple WithArguments calls should accumulate, got '{result.Trim()}'"
     );
+  }
+
+  public static async Task TestRunBuilderWithEnvironmentVariableCommandString()
+  {
+    // Note: Environment variables don't appear in ToCommandString()
+    string command = Shell.Run("printenv")
+      .WithEnvironmentVariable("TEST_VAR", "test_value")
+      .WithArguments("TEST_VAR")
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "printenv TEST_VAR",
+      $"Expected 'printenv TEST_VAR', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestRunBuilderWithEnvironmentVariable()
@@ -72,6 +120,22 @@ internal sealed class RunBuilderTests
     );
   }
 
+  public static async Task TestRunBuilderWithWorkingDirectoryCommandString()
+  {
+    // Note: Working directory doesn't appear in ToCommandString()
+    string command = Shell.Run("pwd")
+      .WithWorkingDirectory("/tmp")
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "pwd ",
+      $"Expected 'pwd ', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
+  }
+
   public static async Task TestRunBuilderWithWorkingDirectory()
   {
     string tempDir = Path.GetTempPath();
@@ -83,6 +147,22 @@ internal sealed class RunBuilderTests
       result.Trim() == tempDir.TrimEnd('/'),
       $"Working directory should be set to {tempDir}, got {result.Trim()}"
     );
+  }
+
+  public static async Task TestRunBuilderPipelineCommandString()
+  {
+    string command = Shell.Run("echo")
+      .WithArguments("Hello\nWorld\nTest")
+      .Build()
+      .Pipe("grep", "World")
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "grep World",
+      $"Expected 'grep World', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestRunBuilderPipeline()
@@ -182,5 +262,35 @@ internal sealed class RunBuilderTests
       result.Length == 0,
       $"Empty StandardInput should return empty string"
     );
+  }
+
+  public static async Task TestRunBuilderWithComplexArgumentsCommandString()
+  {
+    string command = Shell.Run("git")
+      .WithArguments("log", "--oneline", "--author=\"John Doe\"", "--grep=fix")
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "git log --oneline \"--author=\\\"John Doe\\\"\" --grep=fix",
+      $"Expected 'git log --oneline \"--author=\\\"John Doe\\\"\" --grep=fix', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
+  }
+
+  public static async Task TestRunBuilderWithNoValidationCommandString()
+  {
+    string command = Shell.Run("false")
+      .WithNoValidation()
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "false ",
+      $"Expected 'false ', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
   }
 }

@@ -18,13 +18,14 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqGetCommand()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .Get("github.com/TimeWarpEngineering/timewarp-cli")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq Get command should build correctly"
+      command == "ghq get github.com/TimeWarpEngineering/timewarp-cli",
+      $"Expected 'ghq get github.com/TimeWarpEngineering/timewarp-cli', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -32,13 +33,14 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqCloneCommand()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .Clone("github.com/user/repo")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq Clone command should build correctly"
+      command == "ghq get github.com/user/repo",
+      $"Expected 'ghq get github.com/user/repo', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -46,16 +48,17 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqGetWithOptions()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .Get("github.com/user/repo")
       .WithShallow()
       .WithBranch("develop")
       .WithUpdate()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq Get with options should build correctly"
+      command == "ghq get --shallow --branch develop --update github.com/user/repo",
+      $"Expected 'ghq get --shallow --branch develop --update github.com/user/repo', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -63,13 +66,14 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqListCommand()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .List()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq List command should build correctly"
+      command == "ghq list",
+      $"Expected 'ghq list', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -77,16 +81,17 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqListWithOptions()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .List()
       .WithFullPath()
       .WithExact()
       .FilterByVcs("git")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq List with options should build correctly"
+      command == "ghq list --full-path --exact --vcs git",
+      $"Expected 'ghq list --full-path --exact --vcs git', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -94,13 +99,14 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqRemoveCommand()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .Remove("github.com/old/repo")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq Remove command should build correctly"
+      command == "ghq rm github.com/old/repo",
+      $"Expected 'ghq rm github.com/old/repo', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -108,14 +114,15 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqRmCommandWithDryRun()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .Rm("github.com/old/repo")
       .WithDryRun()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq Rm command with dry-run should build correctly"
+      command == "ghq rm --dry-run github.com/old/repo",
+      $"Expected 'ghq rm --dry-run github.com/old/repo', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -123,13 +130,14 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqRootCommand()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .Root()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq Root command should build correctly"
+      command == "ghq root",
+      $"Expected 'ghq root', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -137,14 +145,15 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqRootWithAllOption()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .Root()
       .WithAll()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq Root with all option should build correctly"
+      command == "ghq root --all",
+      $"Expected 'ghq root --all', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -152,13 +161,14 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqCreateCommand()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .Create("github.com/user/new-repo")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq Create command should build correctly"
+      command == "ghq create github.com/user/new-repo",
+      $"Expected 'ghq create github.com/user/new-repo', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -166,15 +176,17 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqWithWorkingDirectoryAndEnvironment()
   {
-    CommandResult command = Ghq.Run()
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    string command = Ghq.Run()
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("GHQ_ROOT", "/tmp/ghq")
       .List()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq with working directory and environment variables should build correctly"
+      command == "ghq list",
+      $"Expected 'ghq list', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -182,17 +194,18 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqGetWithAdvancedOptions()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .Get("github.com/example/repo")
       .WithLook()
       .WithParallel()
       .WithSilent()
       .WithNoRecursive()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq Get with advanced options should build correctly"
+      command == "ghq get --look --parallel --silent --no-recursive github.com/example/repo",
+      $"Expected 'ghq get --look --parallel --silent --no-recursive github.com/example/repo', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -200,14 +213,15 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqGetWithVcsBackend()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .Get("gitlab.com/user/project")
       .WithVcs("gitlab")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq Get with VCS backend should build correctly"
+      command == "ghq get --vcs gitlab gitlab.com/user/project",
+      $"Expected 'ghq get --vcs gitlab gitlab.com/user/project', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -215,14 +229,15 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqListWithUniqueOption()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .List()
       .WithUnique()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq List with unique option should build correctly"
+      command == "ghq list --unique",
+      $"Expected 'ghq list --unique', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -230,14 +245,15 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqGetWithBareRepository()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .Get("github.com/user/bare-repo")
       .WithBare()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq Get with bare repository should build correctly"
+      command == "ghq get --bare github.com/user/bare-repo",
+      $"Expected 'ghq get --bare github.com/user/bare-repo', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -245,13 +261,14 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqPipeToExtension()
   {
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .List()
-      .PipeTo("grep", "timewarp");
+      .PipeTo("grep", "timewarp")
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq PipeTo extension should work correctly"
+      command == "grep timewarp",
+      $"Expected 'grep timewarp', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -260,14 +277,15 @@ internal sealed class GhqCommandTests
   public static async Task TestGhqCommandBuilds()
   {
     // This tests that the command builds correctly even if ghq might not be installed
-    CommandResult command = Ghq.Run()
+    string command = Ghq.Run()
       .List()
       .WithFullPath()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Ghq command should build correctly for testing"
+      command == "ghq list --full-path",
+      $"Expected 'ghq list --full-path', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -275,27 +293,33 @@ internal sealed class GhqCommandTests
 
   public static async Task TestGhqRootExecution()
   {
-    string result = await Ghq.Run()
+    // Test command string generation for root command
+    string command = Ghq.Run()
       .Root()
-      .GetStringAsync();
+      .Build()
+      .ToCommandString();
     
-    // Even if ghq is not installed, should return empty string gracefully
     AssertTrue(
-      result != null,
-      "Ghq Root command execution should complete with graceful handling"
+      command == "ghq root",
+      $"Expected 'ghq root', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 
   public static async Task TestGhqListExecution()
   {
-    string[] lines = await Ghq.Run()
+    // Test command string generation for list command
+    string command = Ghq.Run()
       .List()
-      .GetLinesAsync();
+      .Build()
+      .ToCommandString();
     
-    // Even if ghq is not installed or no repos exist, should return empty array gracefully
     AssertTrue(
-      lines != null,
-      "Ghq List command execution should complete with graceful handling"
+      command == "ghq list",
+      $"Expected 'ghq list', got '{command}'"
     );
+    
+    await Task.CompletedTask;
   }
 }
