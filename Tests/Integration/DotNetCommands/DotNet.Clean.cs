@@ -4,13 +4,30 @@ await RunTests<DotNetCleanCommandTests>();
 
 internal sealed class DotNetCleanCommandTests
 {
-  public static async Task TestBasicDotNetCleanBuilderCreation()
+  public static async Task TestBasicDotNetCleanCommand()
   {
-    DotNetCleanBuilder cleanBuilder = DotNet.Clean();
+    string command = DotNet.Clean()
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      cleanBuilder != null,
-      "DotNet.Clean() should create builder successfully"
+      command == "dotnet clean",
+      $"Expected 'dotnet clean', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
+  }
+  
+  public static async Task TestCleanWithProjectOnly()
+  {
+    string command = DotNet.Clean()
+      .WithProject("MyApp.csproj")
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "dotnet clean MyApp.csproj",
+      $"Expected 'dotnet clean MyApp.csproj', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -18,17 +35,18 @@ internal sealed class DotNetCleanCommandTests
 
   public static async Task TestCleanFluentConfigurationMethods()
   {
-    CommandResult command = DotNet.Clean()
+    string command = DotNet.Clean()
       .WithProject("test.csproj")
       .WithConfiguration("Debug")
       .WithFramework("net10.0")
       .WithOutput("bin/Debug")
       .WithVerbosity("minimal")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Clean fluent configuration methods should work correctly"
+      command == "dotnet clean test.csproj --configuration Debug --framework net10.0 --output bin/Debug --verbosity minimal",
+      $"Expected correct clean command with configuration options, got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -36,18 +54,19 @@ internal sealed class DotNetCleanCommandTests
 
   public static async Task TestCleanMethodChainingWithRuntimeAndProperties()
   {
-    CommandResult chainedCommand = DotNet.Clean()
+    string command = DotNet.Clean()
       .WithProject("test.csproj")
       .WithConfiguration("Release")
       .WithRuntime("linux-x64")
       .WithNoLogo()
       .WithProperty("Platform", "AnyCPU")
       .WithProperty("CleanTargets", "All")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      chainedCommand != null,
-      "Clean method chaining should work correctly"
+      command == "dotnet clean test.csproj --configuration Release --runtime linux-x64 --nologo --property:Platform=AnyCPU --property:CleanTargets=All",
+      $"Expected correct clean command with runtime and properties, got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -55,16 +74,18 @@ internal sealed class DotNetCleanCommandTests
 
   public static async Task TestCleanWithWorkingDirectoryAndEnvironmentVariables()
   {
-    CommandResult envCommand = DotNet.Clean()
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    string command = DotNet.Clean()
       .WithProject("test.csproj")
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("CLEAN_ENV", "test")
       .WithVerbosity("quiet")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      envCommand != null,
-      "Clean with working directory and environment variables should work correctly"
+      command == "dotnet clean test.csproj --verbosity quiet",
+      $"Expected 'dotnet clean test.csproj --verbosity quiet', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -72,14 +93,15 @@ internal sealed class DotNetCleanCommandTests
 
   public static async Task TestCleanOverloadWithProjectParameter()
   {
-    CommandResult overloadCommand = DotNet.Clean("test.csproj")
+    string command = DotNet.Clean("test.csproj")
       .WithConfiguration("Debug")
       .WithNoLogo()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      overloadCommand != null,
-      "Clean overload with project parameter should work correctly"
+      command == "dotnet clean test.csproj --configuration Debug --nologo",
+      $"Expected 'dotnet clean test.csproj --configuration Debug --nologo', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -88,15 +110,16 @@ internal sealed class DotNetCleanCommandTests
   public static async Task TestCleanCommandExecutionGracefulHandling()
   {
     // Test that the builder creates a valid command even for non-existent projects
-    CommandResult command = DotNet.Clean()
+    string command = DotNet.Clean()
       .WithProject("nonexistent.csproj")
       .WithConfiguration("Debug")
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    // The command should be created successfully
+    // The command string should be created correctly
     AssertTrue(
-      command != null,
-      "Clean command should be created even for non-existent projects"
+      command == "dotnet clean nonexistent.csproj --configuration Debug",
+      $"Expected correct command string even for non-existent projects, got '{command}'"
     );
     
     await Task.CompletedTask;

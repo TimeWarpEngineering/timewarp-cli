@@ -4,13 +4,30 @@ await RunTests<DotNetBuildCommandTests>();
 
 internal sealed class DotNetBuildCommandTests
 {
-  public static async Task TestBasicDotNetBuildBuilderCreation()
+  public static async Task TestBasicDotNetBuildCommand()
   {
-    DotNetBuildBuilder buildBuilder = DotNet.Build();
+    string command = DotNet.Build()
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      buildBuilder != null,
-      "DotNet.Build() should create builder successfully"
+      command == "dotnet build",
+      $"Expected 'dotnet build', got '{command}'"
+    );
+    
+    await Task.CompletedTask;
+  }
+  
+  public static async Task TestBuildWithProjectOnly()
+  {
+    string command = DotNet.Build()
+      .WithProject("MyApp.csproj")
+      .Build()
+      .ToCommandString();
+    
+    AssertTrue(
+      command == "dotnet build MyApp.csproj",
+      $"Expected 'dotnet build MyApp.csproj', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -18,17 +35,18 @@ internal sealed class DotNetBuildCommandTests
 
   public static async Task TestBuildFluentConfigurationMethods()
   {
-    CommandResult command = DotNet.Build()
+    string command = DotNet.Build()
       .WithProject("test.csproj")
       .WithConfiguration("Debug")
       .WithFramework("net10.0")
       .WithNoRestore()
       .WithOutput("bin/Debug")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      command != null,
-      "Build fluent configuration methods should work correctly"
+      command == "dotnet build test.csproj --configuration Debug --framework net10.0 --output bin/Debug --no-restore",
+      $"Expected 'dotnet build test.csproj --configuration Debug --framework net10.0 --output bin/Debug --no-restore', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -36,7 +54,7 @@ internal sealed class DotNetBuildCommandTests
 
   public static async Task TestBuildMethodChainingWithAdvancedOptions()
   {
-    CommandResult chainedCommand = DotNet.Build()
+    string command = DotNet.Build()
       .WithProject("test.csproj")
       .WithConfiguration("Release")
       .WithArchitecture("x64")
@@ -46,11 +64,12 @@ internal sealed class DotNetBuildCommandTests
       .WithNoIncremental()
       .WithVerbosity("minimal")
       .WithProperty("Platform", "AnyCPU")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      chainedCommand != null,
-      "Build method chaining should work correctly"
+      command == "dotnet build test.csproj --configuration Release --arch x64 --os linux --verbosity minimal --no-restore --no-dependencies --no-incremental --property:Platform=AnyCPU",
+      $"Expected correct build command with advanced options, got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -58,16 +77,19 @@ internal sealed class DotNetBuildCommandTests
 
   public static async Task TestBuildWithWorkingDirectoryAndEnvironmentVariables()
   {
-    CommandResult envCommand = DotNet.Build()
+    // Note: Working directory and environment variables don't appear in ToCommandString()
+    // They are process execution settings, not command arguments
+    string command = DotNet.Build()
       .WithProject("test.csproj")
       .WithWorkingDirectory("/tmp")
       .WithEnvironmentVariable("BUILD_ENV", "test")
       .WithNoLogo()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      envCommand != null,
-      "Build with working directory and environment variables should work correctly"
+      command == "dotnet build test.csproj --nologo",
+      $"Expected 'dotnet build test.csproj --nologo', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -75,17 +97,18 @@ internal sealed class DotNetBuildCommandTests
 
   public static async Task TestBuildWithMSBuildPropertiesIncludingNoCacheOptions()
   {
-    CommandResult propsCommand = DotNet.Build()
+    string command = DotNet.Build()
       .WithProject("test.csproj")
       .WithConfiguration("Debug")
       .WithProperty("RestoreNoCache", "true")
       .WithProperty("DisableImplicitNuGetFallbackFolder", "true")
       .WithProperty("RestoreIgnoreFailedSources", "true")
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      propsCommand != null,
-      "MSBuild properties including no-cache options should work correctly"
+      command == "dotnet build test.csproj --configuration Debug --property:RestoreNoCache=true --property:DisableImplicitNuGetFallbackFolder=true --property:RestoreIgnoreFailedSources=true",
+      $"Expected correct build command with MSBuild properties, got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -93,14 +116,15 @@ internal sealed class DotNetBuildCommandTests
 
   public static async Task TestBuildOverloadWithProjectParameter()
   {
-    CommandResult overloadCommand = DotNet.Build("test.csproj")
+    string command = DotNet.Build("test.csproj")
       .WithConfiguration("Debug")
       .WithNoRestore()
-      .Build();
+      .Build()
+      .ToCommandString();
     
     AssertTrue(
-      overloadCommand != null,
-      "Build overload with project parameter should work correctly"
+      command == "dotnet build test.csproj --configuration Debug --no-restore",
+      $"Expected 'dotnet build test.csproj --configuration Debug --no-restore', got '{command}'"
     );
     
     await Task.CompletedTask;
@@ -109,16 +133,17 @@ internal sealed class DotNetBuildCommandTests
   public static async Task TestBuildCommandExecutionGracefulHandling()
   {
     // Test that the builder creates a valid command even for non-existent projects
-    CommandResult command = DotNet.Build()
+    string commandString = DotNet.Build()
       .WithProject("nonexistent.csproj")
       .WithConfiguration("Debug")
       .WithNoRestore()
-      .Build();
+      .Build()
+      .ToCommandString();
     
-    // The command should be created successfully
+    // The command string should be created correctly
     AssertTrue(
-      command != null,
-      "Build command should be created even for non-existent projects"
+      commandString == "dotnet build nonexistent.csproj --configuration Debug --no-restore",
+      $"Expected correct command string even for non-existent projects, got '{commandString}'"
     );
     
     await Task.CompletedTask;
