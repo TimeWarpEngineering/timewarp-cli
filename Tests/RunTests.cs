@@ -14,7 +14,7 @@ string originalDirectory = Directory.GetCurrentDirectory();
 string scriptDir = GetScriptDirectory();
 Directory.SetCurrentDirectory(scriptDir);
 
-Console.WriteLine("🧪 Running TimeWarp.Cli Test Suite...");
+Console.WriteLine("🧪 Running TimeWarp.Amuru Test Suite...");
 Console.WriteLine($"Script directory: {scriptDir}");
 Console.WriteLine($"Working from: {Directory.GetCurrentDirectory()}\n");
 

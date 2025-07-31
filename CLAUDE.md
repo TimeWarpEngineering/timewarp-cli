@@ -4,18 +4,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-TimeWarp.Cli is a fluent API wrapper around CliWrap for elegant C# scripting. The library makes shell command execution feel natural and concise in C#, providing a simple static `Run()` method with async operations and graceful error handling.
+TimeWarp.Amuru is a fluent API wrapper around CliWrap for elegant C# scripting. The library makes shell command execution feel natural and concise in C#, providing a simple static `Run()` method with async operations and graceful error handling.
 
 **Target Framework:** .NET 10.0  
 **Current Version:** 0.2.0  
-**Package ID:** TimeWarp.Cli
+**Package ID:** TimeWarp.Amuru
 
 ## Project Structure
 
-- `Source/TimeWarp.Cli/` - Main library (published as NuGet package)
+- `Source/TimeWarp.Amuru/` - Main library (published as NuGet package)
   - `CommandExtensions.cs` - Static `Run()` method entry point
   - `CommandResult.cs` - Fluent result wrapper with async operations
-- `Scripts/` - Build automation scripts (all use TimeWarp.Cli itself)
+- `Scripts/` - Build automation scripts (all use TimeWarp.Amuru itself)
 - `Tests/` - Integration tests with custom test runner
 - `Spikes/CsScripts/` - Example scripts demonstrating API usage
 - `LocalNuGetFeed/` - Local NuGet packages for development
@@ -48,16 +48,16 @@ TimeWarp.Cli is a fluent API wrapper around CliWrap for elegant C# scripting. Th
 ./Tests/RunTests.cs
 ```
 
-Tests are executable C# scripts that return exit codes. The test runner uses TimeWarp.Cli itself to execute tests and report results.
+Tests are executable C# scripts that return exit codes. The test runner uses TimeWarp.Amuru itself to execute tests and report results.
 
 **Important**: All test files include `#:property RestoreNoCache true` to ensure fresh package downloads and avoid caching issues during development.
 
 ### Local Development Workflow
 
-1. Make changes to `Source/TimeWarp.Cli/`
+1. Make changes to `Source/TimeWarp.Amuru/`
 2. Run `./Scripts/Build.cs` to build
 3. Run `./Scripts/Pack.cs` to publish to local feed
-4. Test in scripts using `#:package TimeWarp.Cli`
+4. Test in scripts using `#:package TimeWarp.Amuru`
 5. Run `./Tests/RunTests.cs` to verify functionality
 
 ### Creating GitHub Releases
@@ -114,7 +114,7 @@ public async Task<ExecutionResult> ExecuteInteractiveAsync()  // Full interactiv
 ### Usage Examples
 ```csharp
 #!/usr/bin/dotnet run
-#:package TimeWarp.Cli
+#:package TimeWarp.Amuru
 
 // Get command output
 var date = await Run("date").GetStringAsync();
@@ -234,15 +234,15 @@ API Methods:
 3. **Async-First**: All operations are async for non-blocking execution
 4. **No Exceptions**: Failed commands return empty results
 5. **Pipeline Support**: Commands can be chained with `.Pipe()` for shell-like operations
-6. **Dogfooding**: Test runner uses TimeWarp.Cli itself for execution
+6. **Dogfooding**: Test runner uses TimeWarp.Amuru itself for execution
 
 ## Build System Architecture
 
-**CRITICAL**: The build scripts (`Scripts/Build.cs`, `Scripts/Pack.cs`, `Scripts/Clean.cs`) deliberately use raw `System.Diagnostics.Process` instead of TimeWarp.Cli to avoid circular dependencies. This ensures:
+**CRITICAL**: The build scripts (`Scripts/Build.cs`, `Scripts/Pack.cs`, `Scripts/Clean.cs`) deliberately use raw `System.Diagnostics.Process` instead of TimeWarp.Amuru to avoid circular dependencies. This ensures:
 
 - Build scripts remain self-contained and stable
 - No chicken-and-egg problems when the library has issues
-- Build can always succeed even if TimeWarp.Cli is broken
+- Build can always succeed even if TimeWarp.Amuru is broken
 - Once the library is stable, other scripts can dogfood it safely
 
 **Rule**: Never make build scripts depend on the library they're building.
@@ -258,7 +258,7 @@ All scripts use shebang lines for direct execution:
 ```csharp
 #!/usr/bin/dotnet run                          // Basic script
 #!/usr/bin/dotnet run --package CliWrap        // With external package
-#:package TimeWarp.Cli                         // Reference local library
+#:package TimeWarp.Amuru                         // Reference local library
 ```
 
 Scripts must have execute permissions (`chmod +x script.cs`).
@@ -278,7 +278,7 @@ public static async Task<int> Main(string[] args, [CallerFilePath] string script
     Environment.CurrentDirectory = scriptDirectory;
     
     // Use relative paths from script location
-    // e.g., "../Source/TimeWarp.Cli/TimeWarp.Cli.csproj"
+    // e.g., "../Source/TimeWarp.Amuru/TimeWarp.Amuru.csproj"
     
     return 0;
   }
@@ -312,7 +312,7 @@ The pragma warnings suppress false IDE warnings about the using directive being 
 **Integration Test Script Headers Should Include**:
 ```csharp
 #!/usr/bin/dotnet run
-#:package TimeWarp.Cli@*-*
+#:package TimeWarp.Amuru@*-*
 #:property RestoreNoCache true
 #:property DisableImplicitNuGetFallbackFolder true
 ```
@@ -320,7 +320,7 @@ The pragma warnings suppress false IDE warnings about the using directive being 
 **Development Workflow**:
 1. Make code changes to library
 2. Run `./Scripts/Build.cs` and `./Scripts/Pack.cs`
-3. Clear only our package cache: `rm -rf LocalNuGetCache/timewarp.cli`
+3. Clear only our package cache: `rm -rf LocalNuGetCache/timewarp.amuru`
 4. Run tests: `./Tests/RunTests.cs`
 
 **Benefits**:
@@ -329,7 +329,7 @@ The pragma warnings suppress false IDE warnings about the using directive being 
 - ✅ Avoids version number pollution
 - ✅ Gives precise control over package caching per script
 
-**Note**: RunTests.cs itself cannot clear the cache because it depends on TimeWarp.Cli package (chicken-and-egg problem). Cache clearing must be done manually or via separate shell script.
+**Note**: RunTests.cs itself cannot clear the cache because it depends on TimeWarp.Amuru package (chicken-and-egg problem). Cache clearing must be done manually or via separate shell script.
 
 ## NuGet Configuration
 
@@ -366,12 +366,12 @@ This project follows specific C# coding standards defined in `.ai/04-csharp-codi
 ### Language Features
 - **Type declarations**: Use `var` only when type is apparent from right side
 - **New operator**: Use targeted type new (`HttpClient client = new();`)
-- **Namespaces**: Use file-scoped namespaces (`namespace TimeWarp.Cli;`)
+- **Namespaces**: Use file-scoped namespaces (`namespace TimeWarp.Amuru;`)
 - **Using statements**: Prefer global usings in GlobalUsings.cs
 
 ### Example Following Standards
 ```csharp
-namespace TimeWarp.Cli;
+namespace TimeWarp.Amuru;
 
 public class CommandResult
 {

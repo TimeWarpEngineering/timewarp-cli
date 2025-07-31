@@ -14,7 +14,7 @@ string originalDirectory = Directory.GetCurrentDirectory();
 string scriptDir = GetScriptDirectory();
 Directory.SetCurrentDirectory(scriptDir);
 
-Console.WriteLine("Building TimeWarp.Cli library...");
+Console.WriteLine("Building TimeWarp.Amuru library...");
 Console.WriteLine($"Script directory: {scriptDir}");
 Console.WriteLine($"Working from: {Directory.GetCurrentDirectory()}");
 
@@ -28,7 +28,7 @@ try
             StartInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
-                Arguments = "build ../Source/TimeWarp.Cli/TimeWarp.Cli.csproj --configuration Release",
+                Arguments = "build ../Source/TimeWarp.Amuru/TimeWarp.Amuru.csproj --configuration Release",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
