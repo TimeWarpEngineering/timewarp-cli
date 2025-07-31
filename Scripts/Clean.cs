@@ -75,32 +75,32 @@ try
         }
     }
 
-    // Clean NuGet cache for this package
-    var cacheCleanProcess = new Process
+    // Clean TimeWarp.Cli from user's global NuGet cache
+    string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+    string globalNuGetCache = Path.Combine(userProfile, ".nuget", "packages", "timewarp.cli");
+    if (Directory.Exists(globalNuGetCache))
     {
-        StartInfo = new ProcessStartInfo
-        {
-            FileName = "dotnet",
-            Arguments = "nuget locals all --clear",
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            CreateNoWindow = true
-        }
-    };
-
-    cacheCleanProcess.Start();
-    string cacheOutput = await cacheCleanProcess.StandardOutput.ReadToEndAsync();
-    string cacheError = await cacheCleanProcess.StandardError.ReadToEndAsync();
-    await cacheCleanProcess.WaitForExitAsync();
-
-    Console.WriteLine(cacheOutput);
-    if (!string.IsNullOrEmpty(cacheError))
-    {
-        Console.WriteLine($"Cache clean errors: {cacheError}");
+        Directory.Delete(globalNuGetCache, true);
+        Console.WriteLine($"🗑️  Removed global NuGet cache: {globalNuGetCache}");
     }
 
-        Console.WriteLine("✅ Cleanup completed!");
+    // Clean LocalNuGetCache directories
+    string[] cacheDirectories = {
+        "../LocalNuGetCache/timewarp.cli",
+        "../Tests/LocalNuGetCache/timewarp.cli",
+        "../Tests/Integration/Core/LocalNuGetCache/timewarp.cli"
+    };
+
+    foreach (string cacheDir in cacheDirectories)
+    {
+        if (Directory.Exists(cacheDir))
+        {
+            Directory.Delete(cacheDir, true);
+            Console.WriteLine($"🗑️  Removed cache directory: {cacheDir}");
+        }
+    }
+
+    Console.WriteLine("✅ Cleanup completed!");
     }
     catch (Exception ex)
     {
