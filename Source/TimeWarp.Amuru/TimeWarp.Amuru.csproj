@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageOutputPath>../../LocalNuGetFeed</PackageOutputPath>
+    <PackageId>TimeWarp.Amuru</PackageId>
+    <Version>1.0.0-beta.1</Version>
+    <Authors>Steven T. Cramer</Authors>
+    <Description>Fluent API for elegant C# scripting with pipeline support</Description>
+    <PackageTags>cli;scripting;fluent;shell;pipeline;amuru</PackageTags>
+    <RepositoryUrl>https://github.com/TimeWarpEngineering/timewarp-amuru</RepositoryUrl>
+    <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
+    <PackageIcon>Logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CliWrap" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Assets\Logo.png" Pack="true" PackagePath="" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+</Project>

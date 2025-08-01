@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Reference TimeWarp.Cli library -->
-    <ProjectReference Include="$(MSBuildThisFileDirectory)../Source/TimeWarp.Cli/TimeWarp.Cli.csproj" />
+    <!-- Reference TimeWarp.Amuru library -->
+    <ProjectReference Include="$(MSBuildThisFileDirectory)../Source/TimeWarp.Amuru/TimeWarp.Amuru.csproj" />
     
     <!-- Reference test helpers library -->
-    <ProjectReference Include="$(MSBuildThisFileDirectory)TimeWarp.Cli.Test.Helpers/TimeWarp.Cli.Test.Helpers.csproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)TimeWarp.Amuru.Test.Helpers/TimeWarp.Amuru.Test.Helpers.csproj" />
     
     <!-- Direct reference to CliWrap for transitive dependency support -->
     <PackageReference Include="CliWrap" />
@@ -20,12 +20,12 @@
 
   <ItemGroup>
     <!-- Global usings for all test projects -->
-    <Using Include="TimeWarp.Cli" />
+    <Using Include="TimeWarp.Amuru" />
     <Using Include="System.Diagnostics" />
     <Using Include="System.Reflection" />
     <Using Include="System.Runtime.CompilerServices" />
-    <Using Include="TimeWarp.Cli.Test.Helpers.TestHelpers" Static="true" />
-    <Using Include="TimeWarp.Cli.Test.Helpers.Asserts" Static="true" />
-    <Using Include="TimeWarp.Cli.Test.Helpers.TestRunner" Static="true" />
+    <Using Include="TimeWarp.Amuru.Test.Helpers.TestHelpers" Static="true" />
+    <Using Include="TimeWarp.Amuru.Test.Helpers.Asserts" Static="true" />
+    <Using Include="TimeWarp.Amuru.Test.Helpers.TestRunner" Static="true" />
   </ItemGroup>
 </Project>

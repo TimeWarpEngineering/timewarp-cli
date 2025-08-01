@@ -28,7 +28,7 @@ try
         StartInfo = new ProcessStartInfo
         {
             FileName = "dotnet",
-            Arguments = "clean ../Source/TimeWarp.Cli/TimeWarp.Cli.csproj",
+            Arguments = "clean ../Source/TimeWarp.Amuru/TimeWarp.Amuru.csproj",
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -60,14 +60,14 @@ try
     string localFeedPath = "../LocalNuGetFeed";
     if (Directory.Exists(localFeedPath))
     {
-        string[] timeWarpPackages = Directory.GetDirectories(localFeedPath, "timewarp.cli", SearchOption.AllDirectories);
+        string[] timeWarpPackages = Directory.GetDirectories(localFeedPath, "timewarp.amuru", SearchOption.AllDirectories);
         foreach (string packageDir in timeWarpPackages)
         {
             Directory.Delete(packageDir, true);
             Console.WriteLine($"🗑️  Removed: {packageDir}");
         }
 
-        string[] nupkgFiles = Directory.GetFiles(localFeedPath, "TimeWarp.Cli.*.nupkg", SearchOption.AllDirectories);
+        string[] nupkgFiles = Directory.GetFiles(localFeedPath, "TimeWarp.Amuru.*.nupkg", SearchOption.AllDirectories);
         foreach (string file in nupkgFiles)
         {
             File.Delete(file);
@@ -75,9 +75,9 @@ try
         }
     }
 
-    // Clean TimeWarp.Cli from user's global NuGet cache
+    // Clean TimeWarp.Amuru from user's global NuGet cache
     string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-    string globalNuGetCache = Path.Combine(userProfile, ".nuget", "packages", "timewarp.cli");
+    string globalNuGetCache = Path.Combine(userProfile, ".nuget", "packages", "timewarp.amuru");
     if (Directory.Exists(globalNuGetCache))
     {
         Directory.Delete(globalNuGetCache, true);
@@ -86,9 +86,9 @@ try
 
     // Clean LocalNuGetCache directories
     string[] cacheDirectories = {
-        "../LocalNuGetCache/timewarp.cli",
-        "../Tests/LocalNuGetCache/timewarp.cli",
-        "../Tests/Integration/Core/LocalNuGetCache/timewarp.cli"
+        "../LocalNuGetCache/timewarp.amuru",
+        "../Tests/LocalNuGetCache/timewarp.amuru",
+        "../Tests/Integration/Core/LocalNuGetCache/timewarp.amuru"
     };
 
     foreach (string cacheDir in cacheDirectories)

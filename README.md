@@ -1,14 +1,14 @@
-[![Stars](https://img.shields.io/github/stars/TimeWarpEngineering/timewarp-cli?logo=github)](https://github.com/TimeWarpEngineering/timewarp-cli)
-[![workflow](https://github.com/TimeWarpEngineering/timewarp-cli/actions/workflows/release-build.yml/badge.svg)](https://github.com/TimeWarpEngineering/timewarp-cli/actions)
-[![Forks](https://img.shields.io/github/forks/TimeWarpEngineering/timewarp-cli)](https://github.com/TimeWarpEngineering/timewarp-cli)
-[![License](https://img.shields.io/github/license/TimeWarpEngineering/timewarp-cli.svg?style=flat-square&logo=github)](https://github.com/TimeWarpEngineering/timewarp-cli/issues)
-[![Issues Open](https://img.shields.io/github/issues/TimeWarpEngineering/timewarp-cli.svg?logo=github)](https://github.com/TimeWarpEngineering/timewarp-cli/issues)
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/TimeWarpEngineering/timewarp-cli/badge)](https://scorecard.dev/viewer/?uri=github.com/TimeWarpEngineering/timewarp-cli)
+[![Stars](https://img.shields.io/github/stars/TimeWarpEngineering/timewarp-amuru?logo=github)](https://github.com/TimeWarpEngineering/timewarp-amuru)
+[![workflow](https://github.com/TimeWarpEngineering/timewarp-amuru/actions/workflows/release-build.yml/badge.svg)](https://github.com/TimeWarpEngineering/timewarp-amuru/actions)
+[![Forks](https://img.shields.io/github/forks/TimeWarpEngineering/timewarp-amuru)](https://github.com/TimeWarpEngineering/timewarp-amuru)
+[![License](https://img.shields.io/github/license/TimeWarpEngineering/timewarp-amuru.svg?style=flat-square&logo=github)](https://github.com/TimeWarpEngineering/timewarp-amuru/issues)
+[![Issues Open](https://img.shields.io/github/issues/TimeWarpEngineering/timewarp-amuru.svg?logo=github)](https://github.com/TimeWarpEngineering/timewarp-amuru/issues)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/TimeWarpEngineering/timewarp-amuru/badge)](https://scorecard.dev/viewer/?uri=github.com/TimeWarpEngineering/timewarp-amuru)
 
-[![nuget](https://img.shields.io/nuget/v/TimeWarp.Cli?logo=nuget)](https://www.nuget.org/packages/TimeWarp.Cli/)
-[![nuget](https://img.shields.io/nuget/dt/TimeWarp.Cli?logo=nuget)](https://www.nuget.org/packages/TimeWarp.Cli/)
+[![nuget](https://img.shields.io/nuget/v/TimeWarp.Amuru?logo=nuget)](https://www.nuget.org/packages/TimeWarp.Amuru/)
+[![nuget](https://img.shields.io/nuget/dt/TimeWarp.Amuru?logo=nuget)](https://www.nuget.org/packages/TimeWarp.Amuru/)
 
-[![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2FTimeWarpEngineering%2Ftimewarp-cli)](https://twitter.com/intent/tweet?url=https://github.com/TimeWarpEngineering/timewarp-cli)
+[![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2FTimeWarpEngineering%2Ftimewarp-amuru)](https://twitter.com/intent/tweet?url=https://github.com/TimeWarpEngineering/timewarp-amuru)
 [![Dotnet](https://img.shields.io/badge/dotnet-10.0-blue)](https://dotnet.microsoft.com)
 
 [![Discord](https://img.shields.io/discord/715274085940199487?logo=discord)](https://discord.gg/7F4bS2T)
@@ -17,15 +17,15 @@
 
 <img src="https://raw.githubusercontent.com/TimeWarpEngineering/timewarpengineering.github.io/refs/heads/master/images/LogoNoMarginNoShadow.svg" alt="logo" height="120" style="float: right" />
 
-# TimeWarp.Cli
+# TimeWarp.Amuru
 
-**TimeWarp.Cli** is a powerful fluent API library for elegant command-line execution in C#. It transforms shell scripting into a type-safe, IntelliSense-friendly experience with a simple static `Run()` method, async operations, and proper error handling.
+**TimeWarp.Amuru** (formerly TimeWarp.Cli) is a powerful fluent API library for elegant command-line execution in C#. It transforms shell scripting into a type-safe, IntelliSense-friendly experience with a simple static `Run()` method, async operations, and proper error handling.
 
-Designed for modern C# developers, TimeWarp.Cli brings the power of shell scripting directly into your C# code. Whether you're building automation tools, DevOps scripts, or integrating command-line tools into your applications, TimeWarp.Cli provides the elegant, type-safe API you need.
+Designed for modern C# developers, TimeWarp.Amuru brings the power of shell scripting directly into your C# code. Whether you're building automation tools, DevOps scripts, or integrating command-line tools into your applications, TimeWarp.Amuru provides the elegant, type-safe API you need.
 
-## Why TimeWarp.Cli?
+## Why TimeWarp.Amuru?
 
-- **Zero Learning Curve**: If you know C#, you already know how to use TimeWarp.Cli
+- **Zero Learning Curve**: If you know C#, you already know how to use TimeWarp.Amuru
 - **IntelliSense Everything**: Full IDE support with autocomplete, parameter hints, and documentation
 - **Type Safety**: Catch errors at compile-time, not runtime
 - **No String Escaping Hell**: Use C# arrays and parameters naturally
@@ -40,9 +40,9 @@ If you find this project useful, please give it a star. Thanks!
 
 ```csharp
 #!/usr/bin/dotnet run
-#:package TimeWarp.Cli
+#:package TimeWarp.Amuru
 
-using TimeWarp.Cli;
+using TimeWarp.Amuru;
 
 // Get command output as string
 var date = await Run("date").GetStringAsync();
@@ -238,12 +238,12 @@ See [Spikes/CsScripts/](Spikes/CsScripts/) for example scripts demonstrating Tim
 
 ## Unlicense
 
-[![License](https://img.shields.io/github/license/TimeWarpEngineering/timewarp-cli.svg?style=flat-square&logo=github)](https://unlicense.org)  
+[![License](https://img.shields.io/github/license/TimeWarpEngineering/timewarp-amuru.svg?style=flat-square&logo=github)](https://unlicense.org)  
 This project is licensed under the [Unlicense](https://unlicense.org).
 
 ## Contributing
 
-Your contributions are welcome! Before starting any work, please open a [discussion](https://github.com/TimeWarpEngineering/timewarp-cli/discussions).
+Your contributions are welcome! Before starting any work, please open a [discussion](https://github.com/TimeWarpEngineering/timewarp-amuru/discussions).
 
 See our [Kanban board](Kanban/Overview.md) for current development tasks and priorities.
 
