@@ -32,6 +32,14 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'merge = normal CI (default). probe = trusted-publishing check only (OIDC login, no build, no publish).'
+        type: choice
+        options:
+          - merge
+          - probe
+        default: merge
 
 jobs:
   ci:
@@ -52,11 +60,15 @@ jobs:
           global-json-file: global.json
 
       - name: NuGet login (OIDC Trusted Publishing)
-        if: github.event_name == 'release'
+        if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'probe')
         id: nuget-login
         uses: nuget/login@v1
         with:
           user: TimeWarp.Enterprises
+
+      - name: Trusted publishing probe result
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'probe'
+        run: echo "Trusted publishing OK — OIDC exchange succeeded for this repo + workflow.yml. (A failure of the NuGet login step above means the policy is missing or misconfigured on NuGet.org.)"
 
       # Cross-repo repository_dispatch (timewarp-software rebuild) cannot use the
       # default GITHUB_TOKEN. A short-lived installation token is minted from the
@@ -74,6 +86,7 @@ jobs:
           repositories: timewarp-software
 
       - name: Run CI Pipeline
+        if: github.event_name != 'workflow_dispatch' || inputs.mode != 'probe'
         env:
           GH_TOKEN: ${{ steps.rebuild-token.outputs.token }}
         run: |
