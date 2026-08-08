@@ -23,9 +23,6 @@
     <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="TimeWarp.Build.Tasks" PrivateAssets="all" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="$(RepositoryRoot)assets/logo.png" Pack="true" PackagePath="" />

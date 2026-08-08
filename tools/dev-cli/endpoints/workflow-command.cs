@@ -31,10 +31,23 @@ internal sealed class WorkflowCommand : ICommand<Unit>
   internal sealed class Handler : ICommandHandler<WorkflowCommand, Unit>
   {
     private readonly ITerminal Terminal;
+    private readonly IRepoCleanService RepoCleanService;
+    private readonly NuGetVersionService NuGetVersionService;
+    private readonly IRepoConfigService ConfigService;
+    private readonly IPackableProjectService PackableProjectService;
 
-    public Handler(ITerminal terminal)
+    public Handler(
+      ITerminal terminal,
+      IRepoCleanService repoCleanService,
+      NuGetVersionService nuGetVersionService,
+      IRepoConfigService configService,
+      IPackableProjectService packableProjectService)
     {
       Terminal = terminal;
+      RepoCleanService = repoCleanService;
+      NuGetVersionService = nuGetVersionService;
+      ConfigService = configService;
+      PackableProjectService = packableProjectService;
     }
 
     public async ValueTask<Unit> Handle(WorkflowCommand command, CancellationToken ct)
@@ -99,7 +112,7 @@ internal sealed class WorkflowCommand : ICommand<Unit>
       Terminal.WriteLine("===============================================================================");
       Terminal.WriteLine("  Step 1/5: Clean");
       Terminal.WriteLine("===============================================================================");
-      CleanCommand.Handler cleanHandler = new();
+      CleanCommand.Handler cleanHandler = new(Terminal, RepoCleanService);
       await cleanHandler.Handle(new CleanCommand(), CancellationToken.None);
 
       if (StopOnFailure("Clean"))
@@ -147,7 +160,7 @@ internal sealed class WorkflowCommand : ICommand<Unit>
       Terminal.WriteLine("===============================================================================");
       Terminal.WriteLine("  Step 5/5: Check Version");
       Terminal.WriteLine("===============================================================================");
-      CheckVersionCommand.Handler checkVersionHandler = new(Terminal);
+      CheckVersionCommand.Handler checkVersionHandler = new(Terminal, NuGetVersionService, ConfigService, PackableProjectService);
       await checkVersionHandler.Handle(new CheckVersionCommand(), CancellationToken.None);
 
       if (StopOnFailure("Check Version"))
@@ -179,7 +192,7 @@ internal sealed class WorkflowCommand : ICommand<Unit>
       Terminal.WriteLine("===============================================================================");
       Terminal.WriteLine("  Step 1/5: Clean");
       Terminal.WriteLine("===============================================================================");
-      CleanCommand.Handler cleanHandler = new();
+      CleanCommand.Handler cleanHandler = new(Terminal, RepoCleanService);
       await cleanHandler.Handle(new CleanCommand(), CancellationToken.None);
 
       if (StopOnFailure("Clean"))
@@ -388,9 +401,3 @@ internal sealed class WorkflowCommand : ICommand<Unit>
   }
 }
 
-internal enum CiMode
-{
-  Pr,
-  Merge,
-  Release
-}

@@ -22,3 +22,5 @@ global using TimeWarp.Terminal;
 global using Microsoft.Extensions.DependencyInjection;
 
 global using static System.Console;
+
+global using DevCli;

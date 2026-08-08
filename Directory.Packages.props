@@ -10,7 +10,8 @@
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="TimeWarp.Build.Tasks" Version="1.0.0" />
     <PackageVersion Include="TimeWarp.Jaribu" Version="1.0.0-beta.13" />
-    <PackageVersion Include="TimeWarp.Nuru" Version="3.0.0-beta.71" />
+    <PackageVersion Include="TimeWarp.Nuru" Version="3.0.0-beta.72" />
+    <PackageVersion Include="TimeWarp.Nuru.DevCli" Version="3.0.0-beta.72" />
     <PackageVersion Include="TimeWarp.Terminal" Version="1.0.0" />
     <!-- Analyzers -->
     <PackageVersion Include="Roslynator.Analyzers" Version="4.15.0" />
@@ -19,5 +20,5 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.301" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="5.6.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="5.6.0" />
-  </ItemGroup>
+  <PackageVersion Include="TimeWarp.Amuru" Version="1.0.0" /><PackageVersion Include="TimeWarp.Amuru.Tools" Version="1.0.0-beta.2" /></ItemGroup>
 </Project>
