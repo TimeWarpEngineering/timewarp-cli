@@ -13,9 +13,9 @@ Rename the owned Amuru skill `skills/amuru` → `skills/tw-amuru` (folder + fron
 
 ## Checklist
 
-- [ ] Create this task via `ganda kanban create` and commit
-- [ ] `git mv` skill folder and set frontmatter `name: tw-amuru`
-- [ ] Grep-clean live refs (`skills/amuru`, `name: amuru`) excluding `kanban/done/**`
+- [x] Create this task via `ganda kanban create` and commit
+- [x] `git mv` skill folder and set frontmatter `name: tw-amuru`
+- [x] Grep-clean live refs (`skills/amuru`, `name: amuru`) excluding `kanban/done/**`
 - [ ] Reset of local master worktree is orchestrator-owned (do not do it)
 - [ ] PR opened to `dev` (orchestrator-owned if you do not open it)
 
@@ -27,3 +27,11 @@ Rename the owned Amuru skill `skills/amuru` → `skills/tw-amuru` (folder + fron
 ## Session
 
 - Implementation: Grok 2026-08-15
+
+## Results
+
+- Cherry-picked `cb6dec3` cleanly as `5a02a88` (`refactor(skills): prefix owned skill with tw- for invoke filtering`)
+- `skills/amuru` → `skills/tw-amuru`; frontmatter `name: tw-amuru`
+- Left `BannedSymbols.txt` ban-message text unchanged (ganda exact-rule audit)
+- Live refs clean; historical `kanban/done/068-*` left alone
+- Master reset and PR left to orchestrator
