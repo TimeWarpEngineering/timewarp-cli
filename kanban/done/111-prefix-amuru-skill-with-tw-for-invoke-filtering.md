@@ -17,7 +17,7 @@ Rename the owned Amuru skill `skills/amuru` → `skills/tw-amuru` (folder + fron
 - [x] `git mv` skill folder and set frontmatter `name: tw-amuru`
 - [x] Grep-clean live refs (`skills/amuru`, `name: amuru`) excluding `kanban/done/**`
 - [x] Reset of local master worktree is orchestrator-owned (do not do it)
-- [ ] PR opened to `dev` (orchestrator-owned if you do not open it)
+- [x] PR opened to `dev` (orchestrator-owned if you do not open it)
 
 ## Notes
 
