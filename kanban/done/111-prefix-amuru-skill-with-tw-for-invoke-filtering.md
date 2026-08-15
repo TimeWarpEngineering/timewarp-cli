@@ -37,3 +37,4 @@ Rename the owned Amuru skill `skills/amuru` → `skills/tw-amuru` (folder + fron
 - Live refs clean; historical `kanban/done/068-*` left alone
 - Local master worktree reset to `origin/master` (`c109775`); no longer ahead/behind
 - `ganda skills add tw-amuru` now resolves to this feature worktree; re-point to `…/master/skills/tw-amuru` after the rename is on master
+- PR: https://github.com/TimeWarpEngineering/timewarp-amuru/pull/84
