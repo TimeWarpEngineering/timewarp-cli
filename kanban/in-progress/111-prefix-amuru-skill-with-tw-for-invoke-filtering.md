@@ -1,0 +1,29 @@
+# Prefix amuru skill with tw- for invoke filtering
+
+## Description
+
+Rename the owned Amuru skill `skills/amuru` → `skills/tw-amuru` (folder + frontmatter `name:`) so it matches the TimeWarp ownership prefix policy (flow task 092). A Jul 18 commit (`cb6dec3`) did this on the local master worktree and was never pushed; redo it on a feature branch from origin/dev.
+
+## Requirements
+
+- Folder `skills/tw-amuru/SKILL.md` exists; `skills/amuru/` is gone
+- Frontmatter `name: tw-amuru`
+- Live references to `skills/amuru` updated (leave historical `kanban/done/**` alone)
+- Work is on `Cramer/2026-08-15/Prefix_Amuru_Skill`, never on local master
+
+## Checklist
+
+- [ ] Create this task via `ganda kanban create` and commit
+- [ ] `git mv` skill folder and set frontmatter `name: tw-amuru`
+- [ ] Grep-clean live refs (`skills/amuru`, `name: amuru`) excluding `kanban/done/**`
+- [ ] Reset of local master worktree is orchestrator-owned (do not do it)
+- [ ] PR opened to `dev` (orchestrator-owned if you do not open it)
+
+## Notes
+
+- Cherry-pick source: `cb6dec3` (local master only) — same 1-line frontmatter change + rename
+- Ganda SkillSource currently: `worktree://github.com/TimeWarpEngineering/timewarp-amuru/master/skills/tw-amuru` (orchestrator will re-point)
+
+## Session
+
+- Implementation: Grok 2026-08-15
