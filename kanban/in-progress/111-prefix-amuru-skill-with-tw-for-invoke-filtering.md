@@ -16,17 +16,18 @@ Rename the owned Amuru skill `skills/amuru` → `skills/tw-amuru` (folder + fron
 - [x] Create this task via `ganda kanban create` and commit
 - [x] `git mv` skill folder and set frontmatter `name: tw-amuru`
 - [x] Grep-clean live refs (`skills/amuru`, `name: amuru`) excluding `kanban/done/**`
-- [ ] Reset of local master worktree is orchestrator-owned (do not do it)
+- [x] Reset of local master worktree is orchestrator-owned (do not do it)
 - [ ] PR opened to `dev` (orchestrator-owned if you do not open it)
 
 ## Notes
 
 - Cherry-pick source: `cb6dec3` (local master only) — same 1-line frontmatter change + rename
-- Ganda SkillSource currently: `worktree://github.com/TimeWarpEngineering/timewarp-amuru/master/skills/tw-amuru` (orchestrator will re-point)
+- Ganda SkillSource re-pointed to this feature worktree until the rename exists on master again
 
 ## Session
 
 - Implementation: Grok 2026-08-15
+- Orchestrator: Grok 2026-08-15 — reset local master to origin/master; re-point ganda tw-amuru source
 
 ## Results
 
@@ -34,4 +35,5 @@ Rename the owned Amuru skill `skills/amuru` → `skills/tw-amuru` (folder + fron
 - `skills/amuru` → `skills/tw-amuru`; frontmatter `name: tw-amuru`
 - Left `BannedSymbols.txt` ban-message text unchanged (ganda exact-rule audit)
 - Live refs clean; historical `kanban/done/068-*` left alone
-- Master reset and PR left to orchestrator
+- Local master worktree reset to `origin/master` (`c109775`); no longer ahead/behind
+- `ganda skills add tw-amuru` now resolves to this feature worktree; re-point to `…/master/skills/tw-amuru` after the rename is on master
