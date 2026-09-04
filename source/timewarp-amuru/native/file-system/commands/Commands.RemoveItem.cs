@@ -1,5 +1,10 @@
 #region Purpose
-// TODO: Add purpose description
+// Commands API wrapper for RemoveItem that returns CommandOutput instead of throwing.
+#endregion
+
+#region Design
+// Delegates to Direct.RemoveItem and maps exceptions to stderr + non-zero exit codes.
+// Force on a missing path succeeds (exit 0) because Direct treats it like bash `rm -f`.
 #endregion
 
 namespace TimeWarp.Amuru.Native.FileSystem;
@@ -11,7 +16,9 @@ public static partial class Commands
   /// </summary>
   /// <param name="path">Path to the file or directory to remove</param>
   /// <param name="recursive">If true, removes directories and their contents recursively</param>
-  /// <param name="force">If true, removes read-only files</param>
+  /// <param name="force">
+  /// If true, removes read-only files and treats a missing path as success (bash <c>rm -f</c>).
+  /// </param>
   /// <returns>CommandOutput indicating success or failure</returns>
   [System.Diagnostics.CodeAnalysis.SuppressMessage(
     "Design",

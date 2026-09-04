@@ -1,5 +1,10 @@
 #region Purpose
-// TODO: Add purpose description
+// Commands API wrapper for SetLocation that returns CommandOutput instead of throwing.
+#endregion
+
+#region Design
+// Delegates to Direct.SetLocation. That call mutates process-global
+// Environment.CurrentDirectory; concurrent relative-path work races on it.
 #endregion
 
 namespace TimeWarp.Amuru.Native.FileSystem;
@@ -11,6 +16,10 @@ public static partial class Commands
   /// </summary>
   /// <param name="path">The new working directory path</param>
   /// <returns>CommandOutput indicating success or failure</returns>
+  /// <remarks>
+  /// Mutates process-global <see cref="Environment.CurrentDirectory"/>. Concurrent callers
+  /// that resolve relative paths race on this process-wide value.
+  /// </remarks>
   [System.Diagnostics.CodeAnalysis.SuppressMessage(
     "Design",
     "CA1031",

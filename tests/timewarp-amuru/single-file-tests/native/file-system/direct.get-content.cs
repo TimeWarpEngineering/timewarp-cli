@@ -63,5 +63,37 @@ namespace Direct_
         }
       });
     }
+
+    public static async Task Cancellation_Should_ThrowOperationCanceledException()
+    {
+      string testFile = Path.GetTempFileName();
+      IEnumerable<string> lines = Enumerable.Range(1, 50).Select(i => $"Line {i}");
+      await File.WriteAllLinesAsync(testFile, lines);
+
+      try
+      {
+        using CancellationTokenSource cts = new();
+        List<string> readLines = [];
+
+        await Should.ThrowAsync<OperationCanceledException>(async () =>
+        {
+          await foreach (string line in Direct.GetContent(testFile).WithCancellation(cts.Token))
+          {
+            readLines.Add(line);
+            if (readLines.Count == 1)
+            {
+              await cts.CancelAsync();
+            }
+          }
+        });
+
+        readLines.Count.ShouldBeGreaterThanOrEqualTo(1);
+      }
+      finally
+      {
+        File.Delete(testFile);
+      }
+    }
   }
 }
+
