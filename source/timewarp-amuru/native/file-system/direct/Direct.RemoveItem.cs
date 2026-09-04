@@ -32,7 +32,7 @@ public static partial class Direct
     if (File.Exists(path))
     {
       FileInfo fileInfo = new(path);
-      if (force && !IsReparsePoint(fileInfo) && fileInfo.IsReadOnly)
+      if (force && !FileSystemWalk.IsReparsePoint(fileInfo) && fileInfo.IsReadOnly)
       {
         fileInfo.IsReadOnly = false;
       }
@@ -70,14 +70,14 @@ public static partial class Direct
 
   private static void RemoveReadOnlyAttribute(DirectoryInfo directory)
   {
-    if (IsReparsePoint(directory))
+    if (FileSystemWalk.IsReparsePoint(directory))
     {
       return;
     }
 
     foreach (FileInfo file in directory.EnumerateFiles())
     {
-      if (IsReparsePoint(file))
+      if (FileSystemWalk.IsReparsePoint(file))
       {
         continue;
       }
@@ -90,7 +90,7 @@ public static partial class Direct
 
     foreach (DirectoryInfo subDir in directory.EnumerateDirectories())
     {
-      if (IsReparsePoint(subDir))
+      if (FileSystemWalk.IsReparsePoint(subDir))
       {
         continue;
       }
@@ -104,7 +104,4 @@ public static partial class Direct
       directory.Attributes &= ~FileAttributes.ReadOnly;
     }
   }
-
-  private static bool IsReparsePoint(FileSystemInfo fileSystemInfo) =>
-    (fileSystemInfo.Attributes & FileAttributes.ReparsePoint) == FileAttributes.ReparsePoint;
 }

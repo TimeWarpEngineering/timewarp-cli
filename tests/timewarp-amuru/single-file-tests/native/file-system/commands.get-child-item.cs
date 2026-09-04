@@ -60,5 +60,61 @@ namespace Commands_
 
       await Task.CompletedTask;
     }
+
+    public static async Task GlobPattern_Should_FilterByName()
+    {
+      string testDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+      Directory.CreateDirectory(testDir);
+
+      try
+      {
+        await File.WriteAllTextAsync(Path.Combine(testDir, "keep.txt"), "k");
+        await File.WriteAllTextAsync(Path.Combine(testDir, "skip.log"), "s");
+
+        CommandOutput result = Commands.GetChildItem(Path.Combine(testDir, "*.txt"));
+
+        result.Success.ShouldBeTrue();
+        result.Stdout.ShouldContain("keep.txt");
+        result.Stdout.ShouldNotContain("skip.log");
+      }
+      finally
+      {
+        Directory.Delete(testDir, true);
+      }
+    }
+
+    public static async Task RecursiveExcludeAndHidden_Should_Filter()
+    {
+      string testDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+      Directory.CreateDirectory(Path.Combine(testDir, "sub"));
+
+      try
+      {
+        await File.WriteAllTextAsync(Path.Combine(testDir, "root.txt"), "r");
+        await File.WriteAllTextAsync(Path.Combine(testDir, "sub", "nested.txt"), "n");
+        await File.WriteAllTextAsync(Path.Combine(testDir, "sub", "skip.log"), "s");
+        await File.WriteAllTextAsync(Path.Combine(testDir, ".secret"), "h");
+
+        CommandOutput recursive = Commands.GetChildItem(testDir, recursive: true, pattern: "*.txt");
+        recursive.Success.ShouldBeTrue();
+        recursive.Stdout.ShouldContain("root.txt");
+        recursive.Stdout.ShouldContain("nested.txt");
+        recursive.Stdout.ShouldNotContain("skip.log");
+
+        CommandOutput excluded = Commands.GetChildItem(testDir, recursive: true, exclude: "*.log");
+        excluded.Success.ShouldBeTrue();
+        excluded.Stdout.ShouldNotContain("skip.log");
+        excluded.Stdout.ShouldContain("root.txt");
+
+        CommandOutput visible = Commands.GetChildItem(testDir, includeHidden: false);
+        visible.Success.ShouldBeTrue();
+        visible.Stdout.ShouldNotContain(".secret");
+        visible.Stdout.ShouldContain("root.txt");
+      }
+      finally
+      {
+        Directory.Delete(testDir, true);
+      }
+    }
   }
 }

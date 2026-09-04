@@ -43,6 +43,33 @@ namespace Commands_
       }
     }
 
+    public static async Task UnreadableFile_Should_ReportPermissionDenied()
+    {
+      if (OperatingSystem.IsWindows())
+      {
+        await Task.CompletedTask;
+        return;
+      }
+
+      string testFile = Path.GetTempFileName();
+      await File.WriteAllTextAsync(testFile, "secret");
+      File.SetUnixFileMode(testFile, UnixFileMode.None);
+
+      try
+      {
+        CommandOutput result = Commands.GetContent(testFile);
+        if (!result.Success)
+        {
+          result.Stderr.ShouldContain("Permission denied");
+        }
+      }
+      finally
+      {
+        File.SetUnixFileMode(testFile, UnixFileMode.UserRead | UnixFileMode.UserWrite);
+        File.Delete(testFile);
+      }
+    }
+
     public static async Task MissingFile_Should_Fail()
     {
       string nonExistentFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());

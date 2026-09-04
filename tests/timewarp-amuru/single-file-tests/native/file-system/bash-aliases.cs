@@ -1,14 +1,13 @@
 #!/usr/bin/dotnet --
 
 #region Purpose
-// Tests for Bash aliases - validates Unix-style command aliases (Cat, Ls, Pwd, Cd, Rm)
+// Tests for Bash aliases - validates Unix-style command aliases
 #endregion
 
 #region Design
 // Naming convention: SUT_Action_Given_Should_Result
 // SUT: BashAliases (the static methods providing Unix-style command aliases)
-// Action: Various alias methods (Cat, Ls, Pwd, Cd, Rm, RmDirect)
-// Tests verify each alias works correctly
+// Action: Cat, Ls, Pwd, Cd, Rm, Cp, Mv, Mkdir, Touch, Test, Find, Stat
 #endregion
 
 #if !JARIBU_MULTI
@@ -97,6 +96,55 @@ namespace BashAliases_
       File.Exists(testFile).ShouldBeFalse();
 
       await Task.CompletedTask;
+    }
+
+    public static async Task CpMvMkdirTouchTestFindStat_Should_Work()
+    {
+      string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+      string source = Path.Combine(root, "source.txt");
+      string copied = Path.Combine(root, "copied.txt");
+      string moved = Path.Combine(root, "moved.txt");
+      string nested = Path.Combine(root, "sub", "dir");
+
+      try
+      {
+        Mkdir(root).Success.ShouldBeTrue();
+        Touch(source).Success.ShouldBeTrue();
+        await File.WriteAllTextAsync(source, "payload");
+
+        Cp(source, copied).Success.ShouldBeTrue();
+        File.Exists(copied).ShouldBeTrue();
+
+        Mv(copied, moved).Success.ShouldBeTrue();
+        File.Exists(moved).ShouldBeTrue();
+        File.Exists(copied).ShouldBeFalse();
+
+        Test(source).Success.ShouldBeTrue();
+        Test(Path.Combine(root, "missing")).Success.ShouldBeFalse();
+        Test(root, ItemType.Directory).Success.ShouldBeTrue();
+
+        Mkdir(nested).Success.ShouldBeTrue();
+        Directory.Exists(nested).ShouldBeTrue();
+
+        CommandOutput findResult = Find(root, new FindCriteria { Name = "*.txt" });
+        findResult.Success.ShouldBeTrue();
+        findResult.Stdout.ShouldContain("source.txt");
+
+        CommandOutput statResult = Stat(source);
+        statResult.Success.ShouldBeTrue();
+        statResult.Stdout.ShouldContain("Type: File");
+
+        CpDirect(source, Path.Combine(root, "direct.txt"));
+        File.Exists(Path.Combine(root, "direct.txt")).ShouldBeTrue();
+        TestDirect(source).ShouldBeTrue();
+      }
+      finally
+      {
+        if (Directory.Exists(root))
+        {
+          Directory.Delete(root, recursive: true);
+        }
+      }
     }
   }
 }
