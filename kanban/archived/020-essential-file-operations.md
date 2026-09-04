@@ -1,3 +1,8 @@
+> **ARCHIVED 2026-09-04:** thin FS slice shipped in core 1.0 (`GetChildItem` /
+> `GetContent` / `GetLocation` / `SetLocation` / `RemoveItem` + bash `Ls`/`Cat`/`Pwd`/`Cd`/`Rm`).
+> Remaining additive ops (cp/mv/mkdir/test/find/stat + globbing) → **112**.
+> Safety/correctness on the shipped slice → **104**.
+
 # 020 Essential File Operations (High ROI)
 
 ## Description
@@ -160,3 +165,7 @@ await Direct.CopyItem(
 - PowerShell Copy-Item, Move-Item, Remove-Item cmdlets
 - Cake build FileHelper and DirectoryHelper
 - .NET System.IO.File and Directory classes
+
+## Session
+
+- Archived: 01a06a4a-807d-7143-9d21-330f32238619 (2026-09-04) — remaining work filed as 112; harden shipped slice via 104

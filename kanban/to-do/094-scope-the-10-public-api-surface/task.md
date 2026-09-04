@@ -38,11 +38,16 @@ Parent task / decision record. The package exposed ~125 public types; each is a 
 - [x] 094-001 — Delete dead public surface
 - [x] 094-002 — Move SshKeyHelper to Zana (DONE 2026-07-05)
 - [x] 094-003 — Split TimeWarp.Amuru.Tools package (DONE)
-- [ ] 094-004 — Adopt PublicAPI analyzers baseline (at/after release)
-- [ ] Update downstream tasks when children land (093, 098, 100, 105, 107 already re-scoped 2026-07-05)
+- [ ] 094-004 — Adopt PublicAPI analyzers baseline (at/after release) — **remaining child; already in to-do**
+- [x] Update downstream tasks when children land (093, 098, 100, 105, 107 already re-scoped 2026-07-05)
+
+## Notes
+
+Parked back to to-do 2026-09-04 so amuru in-progress can close. Cannot mark this parent **done** while 094-004 is open (kanban parent/child rule). 001–003 shipped with core 1.0.0 (2026-07-05). When 094-004 is done, this parent rolls up to done.
 
 ## Session
 
 - Created: multi-agent release review (2026-07-04)
 - Folderized + review findings: Grok (2026-07-04)
 - Decision record + child breakdown: Claude session (2026-07-05)
+- Returned to to-do: 01a06a4a-807d-7143-9d21-330f32238619 (2026-09-04) — WIP close; remaining work is 094-004
