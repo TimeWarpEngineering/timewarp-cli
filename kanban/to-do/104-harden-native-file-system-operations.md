@@ -18,3 +18,25 @@ Correctness/safety issues in `native/file-system/` found by the release review. 
 ## Notes
 
 Found by multi-agent release review (2026-07-04). Verified clean: `PathResolver.cs`, `Bash.cs` aliases, `ConvertTimestamp`, `GenerateColor`. Paths relative to `source/timewarp-amuru/`.
+
+### Cockpit brief 2026-09-04 (core 1.0.0 already shipped)
+
+**Must do (non-breaking):**
+- Skip reparse points in `RemoveReadOnlyAttribute` (the safety bug)
+- Decide `force` + missing path: match bash `rm -f` (no throw) and document
+- `[EnumeratorCancellation]` on `GetContent`
+- Remove Commands sync-over-async (`Task.Run(…).GetResult()`)
+- Document `Cd` process-global cwd race (do not change behavior)
+- Tests: symlink/reparse skip, force-not-found, cancellation
+
+**Defer (breaking; 1.0 window closed):**
+- Flags enum for `Rm` twin bools — keep current signature
+- Rename `IAsyncEnumerable` methods with `Async` suffix — keep shipped names; apply convention on new APIs in 112
+
+**Same-file overlap with 111-003:** M12 (force on file symlink must not mutate the target) and M13 (force+recursive must clear root directory read-only, still skip reparse points). Fold M12/M13 into this pass if they stay in `Direct.RemoveItem`. Leave 111-003 M10/M11/M14 (ScriptContext / PathResolver) alone.
+
+112 depends on this task (remaining native file ops).
+
+## Session
+
+- Cockpit dispatch: 01a06a4a-807d-7143-9d21-330f32238619 (2026-09-04)
