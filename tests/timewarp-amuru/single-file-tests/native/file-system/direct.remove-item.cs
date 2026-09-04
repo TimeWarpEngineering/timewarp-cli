@@ -60,7 +60,9 @@ namespace Direct_
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-          return;
+          throw new InvalidOperationException(
+            "Symlink creation is required for this test. Run on Unix or enable Windows Developer Mode.",
+            ex);
         }
 
         Direct.RemoveItem(link, force: true);
@@ -109,7 +111,9 @@ namespace Direct_
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-          return;
+          throw new InvalidOperationException(
+            "Symlink creation is required for this test. Run on Unix or enable Windows Developer Mode.",
+            ex);
         }
 
         await File.WriteAllTextAsync(Path.Combine(treeDir, "local.txt"), "local");
@@ -158,7 +162,9 @@ namespace Direct_
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-          return;
+          throw new InvalidOperationException(
+            "Symlink creation is required for this test. Run on Unix or enable Windows Developer Mode.",
+            ex);
         }
 
         await File.WriteAllTextAsync(Path.Combine(treeDir, "file.txt"), "content");
