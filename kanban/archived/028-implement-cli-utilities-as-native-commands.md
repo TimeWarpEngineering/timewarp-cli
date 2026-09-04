@@ -1,3 +1,9 @@
+> **ARCHIVED 2026-09-04:** superseded by task 094 (1.0 public API surface).
+> CLI utilities were implemented in Amuru, then removed or moved: 094-001 deleted
+> Post / GenerateColor / ConvertTimestamp / Installer; 094-002 moved SshKeyHelper
+> to Zana. Remaining distribution work belongs in ganda / Zana / Kijamii (031/033),
+> not Amuru. GitHub issue #14 left open for retarget.
+
 # 028 Implement CLI Utilities As Native Commands
 
 ## Description
@@ -243,3 +249,7 @@ Available source files:
 - Existing private repo implementations
 - .NET Tool documentation: https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools
 - PublishAot documentation: https://docs.microsoft.com/en-us/dotnet/core/deploying/native-aot
+
+## Session
+
+- Archived: 01a06a4a-807d-7143-9d21-330f32238619 (2026-09-04) — cockpit archive; Amuru is no longer the home for these utilities after 094.
