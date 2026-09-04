@@ -35,8 +35,18 @@ Do **not** redo shipped commands here. Safety/correctness on the existing slice 
 ## Notes
 
 - Archived parent: 020. Sibling native expansion still in to-do: 021–027 (text/process/system/interactive/archive) — out of scope here.
-- 104 must land first: force-remove currently follows directory symlinks.
+- 104 merged 2026-09-04 (PR #89, `5e9602e`): force-remove skips reparse points; `rm -f` missing path is a no-op; GetContent/GetChildItem honor cancellation. Copy those patterns.
+
+### Cockpit brief 2026-09-04
+
+- Do **not** reimplement shipped ops (`GetChildItem` basic listing, `GetContent`, `GetLocation`, `SetLocation`, `RemoveItem`, existing bash aliases).
+- Match Commands vs Direct split and Purpose/Design regions used in `native/file-system/` after 104.
+- Keep shipped `IAsyncEnumerable` names **without** an `Async` suffix; same convention on new streaming APIs.
+- Skip reparse points on recursive copy/move/delete-style walks.
+- **Version:** additive public API → bump core `source/Directory.Build.props` `<Version>` from `1.0.1` to **`1.1.0`**. Do not bump Tools (`1.0.0-beta.2`) unless this PR changes it. CI `check-version` fails if source equals the latest GitHub release.
+- Write `## Results` + `### How to validate`. Do not `kanban done` yourself; host walk does that. Do not `gh pr create`.
 
 ## Session
 
 - Created: 01a06a4a-807d-7143-9d21-330f32238619 (2026-09-04) — split from 020 so amuru WIP can close
+- Cockpit dispatch: 01a06a4a-807d-7143-9d21-330f32238619 (2026-09-04)
