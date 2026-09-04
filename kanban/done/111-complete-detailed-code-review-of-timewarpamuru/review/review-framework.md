@@ -1,16 +1,24 @@
 # Review framework — task 111
 
 **Date:** 2026-09-04
-**Host task:** `kanban/to-do/111-complete-detailed-code-review-of-timewarpamuru/`
+**Host task:** `kanban/in-progress/111-complete-detailed-code-review-of-timewarpamuru/`
 **Diff scope:** whole-repo review of origin-home `master` (not a PR delta)
-**Pinned SHA at kitchen create:** `6867b6747cc1c1b48ffe47e21c0840c6f17d69dd`
+**Pinned SHA at kitchen create:** `6867b6747cc1c1b48ffe47e21c0840c6f17d69dd` (`publish kanban 110`)
+**Pinned SHA actually reviewed:** `fbd5d276fc5a936136a55d981fc121a23b991493` (`publish kanban 111`; `git rev-parse origin/master` 2026-09-04)
+**Product-code delta since kitchen pin:** none — `6867b67..fbd5d27` is kanban 111 kitchen only
 **Pinned versions:** TimeWarp.Amuru `1.0.0` · TimeWarp.Amuru.Tools `1.0.0-beta.2`
 **Plan / brief:** `task.md` — successor to 2026-07-04 release review (097/094/090–092); re-review current tree
 **Effort:** elevated — 7 area reviewers (not default effort-1)
 **Reviewer roster:** core-engine, testing-mocks, native-fs, tools-builders, tools-services, tests-infra, security
-**Session IDs:** kitchen created Grok `01a06a77-1631-7543-b181-07ddc524f9fe` / ganda claim 3290396; review-round sessions TBD
+**Session IDs:** kitchen created Grok `01a06a77-1631-7543-b181-07ddc524f9fe` / ganda claim 3290396; implementer Grok `01a06a90-5f33-7a63-a842-6d6fa9c5ce92` / ganda claim 3295439; review-oracle Grok `01a06aa7-938b-7400-9ca1-fbc64b625972` (2026-09-04)
 
-**Re-pin before round 1:** if `origin/master` has moved, update **Pinned SHA** here and record the new `git rev-parse origin/master` / `git log -1 --oneline`.
+## Host review-oracle pass (round 2, effort 1)
+
+**Date:** 2026-09-04
+**Diff scope:** implementer commit `09715af` (review artifacts + `task.md` Results) plus independent re-verification of every round-1 `M#` against product source on this worktree. Not a new whole-repo specialist pass.
+**Effort:** 1 (general only)
+**Reviewer roster:** general
+**Writes:** `review/round-2/general.md` then `review/round-2/merged.md`. Do not clobber `review/round-1/`.
 
 ## Ground rules
 

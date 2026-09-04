@@ -72,19 +72,20 @@ Severity: `bug` · `suggestion` · `nit`. Status starts `open`. Prefer strongest
 
 - [x] Folder task created (`ganda kanban reserve` + `claim --repo timewarp-amuru`)
 - [x] `review/review-framework.md` scaffolded with scope, roster, prior-art notes
-- [ ] Worker re-pins SHA at review start if `origin/master` moved
+- [x] Worker re-pins SHA at review start if `origin/master` moved (`fbd5d276fc5a936136a55d981fc121a23b991493`)
 
 ### Round 1
 
-- [ ] Area reviewers write `review/round-1/<area>.md` (7 files)
-- [ ] Merge → `review/round-1/merged.md` (counts + stable `M#`)
+- [x] Area reviewers write `review/round-1/<area>.md` (7 files)
+- [x] Merge → `review/round-1/merged.md` (counts + stable `M#`)
 
 ### Disposition / follow-through
 
-- [ ] Child tasks for independent product fixes (`--parent 111`), or same-task nits committed here
-- [ ] `review/disposition.md`
-- [ ] `## Results` + `### How to validate`
-- [ ] Do not `kanban done` from the implementer; host lifecycle / human gate
+- [x] Child tasks for independent product fixes (`--parent 111`): **111-001** … **111-005** published to origin-home to-do
+- [x] `review/disposition.md`
+- [x] `## Results` + `### How to validate`
+- [x] Host review-oracle (effort 1 general): `review/round-2/` re-verified M1–M26; fixed How to validate (`--repo`); M28 wontfix
+- [ ] Do not `kanban done` from the implementer / review oracle; host lifecycle / human gate
 
 ## Notes
 
@@ -119,3 +120,91 @@ ganda task work 111 --repo timewarp-amuru --host herdr
 
 - Created: Grok cockpit `01a06a77-1631-7543-b181-07ddc524f9fe` (2026-09-04) — reserved/claimed 111, wrote inbound brief
 - Ganda claim: cramer@TWE-001 session 3290396 (2026-09-04)
+- Implementer: Grok `01a06a90-5f33-7a63-a842-6d6fa9c5ce92` / ganda claim 3295439 (2026-09-04) — SHA re-pin, round-1 merge, children 111-001…005, disposition
+- Review oracle: Grok `01a06aa7-938b-7400-9ca1-fbc64b625972` (2026-09-04) — effort-1 general re-verification, M27 How to validate fix, disposition update
+
+## Results
+
+Whole-repo implementation review of TimeWarp.Amuru on origin-home `master` at **`fbd5d276fc5a936136a55d981fc121a23b991493`** (`publish kanban 111`). Product code is unchanged since kitchen pin `6867b67`; the delta is kanban 111 itself. Core remains `1.0.0`; Tools remains `1.0.0-beta.2`.
+
+**Rounds:** 1 (product, elevated 7 specialists) + 2 (host review-oracle, effort 1 general) + 3 (re-verify How to validate fix).
+
+**Roster:** round 1 `core-engine`, `testing-mocks`, `native-fs`, `tools-builders`, `tools-services`, `tests-infra`, `security`. Round 2–3 `general`.
+
+**Counts (round 1 product ledger — remaining opens filed as children):**
+
+| Severity | open | fixed | wontfix |
+|----------|------|-------|---------|
+| bug | 13 | 0 | 0 |
+| suggestion | 9 | 0 | 0 |
+| nit | 2 | 0 | 2 |
+
+**Counts (round 2–3 oracle kitchen):**
+
+| Severity | open | fixed | wontfix |
+|----------|------|-------|---------|
+| bug | 0 | 1 | 0 |
+| suggestion | 0 | 0 | 1 |
+| nit | 0 | 0 | 0 |
+
+**Disposition:** `accepted-exceptions` (`review/disposition.md`). Product remaining opens filed as children (parent stays in-progress until they land). Wontfix: **M9** (MockSetup Throws-then-Returns leftover Exception), **M25** (`cliwrap-exit-code-tests/` historical tree), **M28** (children cite parent `merged.md` not yet on origin-home; host open-pr lands `09715af`; Requirements already inlined). Oracle **M27** (How to validate child `show`) is **fixed**.
+
+**Children (published to origin-home `kanban/to-do/`):**
+
+| Id | Findings | Batch |
+|----|----------|-------|
+| **111-001** | M1–M5 | CaptureAsync RunTime / blank lines / SelectAsync validation / ConfigureAwait / env-dict copy |
+| **111-002** | M6–M8 | CommandMock Pipe identity + path-override matching |
+| **111-003** | M10–M14 | ScriptContext leak/deadlock + native force extras (not 104) |
+| **111-004** | M16–M20 | check-version exact-tag / unlisted / Tools version / `dev clean` |
+| **111-005** | M15, M21–M24, M26 | skill.md + DotNet reference + CI/test-inclusion |
+
+**Verified still fixed (not re-opened):** 097 engine remediations, 090–092 error-handling/CliWrap-off-API, 098 FindDirectories reparse+tracked skip, no InternalsVisibleTo, builders use `Shell.Run`/`Shell.Builder`, 103 runner includes all 78 on-disk tests.
+
+**Known open product tasks confirmed, not cloned:** 087, 088, 094-004, 099, 100, 104, 105, 106, 082.
+
+**Oracle re-verification:** every round-1 M1–M26 citation confirmed against current source; none refuted or cloned.
+
+**Files changed (this parent):** review artifacts under `kanban/in-progress/111-complete-detailed-code-review-of-timewarpamuru/review/` plus this `task.md`. No product-code edits on 111.
+
+**Review paths:** `review/review-framework.md`, `review/round-1/*.md`, `review/round-1/merged.md`, `review/round-2/general.md`, `review/round-2/merged.md`, `review/round-3/general.md`, `review/round-3/merged.md`, `review/disposition.md`.
+
+### How to validate
+
+**Smoke**
+```bash
+cd /home/steve/worktrees/github.com/TimeWarpEngineering/timewarp-amuru/task-111-complete-detailed-code-review-of-timewarpamuru
+git rev-parse HEAD
+# expect: a commit that only adds 111 review artifacts (09715af or later on this task branch)
+
+ls kanban/in-progress/111-complete-detailed-code-review-of-timewarpamuru/review/round-1/
+# expect: core-engine.md testing-mocks.md native-fs.md tools-builders.md
+#         tools-services.md tests-infra.md security.md merged.md
+
+ls kanban/in-progress/111-complete-detailed-code-review-of-timewarpamuru/review/round-2/
+# expect: general.md merged.md
+
+grep -E '^\*\*Outcome:\*\*' kanban/in-progress/111-complete-detailed-code-review-of-timewarpamuru/review/disposition.md
+# expect: accepted-exceptions
+
+# Children live on origin-home, not this worktree's board — pass --repo.
+ganda kanban show --repo timewarp-amuru 111-001
+ganda kanban show --repo timewarp-amuru 111-002
+ganda kanban show --repo timewarp-amuru 111-003
+ganda kanban show --repo timewarp-amuru 111-004
+ganda kanban show --repo timewarp-amuru 111-005
+# expect: each Column: to-do
+```
+
+**Expect**
+- `review/round-1/merged.md` counts table: bug 13 open, suggestion 9 open, nit 2 open / 2 wontfix.
+- Every product `M#` cites `path:line` in the current tree.
+- Security area file has no Issues section findings.
+- Children 111-001…005 exist as origin-home inbox items; 111 remains in-progress (not board-done).
+- Round-2/3 oracle open count is 0 (`M27` fixed, `M28` wontfix).
+- Parent review evidence (`review/round-1/merged.md`) lives on this task branch until host open-pr; children already inline Requirements.
+
+**Automated gate**
+None on this parent — no product-code change. Product proofs belong on the children (`dotnet build timewarp-amuru.slnx`, `cd tests/timewarp-amuru/multi-file-runners && dotnet run run-tests.cs`).
+
+**Not in scope:** re-running 087/088/099/100/104/105/106/082 work on this id; `ganda kanban done`; opening a PR from this review-oracle node.
