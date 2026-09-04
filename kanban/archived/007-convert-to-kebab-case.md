@@ -1,3 +1,8 @@
+> **ARCHIVED 2026-09-04:** superseded by task **082**. Directories (`source/`,
+> `tests/`, `kanban/`) are already kebab-case; this card still describes the
+> pre-rename `Source/` / `TimeWarp.Cli/` tree. Remaining file-name + region
+> cleanup lives on 082.
+
 # Convert All Files and Directories to kebab-case (XL)
 
 ## Description

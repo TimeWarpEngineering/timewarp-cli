@@ -100,11 +100,12 @@ All files should follow this pattern (see csharp skill):
 
 ## Notes
 
-### Current State
-- 96 files have "TODO: Add purpose description" in their regions
-- Many files still use PascalCase naming (e.g., `AppContextExtensions.cs`, `CliConfiguration.cs`)
-- The `core/` folder has been cleaned up (completed in tasks 080/081)
-- The `nu-get/` folder has been cleaned up (completed in task 081)
+Returned to to-do 2026-09-04 (parked in in-progress since 2026-04-13 with no product commits). Task **007** archived as a stale duplicate of this card. Region stubs also appear on **106**; kebab-case file names are this card.
+
+### Current State (2026-09-04)
+- ~84 source `.cs` files still PascalCase; `core/` and `nu-get/` already kebab (080/081)
+- ~84 files still have `// TODO: Add purpose description`
+- 094 deleted some files this checklist still names (`Installer.cs`, `CommandBuilderExtensions.cs`, json-rpc, native utilities) — skip those
 
 ### Approach
 1. Work folder-by-folder to keep commits focused
@@ -156,3 +157,4 @@ All files should follow this pattern (see csharp skill):
 ## Session
 
 - Created: ses_27dd18c7effe1K4rnFRhnQezjn (2026-04-13)
+- Returned to to-do: 01a06a4a-807d-7143-9d21-330f32238619 (2026-09-04) — never started; close WIP
