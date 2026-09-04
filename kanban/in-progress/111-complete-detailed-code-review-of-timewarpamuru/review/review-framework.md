@@ -10,7 +10,15 @@
 **Plan / brief:** `task.md` — successor to 2026-07-04 release review (097/094/090–092); re-review current tree
 **Effort:** elevated — 7 area reviewers (not default effort-1)
 **Reviewer roster:** core-engine, testing-mocks, native-fs, tools-builders, tools-services, tests-infra, security
-**Session IDs:** kitchen created Grok `01a06a77-1631-7543-b181-07ddc524f9fe` / ganda claim 3290396; implementer Grok `01a06a90-5f33-7a63-a842-6d6fa9c5ce92` / ganda claim 3295439
+**Session IDs:** kitchen created Grok `01a06a77-1631-7543-b181-07ddc524f9fe` / ganda claim 3290396; implementer Grok `01a06a90-5f33-7a63-a842-6d6fa9c5ce92` / ganda claim 3295439; review-oracle Grok `01a06aa7-938b-7400-9ca1-fbc64b625972` (2026-09-04)
+
+## Host review-oracle pass (round 2, effort 1)
+
+**Date:** 2026-09-04
+**Diff scope:** implementer commit `09715af` (review artifacts + `task.md` Results) plus independent re-verification of every round-1 `M#` against product source on this worktree. Not a new whole-repo specialist pass.
+**Effort:** 1 (general only)
+**Reviewer roster:** general
+**Writes:** `review/round-2/general.md` then `review/round-2/merged.md`. Do not clobber `review/round-1/`.
 
 ## Ground rules
 

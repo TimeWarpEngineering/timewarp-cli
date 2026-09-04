@@ -2,14 +2,14 @@
 
 **Date:** 2026-09-04
 **Outcome:** accepted-exceptions
-**Rounds:** 1
-**Final open count on this parent:** 24 open findings, all filed as `--parent 111` children (IDs below). Two nits `wontfix`. Parent stays in-progress until those children land.
+**Rounds:** 3
+**Final open count:** 0 on this parent for oracle kitchen findings. Product remaining opens (24) are filed as `--parent 111` children (IDs below). Three nits/suggestions `wontfix`. Parent stays in-progress until those children land.
 
 ## Summary
 
-Whole-repo re-review of origin-home `master` at `fbd5d276fc5a936136a55d981fc121a23b991493` (product code unchanged since kitchen pin `6867b67`; only kanban 111 itself moved). Seven area specialists. Security filed zero new issues. 097 / 090–092 remediations still hold. Independent product fixes went to five child tasks rather than a sibling “apply findings” task. Two nits were wontfix’d with rationale.
+Whole-repo re-review of origin-home `master` at `fbd5d276fc5a936136a55d981fc121a23b991493` (product code unchanged since kitchen pin `6867b67`; only kanban 111 itself moved). Round 1: seven area specialists. Security filed zero new issues. 097 / 090–092 remediations still hold. Independent product fixes went to five child tasks rather than a sibling “apply findings” task. Host review-oracle (effort 1 general, rounds 2–3) independently confirmed every M1–M26 citation, fixed How to validate (`M27`), and wontfix’d the origin-home evidence-path timing (`M28`).
 
-## Children (remaining opens)
+## Children (remaining product opens)
 
 | Child | Findings | Title |
 |-------|----------|-------|
@@ -21,12 +21,13 @@ Whole-repo re-review of origin-home `master` at `fbd5d276fc5a936136a55d981fc121a
 
 Children published to origin-home `kanban/to-do/` (kanban-only). Parent does not `kanban done` until they land.
 
-## Exception log
+## Exception log (if accepted-exceptions)
 
 | ID | Severity | Rationale | Decided by |
 |----|----------|-----------|------------|
 | M9 | nit | `Throws` then `Returns` leftover `Exception` is an uncommon fluent chain; not worth a public-behavior change | implementer 111 |
 | M25 | nit | `cliwrap-exit-code-tests/` is historical CliWrap investigation, not CI, not a shipped sample | implementer 111 |
+| M28 | suggestion | Children were published to origin-home per task brief before parent review artifacts can land (host open-pr). Requirements are already inlined on each child, so they remain workable without `merged.md` on origin-home. | review oracle 111 |
 
 ## Escalations
 
@@ -37,4 +38,8 @@ None. Known open product tasks (087, 088, 094-004, 099, 100, 104, 105, 106, 082)
 - `review/review-framework.md`
 - `review/round-1/{core-engine,testing-mocks,native-fs,tools-builders,tools-services,tests-infra,security}.md`
 - `review/round-1/merged.md`
+- `review/round-2/general.md`
+- `review/round-2/merged.md`
+- `review/round-3/general.md`
+- `review/round-3/merged.md`
 - `review/disposition.md`
