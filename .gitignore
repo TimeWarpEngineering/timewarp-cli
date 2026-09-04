@@ -428,3 +428,6 @@ FodyWeavers.xsd
 .idea/.idea.TimeWarp.Amuru/.idea/vcs.xml
 sandbox/
 .memsearch/
+
+# Routine journals beside kitchens (local; not product)
+*.journal.json
