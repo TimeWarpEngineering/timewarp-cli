@@ -51,6 +51,17 @@ internal static class FileSystemWalk
     return name.StartsWith('.') && name is not "." and not "..";
   }
 
+  public static EnumerationOptions CreateEnumerationOptions()
+  {
+    return new EnumerationOptions
+    {
+      RecurseSubdirectories = false,
+      IgnoreInaccessible = false,
+      AttributesToSkip = FileAttributes.None,
+      ReturnSpecialDirectories = false
+    };
+  }
+
   public static IEnumerable<FileSystemInfo> Enumerate(
     string rootPath,
     bool recursive,
@@ -184,13 +195,7 @@ internal static class FileSystemWalk
     bool recursive,
     bool includeHidden)
   {
-    EnumerationOptions enumerationOptions = new()
-    {
-      RecurseSubdirectories = false,
-      IgnoreInaccessible = false,
-      AttributesToSkip = FileAttributes.None,
-      ReturnSpecialDirectories = false
-    };
+    EnumerationOptions enumerationOptions = CreateEnumerationOptions();
 
     foreach (FileSystemInfo entry in directory.EnumerateFileSystemInfos("*", enumerationOptions))
     {

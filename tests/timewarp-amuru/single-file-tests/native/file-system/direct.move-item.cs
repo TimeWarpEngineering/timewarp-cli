@@ -101,5 +101,41 @@ namespace Direct_
 
       await Task.CompletedTask;
     }
+
+    public static async Task ExistingDestinationDirectoryWithOverwrite_Should_ThrowAndPreserve()
+    {
+      string sourceName = Guid.NewGuid().ToString("N");
+      string sourceDir = Path.Combine(Path.GetTempPath(), sourceName);
+      string containerDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+      string finalDestination = Path.Combine(containerDir, sourceName);
+      string markerPath = Path.Combine(finalDestination, "marker.txt");
+
+      Directory.CreateDirectory(sourceDir);
+      Directory.CreateDirectory(finalDestination);
+      await File.WriteAllTextAsync(Path.Combine(sourceDir, "source.txt"), "source");
+      await File.WriteAllTextAsync(markerPath, "keep-me");
+
+      try
+      {
+        // Destination container exists, so final path is container/sourceName — already a directory.
+        Should.Throw<IOException>(() => Direct.MoveItem(sourceDir, containerDir, overwrite: true));
+
+        Directory.Exists(finalDestination).ShouldBeTrue();
+        File.Exists(markerPath).ShouldBeTrue();
+        (await File.ReadAllTextAsync(markerPath)).ShouldBe("keep-me");
+      }
+      finally
+      {
+        if (Directory.Exists(sourceDir))
+        {
+          Directory.Delete(sourceDir, recursive: true);
+        }
+
+        if (Directory.Exists(containerDir))
+        {
+          Directory.Delete(containerDir, recursive: true);
+        }
+      }
+    }
   }
 }

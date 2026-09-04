@@ -4,8 +4,10 @@
 
 #region Design
 // File.Move / Directory.Move first. Cross-volume Directory.Move throws IOException;
-// then copy+delete, skipping reparse children on the copy walk. Destination-is-directory
-// matches mv: move into dest under the source name. overwrite replaces an existing file.
+// then copy+delete, skipping reparse children on the copy walk. Copy failure may leave a
+// partial destination; delete failure after a successful copy may leave data in both places.
+// Destination-is-directory matches mv: move into dest under the source name. overwrite
+// replaces an existing file; an existing destination directory always throws.
 #endregion
 
 namespace TimeWarp.Amuru.Native.FileSystem;
@@ -19,9 +21,15 @@ public static partial class Direct
   /// <param name="destination">Destination path. An existing directory receives the source under its original name.</param>
   /// <param name="overwrite">When true, replaces an existing file at the destination.</param>
   /// <exception cref="FileNotFoundException">When the source does not exist.</exception>
-  /// <exception cref="IOException">When the destination exists and <paramref name="overwrite"/> is false, or the move fails.</exception>
+  /// <exception cref="IOException">When an existing file is not overwritten, when a destination directory already exists, or when the move fails.</exception>
   /// <exception cref="UnauthorizedAccessException">When lacking permission.</exception>
   /// <exception cref="ArgumentException">When <paramref name="source"/> or <paramref name="destination"/> is null or whitespace.</exception>
+  /// <remarks>
+  /// Same-volume moves use <see cref="File.Move(string, string, bool)"/> / <see cref="Directory.Move(string, string)"/>.
+  /// When that throws <see cref="IOException"/> and the source still exists (typical for cross-volume moves),
+  /// the fallback is copy then delete the source. A failed copy may leave a partial destination.
+  /// A failed delete after a successful copy may leave data in both places.
+  /// </remarks>
   public static void MoveItem(string source, string destination, bool overwrite = false)
   {
     ArgumentException.ThrowIfNullOrWhiteSpace(source);
@@ -91,21 +99,12 @@ public static partial class Direct
   {
     if (File.Exists(destinationPath))
     {
-      if (!overwrite)
-      {
-        throw new IOException($"MoveItem: {destinationPath}: file exists");
-      }
-
-      File.Delete(destinationPath);
+      throw new IOException($"MoveItem: {destinationPath}: cannot overwrite non-directory");
     }
-    else if (Directory.Exists(destinationPath))
-    {
-      if (!overwrite)
-      {
-        throw new IOException($"MoveItem: {destinationPath}: directory exists");
-      }
 
-      RemoveItem(destinationPath, recursive: true, force: true);
+    if (Directory.Exists(destinationPath))
+    {
+      throw new IOException($"MoveItem: {destinationPath}: directory exists");
     }
 
     try

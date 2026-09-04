@@ -59,15 +59,17 @@ public static partial class Direct
       return false;
     }
 
+    if (itemType is not ItemType.File and not ItemType.Directory)
+    {
+      throw new ArgumentOutOfRangeException(nameof(itemType), itemType, "Unknown item type.");
+    }
+
     try
     {
       string fullPath = Path.GetFullPath(path);
-      return itemType switch
-      {
-        ItemType.File => File.Exists(fullPath),
-        ItemType.Directory => Directory.Exists(fullPath),
-        _ => throw new ArgumentOutOfRangeException(nameof(itemType), itemType, "Unknown item type.")
-      };
+      return itemType == ItemType.File
+        ? File.Exists(fullPath)
+        : Directory.Exists(fullPath);
     }
     catch (Exception)
     {

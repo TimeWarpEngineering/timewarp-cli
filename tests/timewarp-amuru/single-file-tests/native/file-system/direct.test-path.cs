@@ -49,6 +49,15 @@ namespace Direct_
       Direct.TestPath(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))).ShouldBeFalse();
       Direct.TestPath("").ShouldBeFalse();
       Direct.TestPath("   ").ShouldBeFalse();
+      Direct.TestPath("", ItemType.File).ShouldBeFalse();
+      Direct.TestPath("   ", ItemType.Directory).ShouldBeFalse();
+
+      await Task.CompletedTask;
+    }
+
+    public static async Task UnknownItemType_Should_ThrowArgumentOutOfRangeException()
+    {
+      Should.Throw<ArgumentOutOfRangeException>(() => Direct.TestPath(".", (ItemType)999));
 
       await Task.CompletedTask;
     }

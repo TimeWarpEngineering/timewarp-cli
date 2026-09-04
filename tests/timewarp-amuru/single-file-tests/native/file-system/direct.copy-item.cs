@@ -54,6 +54,38 @@ namespace Direct_
       await Task.CompletedTask;
     }
 
+    public static async Task RecursiveDirectory_Should_IncludeDotfiles()
+    {
+      string sourceDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+      string destDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+
+      Directory.CreateDirectory(sourceDir);
+
+      try
+      {
+        await File.WriteAllTextAsync(Path.Combine(sourceDir, "visible.txt"), "visible");
+        await File.WriteAllTextAsync(Path.Combine(sourceDir, ".secret"), "secret");
+
+        Direct.CopyItem(sourceDir, destDir, recursive: true);
+
+        File.Exists(Path.Combine(destDir, "visible.txt")).ShouldBeTrue();
+        File.Exists(Path.Combine(destDir, ".secret")).ShouldBeTrue();
+        (await File.ReadAllTextAsync(Path.Combine(destDir, ".secret"))).ShouldBe("secret");
+      }
+      finally
+      {
+        if (Directory.Exists(sourceDir))
+        {
+          Directory.Delete(sourceDir, recursive: true);
+        }
+
+        if (Directory.Exists(destDir))
+        {
+          Directory.Delete(destDir, recursive: true);
+        }
+      }
+    }
+
     public static async Task DirectoryWithOutsideSymlink_Recursive_Should_LeaveOutsideIntact()
     {
       string outsideDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));

@@ -5,8 +5,9 @@
 #region Design
 // File.Copy for files; recursive walk for directories. Reparse points are skipped
 // on the walk (the named source is copied; children that are links are not followed
-// or copied). Destination-is-directory matches cp: copy into dest under the source name.
-// preserveAttributes copies timestamps, attributes, and Unix mode where supported.
+// or copied). Enumeration uses AttributesToSkip=None so Hidden/System and Unix
+// dotfiles are included. Destination-is-directory matches cp: copy into dest under
+// the source name. preserveAttributes copies timestamps, attributes, and Unix mode.
 #endregion
 
 namespace TimeWarp.Amuru.Native.FileSystem;
@@ -132,8 +133,9 @@ public static partial class Direct
   {
     Directory.CreateDirectory(destinationPath);
     DirectoryInfo sourceDirectory = new(sourcePath);
+    EnumerationOptions enumerationOptions = FileSystemWalk.CreateEnumerationOptions();
 
-    foreach (FileInfo file in sourceDirectory.EnumerateFiles())
+    foreach (FileInfo file in sourceDirectory.EnumerateFiles("*", enumerationOptions))
     {
       if (FileSystemWalk.IsReparsePoint(file))
       {
@@ -143,7 +145,7 @@ public static partial class Direct
       CopyFile(file.FullName, Path.Combine(destinationPath, file.Name), overwrite, preserveAttributes);
     }
 
-    foreach (DirectoryInfo child in sourceDirectory.EnumerateDirectories())
+    foreach (DirectoryInfo child in sourceDirectory.EnumerateDirectories("*", enumerationOptions))
     {
       if (FileSystemWalk.IsReparsePoint(child))
       {
