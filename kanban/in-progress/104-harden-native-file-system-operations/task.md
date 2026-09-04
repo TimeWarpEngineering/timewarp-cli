@@ -15,6 +15,7 @@ Correctness/safety issues in `native/file-system/` found by the release review. 
 - [x] API-consistency: `Direct.GetChildItem`/`Direct.GetContent` return `IAsyncEnumerable` without the `Async` suffix used everywhere else — pick a convention before 1.0 — **deferred** (keep shipped names; new APIs in 112)
 - [x] Tests for symlink handling, force-not-found, and cancellation
 - [x] Fold 111-003 M12 (file-symlink force must not mutate target) and M13 (force+recursive clears root directory read-only)
+- [x] Implementation review (effort 1 general): round 1 + fix M1/M2 + round 2 + disposition clean
 
 ## Notes
 
@@ -38,10 +39,15 @@ Found by multi-agent release review (2026-07-04). Verified clean: `PathResolver.
 
 112 depends on this task (remaining native file ops).
 
+### Implementation review 2026-09-04
+
+Kitchen: `review/`. Effort 1 general, 2 rounds, disposition **clean**. See Results.
+
 ## Session
 
 - Cockpit dispatch: 01a06a4a-807d-7143-9d21-330f32238619 (2026-09-04)
 - Implementer: Grok session 01a06bc1-e12b-76e0-9e5f-d56972d7fe37 (2026-09-04)
+- Review oracle: Grok session 01a06bcc-fe00-7362-923e-8bd7631c95c6 (2026-09-04)
 
 ## Results
 
@@ -70,6 +76,7 @@ Harden native file-system ops without breaking 1.0.0 signatures.
 - `source/timewarp-amuru/native/aliases/Bash.cs`
 - `tests/timewarp-amuru/single-file-tests/native/file-system/direct.remove-item.cs` (new)
 - `tests/timewarp-amuru/single-file-tests/native/file-system/direct.get-content.cs`
+- `tests/timewarp-amuru/single-file-tests/native/file-system/direct.get-child-item.cs` (new, review M2)
 - `tests/timewarp-amuru/single-file-tests/native/file-system/commands.remove-item.cs`
 
 ### Key decisions / deviations
@@ -81,8 +88,21 @@ Harden native file-system ops without breaking 1.0.0 signatures.
 ### Test outcomes
 
 - `dotnet build timewarp-amuru.slnx` — 0 errors, 0 warnings
-- Native file-system tests (direct.remove-item 6, direct.get-content 3, commands.remove-item 6, commands.get-content 3, commands.get-child-item 2, bash-aliases 6) — all passed
-- Aggregate `tests/timewarp-amuru/multi-file-runners/run-tests.cs` — **424 passed, 1 skipped, 0 failed** (425 total)
+- Native file-system tests (direct.remove-item 6, direct.get-content 3, direct.get-child-item 1, commands.remove-item 6, commands.get-content 3, commands.get-child-item 2, bash-aliases 6) — all passed
+- Aggregate `tests/timewarp-amuru/multi-file-runners/run-tests.cs` — **424 passed, 1 skipped, 0 failed** (425 total) at implement
+- Review M2 adds `direct.get-child-item` cancellation (standalone 1/1 passed). Expect aggregate **425 passed, 1 skipped, 0 failed** (426 total)
+
+### Review disposition
+
+- **Outcome:** clean
+- **Rounds:** 2
+- **Effort / roster:** 1, general only
+- **Final counts:** bug 0/0/0 open/fixed/wontfix; suggestion 0 open, 2 fixed, 0 wontfix; nit 0
+- **Final open count:** 0
+- Round 1: no bugs; **M1** vacuous symlink-test pass; **M2** missing GetChildItem cancellation test
+- Fixes on this task id (no sibling apply-review task): throw on symlink-create failure; add `direct.get-child-item.cs`
+- Round 2: M1/M2 confirmed fixed; no new findings
+- Paths: `review/review-framework.md`, `review/round-1/{general,merged}.md`, `review/round-2/{general,merged}.md`, `review/disposition.md`
 
 ### How to validate
 
@@ -93,21 +113,23 @@ cd /path/to/timewarp-amuru
 dotnet build timewarp-amuru.slnx
 dotnet run tests/timewarp-amuru/single-file-tests/native/file-system/direct.remove-item.cs
 dotnet run tests/timewarp-amuru/single-file-tests/native/file-system/direct.get-content.cs
+dotnet run tests/timewarp-amuru/single-file-tests/native/file-system/direct.get-child-item.cs
 dotnet run tests/timewarp-amuru/single-file-tests/native/file-system/commands.remove-item.cs
 ```
 
 **Expect**
 
 - Build: `Build succeeded.` with `0 Warning(s)` `0 Error(s)`
-- `direct.remove-item`: 6 passed, including file-symlink force (target stays read-only), outside directory symlink left intact, cyclic symlink completes, missing+force does not throw
+- `direct.remove-item`: 6 passed, including file-symlink force (target stays read-only), outside directory symlink left intact, cyclic symlink completes, missing+force does not throw. Symlink-create failure must throw `InvalidOperationException` (not a silent pass)
 - `direct.get-content`: 3 passed, including `Cancellation_Should_ThrowOperationCanceledException`
+- `direct.get-child-item`: 1 passed (`Cancellation_Should_ThrowOperationCanceledException`)
 - `commands.remove-item`: 6 passed, including `MissingPathWithForce_Should_Succeed` (exit 0) and `MissingPath_Should_Fail` without force (exit 1)
 
 **Automated gate**
 
 ```bash
 cd tests/timewarp-amuru/multi-file-runners && dotnet run run-tests.cs
-# expect: Grand Total Passed: 424, Failed: 0, Skipped: 1, Total: 425
+# expect: Grand Total Passed: 425, Failed: 0, Skipped: 1, Total: 426
 ```
 
 If a standalone `dotnet run <test>.cs` disagrees with the source you just changed, clear the runfile cache (`ganda runfile cache --clear` or `rm -rf ~/.local/share/dotnet/runfile/<test-name>-*`) and re-run.
