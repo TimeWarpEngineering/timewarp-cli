@@ -1,5 +1,10 @@
 #region Purpose
-// TODO: Add purpose description
+// Commands API for listing directory contents as ls-style CommandOutput text.
+#endregion
+
+#region Design
+// Uses synchronous DirectoryInfo.EnumerateFileSystemInfos so the Commands surface stays
+// sync and avoids sync-over-async. Output format matches prior ls-style lines.
 #endregion
 
 namespace TimeWarp.Amuru.Native.FileSystem;
@@ -20,22 +25,20 @@ public static partial class Commands
   {
     try
     {
-      var entries = new List<string>();
+      DirectoryInfo directory = new(path);
+      List<string> entries = [];
 
-      // Use Direct API internally and collect results
-      var task = Task.Run(async () =>
+      foreach (FileSystemInfo entry in directory.EnumerateFileSystemInfos())
       {
-        await foreach (FileSystemInfo entry in Direct.GetChildItem(path).ConfigureAwait(false))
-        {
-          // Format similar to ls -la
-          string type = entry is DirectoryInfo ? "d" : "-";
-          string size = entry is FileInfo file ? file.Length.ToString(CultureInfo.InvariantCulture).PadLeft(10) : "<DIR>".PadLeft(10);
-          string name = entry.Name;
+        // Format similar to ls -la
+        string type = entry is DirectoryInfo ? "d" : "-";
+        string size = entry is FileInfo file
+          ? file.Length.ToString(CultureInfo.InvariantCulture).PadLeft(10)
+          : "<DIR>".PadLeft(10);
+        string name = entry.Name;
 
-          entries.Add($"{type}  {size}  {entry.LastWriteTime:yyyy-MM-dd HH:mm}  {name}");
-        }
-      });
-      task.GetAwaiter().GetResult();
+        entries.Add($"{type}  {size}  {entry.LastWriteTime:yyyy-MM-dd HH:mm}  {name}");
+      }
 
       return new CommandOutput(
         string.Join("\n", entries),

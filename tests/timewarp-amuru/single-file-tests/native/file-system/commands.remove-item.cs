@@ -107,5 +107,17 @@ namespace Commands_
 
       await Task.CompletedTask;
     }
+
+    public static async Task MissingPathWithForce_Should_Succeed()
+    {
+      string nonExistentPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+
+      CommandOutput result = Commands.RemoveItem(nonExistentPath, force: true);
+
+      result.Success.ShouldBeTrue();
+      result.ExitCode.ShouldBe(0);
+
+      await Task.CompletedTask;
+    }
   }
 }

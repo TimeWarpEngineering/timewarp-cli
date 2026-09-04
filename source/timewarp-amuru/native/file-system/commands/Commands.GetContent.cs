@@ -1,5 +1,10 @@
 #region Purpose
-// TODO: Add purpose description
+// Commands API for reading file content into a CommandOutput stdout payload.
+#endregion
+
+#region Design
+// Uses synchronous File.ReadAllLines so the Commands surface stays sync and avoids
+// sync-over-async. Stdout shape is lines joined with '\n', matching prior behavior.
 #endregion
 
 namespace TimeWarp.Amuru.Native.FileSystem;
@@ -25,17 +30,7 @@ public static partial class Commands
   {
     try
     {
-      var lines = new List<string>();
-
-      // Use Direct API internally and collect results
-      var task = Task.Run(async () =>
-      {
-        await foreach (string line in Direct.GetContent(path).ConfigureAwait(false))
-        {
-          lines.Add(line);
-        }
-      });
-      task.GetAwaiter().GetResult();
+      string[] lines = File.ReadAllLines(path);
 
       return new CommandOutput(
         string.Join("\n", lines),

@@ -1,5 +1,10 @@
 #region Purpose
-// TODO: Add purpose description
+// Unified bash-style aliases over Native.FileSystem Commands and Direct APIs.
+#endregion
+
+#region Design
+// Thin renames (Cat/Ls/Pwd/Cd/Rm) so scripts can `global using static` bash names.
+// Rm keeps separate recursive/force bools for 1.0 compatibility; a flags enum is deferred.
 #endregion
 
 namespace TimeWarp.Amuru.Native.Aliases;
