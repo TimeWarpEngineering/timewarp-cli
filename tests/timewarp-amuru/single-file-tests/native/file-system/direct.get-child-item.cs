@@ -57,5 +57,34 @@ namespace Direct_
         Directory.Delete(testDir, recursive: true);
       }
     }
+
+    public static async Task GlobAndRecursive_Should_FilterEntries()
+    {
+      string testDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+      Directory.CreateDirectory(Path.Combine(testDir, "sub"));
+      await File.WriteAllTextAsync(Path.Combine(testDir, "a.cs"), "a");
+      await File.WriteAllTextAsync(Path.Combine(testDir, "sub", "b.cs"), "b");
+      await File.WriteAllTextAsync(Path.Combine(testDir, "c.txt"), "c");
+
+      try
+      {
+        List<string> names = [];
+        await foreach (FileSystemInfo entry in Direct.GetChildItem(
+          testDir,
+          recursive: true,
+          pattern: "*.cs"))
+        {
+          names.Add(entry.Name);
+        }
+
+        names.ShouldContain("a.cs");
+        names.ShouldContain("b.cs");
+        names.ShouldNotContain("c.txt");
+      }
+      finally
+      {
+        Directory.Delete(testDir, recursive: true);
+      }
+    }
   }
 }
