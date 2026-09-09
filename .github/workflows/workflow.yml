@@ -47,6 +47,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+      # DELETE /actions/artifacts/{id} for keep-last-two Packages-* prune.
+      # Release download still works with write.
+      actions: write
 
     steps:
       - name: Checkout repository
@@ -97,9 +100,50 @@ jobs:
           fi
 
       - name: Upload Artifacts
-        if: always()
+        # Green master only. Skip PRs, releases, probe, and failed runs so
+        # Packages-* does not refill Actions artifact quota.
+        if: >-
+          success() &&
+          github.ref == 'refs/heads/master' &&
+          github.event_name != 'release' &&
+          !(github.event_name == 'workflow_dispatch' && inputs.mode == 'probe')
         uses: actions/upload-artifact@v4
         with:
           name: Packages-${{ github.run_number }}
           path: artifacts/packages/*.nupkg
-          if-no-files-found: ignore
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Keep last two Packages artifacts
+        if: >-
+          success() &&
+          github.ref == 'refs/heads/master' &&
+          github.event_name != 'release' &&
+          !(github.event_name == 'workflow_dispatch' && inputs.mode == 'probe')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          export LC_ALL=C
+          current="Packages-${{ github.run_number }}"
+          rows="$(gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/artifacts?per_page=100" \
+            --jq '.artifacts[] | select((.name | startswith("Packages-")) and (.expired | not)) | [.created_at, (.id|tostring), .name] | @tsv')"
+          if [ -z "${rows}" ]; then
+            echo "No Packages-* artifacts listed; skip prune."
+            exit 0
+          fi
+          filtered="$(printf '%s\n' "${rows}" | awk -F '\t' 'NF >= 3')"
+          if ! printf '%s\n' "${filtered}" | awk -F '\t' -v n="${current}" '$3 == n { found=1 } END { exit found ? 0 : 1 }'; then
+            echo "Just-uploaded ${current} is not listed yet; skip prune (next green master will keep-last-2)."
+            exit 0
+          fi
+          extra="$(printf '%s\n' "${filtered}" | sort -r -k1,1 | tail -n +3)"
+          if [ -z "${extra}" ]; then
+            echo "At most two Packages-* artifacts; nothing to prune."
+            exit 0
+          fi
+          while IFS=$'\t' read -r created_at id name; do
+            [ -n "${id}" ] || continue
+            echo "Deleting ${name} (id=${id}, created_at=${created_at})"
+            gh api -X DELETE "repos/${GITHUB_REPOSITORY}/actions/artifacts/${id}"
+          done <<< "${extra}"
